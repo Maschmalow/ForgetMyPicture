@@ -12,7 +12,10 @@ $date = $argv[6];
 $i=7;
 $explication = ''; //$explication doit toujours au moins avoir un mot, ce qui devrait etre toujours le cas
                    //$explication contient le texte former des mots jusqu'au mot fin_explication qui sert de balise de fin
-                   //$explication ne peux pas contenir d'apostrophe, ni tout autre symbole ayant un sens dans une chaine de caracteres (par exemples : \n, (, ), ...), car c'est interprete et donc ca provoque un bug. Une solution a ce bug serait de faire passer le texte dans un parseur qui enlève toutes ces symboles en les traduisant directement en code URL avec urlencode(), a ce moment la, il faudra enlever urlencode() des 3 boucles foreach 
+                   //$explication ne peux pas contenir d'apostrophe, ni tout autre symbole ayant un sens dans une chaine de caracteres (par exemples : \n, (, ), ...)
+		   //, car c'est interprete et donc ca provoque un bug.
+		   //Une solution a ce bug serait de faire passer le texte dans un parseur (pas en php, mais plutot en C/C++) qui enlève toutes ces symboles en les traduisant directement en code URL avec une fonction de type urlencode()
+		   //, a ce moment la, il faudra enlever urlencode() des 3 boucles foreach 
 while($argv[$i] != 'fin_explication')
   {
     $explication .= $argv[$i] . ' ';
