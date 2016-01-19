@@ -3,7 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#define MAX_LEN 128
+#define MAX_LEN 500 //attention il faudra mettre une limite du nombre de caracteres utilisables
 
 int main(int argc, char ** argv)
 {     

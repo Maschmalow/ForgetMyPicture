@@ -9,7 +9,7 @@ envoi:
 	php formulaire.php 'France' 'Jean-Michel' 'DUPOND' 'JeanDUPOND@gmail.com' 'ID.png' '02/02/2016' 'je' 'n'"'"'aime' 'pas' 'cette' 'photo,' 'oui' 'c'"'"'est' 'une' 'virgule!' 'exclamation' 'et' 'les' 'accents' 'é' 'à' 'è' 'ù' 'ê' 'î' 'ô' 'û' 'â' 'ï' 'enfin' 'point.' 'interrogation?' 'fin_explication' 'http://premiereadereferencer.com' 'http://deuxiemeadereferencer.fr'
 
 preparseur: Preparse Preparse2
-	./preparse | ./preparse2
+	./preparse 'France' 'Jean-Michel' 'DUPOND' 'JeanDUPOND@gmail.com' 'ID.png' '02/02/2016' 'je' 'n'"'"'aime' 'pas' 'cette' 'photo,' 'oui' 'c'"'"'est' 'une' 'virgule!' 'exclamation' 'et' 'les' 'accents' 'é' 'à' 'è' 'ù' 'ê' 'î' 'ô' 'û' 'â' 'ï' 'enfin' 'point.' 'interrogation?' 'fin_explication' 'http://premiereadereferencer.com' 'http://deuxiemeadereferencer.fr' | ./preparse2
 
 Preparse:
 	gcc -o preparse preparse.c

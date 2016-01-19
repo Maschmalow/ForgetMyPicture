@@ -3,31 +3,26 @@
 #include <string.h>
 #include <unistd.h>
 
-#define MAX_LEN 128
+#define MAX_LEN 500 //attention il faudra mettre une limite du nombre de caracteres utilisables
 
 int main(int argc, char ** argv)
 {     
   ssize_t len_read=0, wrote = 0;
   char buf[MAX_LEN];
-  if((len_read = read(STDIN_FILENO,buf,MAX_LEN) ) == -1)
+  int i, j;
+  int k = 0;
+  for (i = 1; i < argc; i++)
     {
-      perror("read");
-      return EXIT_FAILURE;
+      for (j = 0; j < strlen(argv[i]); j++)
+	{
+	  buf[k] = argv[i][j];
+	  k++;
+	}
+      buf[k] = ' ';
+      k++;
     }
-	
-  if(len_read ==0)/*EOF*/
-    {
-      return EXIT_SUCCESS;
-    }
-
-  char * chaine = "Ca marche";
-  int i;
-  for (i = 0; i < strlen(chaine); i++)
-    {
-      buf[i] = chaine[i];
-    }
-
-  len_read = strlen(chaine);
+  buf[k - 1] = '\0';
+  len_read = (ssize_t) k;
 	
   do
     {
