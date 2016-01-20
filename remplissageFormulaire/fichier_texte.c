@@ -12,7 +12,6 @@ int main(int argc, char ** argv)
  
   char * buf = TEXTE;
   ssize_t len_read=strlen(buf), wrote = 0;
-  
 
   //debut ecriture de la chaine de caracteres dans la sortie standard
   do
