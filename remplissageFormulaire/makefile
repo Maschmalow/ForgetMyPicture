@@ -8,7 +8,7 @@ parse:
 envoi:
 	php formulaire.php 'France' 'Jean-Michel' 'DUPOND' 'JeanDUPOND@gmail.com' 'ID.png' '02/02/2016' 'je' 'n'"'"'aime' 'pas' 'cette' 'photo,' 'oui' 'c'"'"'est' 'une' 'virgule!' 'exclamation' 'et' 'les' 'accents' 'é' 'à' 'è' 'ù' 'ê' 'î' 'ô' 'û' 'â' 'ï' 'enfin' 'point.' 'interrogation?' 'fin_explication' 'http://premiereadereferencer.com' 'http://deuxiemeadereferencer.fr'
 
-preparseur: Fichier_texte Preparse
+preparseur: Fichier_texte Preparse ## on doit passer les infos sur l'entree standard de preparse
 	./fichier_texte | ./preparse
 
 Fichier_texte:

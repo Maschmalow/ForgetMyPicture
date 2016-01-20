@@ -22,7 +22,8 @@ int main(int argc, char ** argv)
     }
   //fin lecture de l'entree standard mis dans une chaine de caracteres 
   
-  //debut modification de la chaine de caracteres
+  //debut modifications de la chaine de caracteres
+  //debut modification pour apostrophes dans le texte de base
   int nb_carac_en_plus = 0;
   char chaine[2];
   sprintf(chaine, "'");
@@ -44,7 +45,36 @@ int main(int argc, char ** argv)
     }
 
   len_read +=  (ssize_t)nb_carac_en_plus;
-  //fin modification de la chaine de caracteres
+  //fin modification pour apostrophes dans le texte de base
+
+  //debut modification pour les apostrophes autour des mots
+  for (j = MAX_LEN - 1; j > 0 ; j--)
+    buf[j] = buf[j - 1];
+
+  buf[0] = chaine[0];
+  len_read++;
+
+  nb_carac_en_plus = 0;
+  for (i = 0; i < len_read; i++)
+    {     
+      if (buf[i + nb_carac_en_plus] == ' ')
+	{
+	  for (j = MAX_LEN - 1; j > i + nb_carac_en_plus + 2 ; j--)
+	    buf[j] = buf[j - 2];
+
+	  buf[i + nb_carac_en_plus] = chaine[0];
+	  buf[i + nb_carac_en_plus + 1] = ' ';
+	  buf[i + nb_carac_en_plus + 2] = chaine[0];
+	  nb_carac_en_plus += 2;
+	}
+    }
+
+  len_read +=  (ssize_t)nb_carac_en_plus;
+
+  buf[(int)len_read] = chaine[0];
+  len_read++;
+  //fin modification pour les apostrophes autour des mots
+  //fin modifications de la chaine de caracteres
 
   //debut ecriture de la chaine de caracteres dans la sortie standard
   do
