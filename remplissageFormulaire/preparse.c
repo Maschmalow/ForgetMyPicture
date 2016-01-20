@@ -7,24 +7,44 @@
 
 int main(int argc, char ** argv)
 {
-  //debut lecture des paramètres mis dans une chaine de caracteres     
+  //debut lecture de l'entree standard mis dans une chaine de caracteres 
   ssize_t len_read=0, wrote = 0;
   char buf[MAX_LEN];
-  int i, j;
-  int k = 0;
-  for (i = 1; i < argc; i++)
+  if((len_read = read(STDIN_FILENO,buf,MAX_LEN) ) == -1)
     {
-      for (j = 0; j < strlen(argv[i]); j++)
-	{
-	  buf[k] = argv[i][j];
-	  k++;
-	}
-      buf[k] = ' ';
-      k++;
+      perror("read");
+      return EXIT_FAILURE;
     }
-  buf[k - 1] = '\0';
-  len_read = (ssize_t) k;
-  //fin lecture des paramètres mis dans une chaine de caracteres
+	
+  if(len_read ==0)/*EOF*/
+    {
+      return EXIT_SUCCESS;
+    }
+  //fin lecture de l'entree standard mis dans une chaine de caracteres 
+  
+  //debut modification de la chaine de caracteres
+  int nb_carac_en_plus = 0;
+  char chaine[2];
+  sprintf(chaine, "'");
+  int i, j;
+  for (i = 0; i < len_read; i++)
+    {     
+      if (buf[i + nb_carac_en_plus] == chaine[0])
+	{
+	  for (j = MAX_LEN - 1; j > i + nb_carac_en_plus + 4 ; j--)
+	    buf[j] = buf[j - 4];
+
+	  buf[i + nb_carac_en_plus] = chaine[0];
+	  buf[i + nb_carac_en_plus + 1] = '"';
+	  buf[i + nb_carac_en_plus + 2] = chaine[0];
+	  buf[i + nb_carac_en_plus + 3] = '"';
+	  buf[i + nb_carac_en_plus + 4] = chaine[0];
+	  nb_carac_en_plus += 4;
+	}
+    }
+
+  len_read +=  (ssize_t)nb_carac_en_plus;
+  //fin modification de la chaine de caracteres
 
   //debut ecriture de la chaine de caracteres dans la sortie standard
   do

@@ -8,14 +8,14 @@ parse:
 envoi:
 	php formulaire.php 'France' 'Jean-Michel' 'DUPOND' 'JeanDUPOND@gmail.com' 'ID.png' '02/02/2016' 'je' 'n'"'"'aime' 'pas' 'cette' 'photo,' 'oui' 'c'"'"'est' 'une' 'virgule!' 'exclamation' 'et' 'les' 'accents' 'é' 'à' 'è' 'ù' 'ê' 'î' 'ô' 'û' 'â' 'ï' 'enfin' 'point.' 'interrogation?' 'fin_explication' 'http://premiereadereferencer.com' 'http://deuxiemeadereferencer.fr'
 
-preparseur: Preparse Preparse2
-	./preparse 'France' 'Jean-Michel' 'DUPOND' 'JeanDUPOND@gmail.com' 'ID.png' '02/02/2016' 'je' 'n'"'"'aime' 'pas' 'cette' 'photo,' 'oui' 'c'"'"'est' 'une' 'virgule!' 'exclamation' 'et' 'les' 'accents' 'é' 'à' 'è' 'ù' 'ê' 'î' 'ô' 'û' 'â' 'ï' 'enfin' 'point.' 'interrogation?' 'fin_explication' 'http://premiereadereferencer.com' 'http://deuxiemeadereferencer.fr' | ./preparse2
+preparseur: Fichier_texte Preparse
+	./fichier_texte | ./preparse
+
+Fichier_texte:
+	gcc -o fichier_texte fichier_texte.c
 
 Preparse:
 	gcc -o preparse preparse.c
 
-Preparse2:
-	gcc -o preparse2 preparse2.c
-
 clean:
-	rm *~ preparse preparse2
+	rm *~ fichier_texte preparse
