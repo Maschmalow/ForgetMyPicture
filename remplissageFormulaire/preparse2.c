@@ -7,6 +7,7 @@
 
 int main(int argc, char ** argv)
 {     
+  //debut lecture de l'entree standard mis dans une chaine de caracteres 
   ssize_t len_read=0, wrote = 0;
   char buf[MAX_LEN];
   if((len_read = read(STDIN_FILENO,buf,MAX_LEN) ) == -1)
@@ -19,7 +20,9 @@ int main(int argc, char ** argv)
     {
       return EXIT_SUCCESS;
     }
+  //fin lecture de l'entree standard mis dans une chaine de caracteres 
 
+  //debut modification de la chaine de caracteres
   char * chaine = " Oui bien sur ;-)\n";
   int i;
   for (i = 0; i < strlen(chaine); i++)
@@ -28,7 +31,9 @@ int main(int argc, char ** argv)
     }
 
   len_read += strlen(chaine);
-	
+  //fin modification de la chaine de caracteres
+
+  //surement a modidier pour lancer l'autre programme avec la chaine de caracteres en argument	
   do
     {
       wrote = write(STDOUT_FILENO, buf+wrote, len_read-wrote);

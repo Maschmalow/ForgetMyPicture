@@ -6,7 +6,8 @@
 #define MAX_LEN 500 //attention il faudra mettre une limite du nombre de caracteres utilisables
 
 int main(int argc, char ** argv)
-{     
+{
+  //debut lecture des paramètres mis dans une chaine de caracteres     
   ssize_t len_read=0, wrote = 0;
   char buf[MAX_LEN];
   int i, j;
@@ -23,7 +24,9 @@ int main(int argc, char ** argv)
     }
   buf[k - 1] = '\0';
   len_read = (ssize_t) k;
-	
+  //fin lecture des paramètres mis dans une chaine de caracteres
+
+  //debut ecriture de la chaine de caracteres dans la sortie standard
   do
     {
       wrote = write(STDOUT_FILENO, buf+wrote, len_read-wrote);
@@ -34,6 +37,7 @@ int main(int argc, char ** argv)
 	}
     }
   while(wrote<len_read);
+  //fin ecriture de la chaine de caracteres dans la sortie standard
 
   return EXIT_SUCCESS;
 }
