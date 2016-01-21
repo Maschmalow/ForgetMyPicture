@@ -8,6 +8,9 @@ parse:
 envoi:
 	php formulaire.php 'France' 'Jean-Michel' 'DUPOND' 'JeanDUPOND@gmail.com' 'ID.png' '02/02/2016' 'je' 'n'"'"'aime' 'pas' 'cette' 'photo,' 'oui' 'c'"'"'est' 'une' 'virgule!' 'exclamation' 'et' 'les' 'accents' 'é' 'à' 'è' 'ù' 'ê' 'î' 'ô' 'û' 'â' 'ï' 'enfin' 'point.' 'interrogation?' 'fin_explication' 'http://premiereadereferencer.com' 'http://deuxiemeadereferencer.fr'
 
+tout: Fichier_texte Preparse Exec_liaison ## on doit passer les infos sur l'entree standard de preparse
+	./fichier_texte | ./preparse | ./exec_liaison
+
 preparseur: Fichier_texte Preparse ## on doit passer les infos sur l'entree standard de preparse
 	./fichier_texte | ./preparse
 
@@ -17,5 +20,8 @@ Fichier_texte:
 Preparse:
 	gcc -o preparse preparse.c
 
+Exec_liaison:
+	gcc -o exec_liaison exec_liaison.c
+
 clean:
-	rm *~ fichier_texte preparse
+	rm *~ fichier_texte exec_liaison preparse
