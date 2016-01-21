@@ -33,19 +33,23 @@ int main(int argc, char ** argv)
     }
   //fin lecture de l'entree standard mis dans une chaine de caracteres 
 
+  //debut creation de la commande
   char entree[(int)len_read];
   cpy(buf, entree, (int)len_read);
   char * name = FILE;
   char * chaine = "php";
   asprintf(&chaine, "%s %s %s", chaine, name, entree);
-  printf("%s\n", chaine);
+  //printf("%s\n", chaine); //ca marche tres bien avec make tout, mais il y a qqs problemes avec make lien, c'est bizarre!!!
+  //fin creation de la commande
 
+  //debut envoi de la commande
   const char * chaine_system = (const)chaine;
   if(system(chaine_system) == -1)
     {
       perror("system");
       return EXIT_FAILURE;
     }
+  //fin envoi de la commande
 
   free(chaine);
   return EXIT_SUCCESS;
