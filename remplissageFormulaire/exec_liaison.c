@@ -5,6 +5,17 @@
 
 #define MAX_LEN 500 //attention il faudra mettre une limite du nombre de caracteres utilisables
 
+#define FILE "parse.php"
+
+
+void cpy(char * src, char * dst, int taille)
+{
+  int i;
+  for (i = 0; i < taille; i++)
+    dst[i] = src[i];
+}
+
+
 int main(int argc, char ** argv)
 {
   //debut lecture de l'entree standard mis dans une chaine de caracteres 
@@ -21,7 +32,21 @@ int main(int argc, char ** argv)
       return EXIT_SUCCESS;
     }
   //fin lecture de l'entree standard mis dans une chaine de caracteres 
-  
-  execlp("php parse.php", "'France'", "'Jean-Michel'", "'DUPOND'", "'JeanDUPOND@gmail.com'", "'ID.png'", "'02/02/2016'", "'je'", "'naime'", "'pas'", "'cette'", "'photo,'", "'oui'", "'cest'", "'une'", "'virgule!'", "'fin_explication'", "'http://premiereadereferencer.com'", "'http://deuxiemeadereferencer.fr'", (char *) NULL);
-  return EXIT_FAILURE; //les fonctions exec ne retourne que si il y a une erreur
+
+  char entree[(int)len_read];
+  cpy(buf, entree, (int)len_read);
+  char * name = FILE;
+  char * chaine = "php";
+  asprintf(&chaine, "%s %s %s", chaine, name, entree);
+  printf("%s\n", chaine);
+
+  const char * chaine_system = (const)chaine;
+  if(system(chaine_system) == -1)
+    {
+      perror("system");
+      return EXIT_FAILURE;
+    }
+
+  free(chaine);
+  return EXIT_SUCCESS;
 }

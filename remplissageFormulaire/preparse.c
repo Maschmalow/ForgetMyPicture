@@ -25,7 +25,7 @@ int main(int argc, char ** argv)
   //debut modifications de la chaine de caracteres
   //debut modification pour apostrophes dans le texte de base
   int nb_carac_en_plus = 0;
-  char chaine[2];
+  char chaine[1];
   sprintf(chaine, "'");
   int i, j;
   for (i = 0; i < len_read; i++)

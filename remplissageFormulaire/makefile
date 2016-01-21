@@ -11,6 +11,9 @@ envoi:
 tout: Fichier_texte Preparse Exec_liaison ## on doit passer les infos sur l'entree standard de preparse
 	./fichier_texte | ./preparse | ./exec_liaison
 
+lien: Fichier_texte Exec_liaison ## on doit passer les infos sur l'entree standard de preparse
+	./fichier_texte | ./exec_liaison
+
 preparseur: Fichier_texte Preparse ## on doit passer les infos sur l'entree standard de preparse
 	./fichier_texte | ./preparse
 
