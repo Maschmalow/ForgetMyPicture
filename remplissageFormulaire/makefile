@@ -17,6 +17,10 @@ lien: Fichier_texte Exec_liaison ## on doit passer les infos sur l'entree standa
 preparseur: Fichier_texte Preparse ## on doit passer les infos sur l'entree standard de preparse
 	./fichier_texte | ./preparse
 
+opti: 
+	gcc -o opti opti.c
+	./opti
+
 Fichier_texte:
 	gcc -o fichier_texte fichier_texte.c
 

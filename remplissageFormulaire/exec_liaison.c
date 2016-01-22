@@ -5,7 +5,7 @@
 
 #define MAX_LEN 500 //attention il faudra mettre une limite du nombre de caracteres utilisables
 
-#define FILE "parse.php"
+#define FILE_NAME "parse.php"
 
 
 void cpy(char * src, char * dst, int taille)
@@ -36,14 +36,14 @@ int main(int argc, char ** argv)
   //debut creation de la commande
   char entree[(int)len_read];
   cpy(buf, entree, (int)len_read);
-  char * name = FILE;
+  char * name = FILE_NAME;
   char * chaine = "php";
   asprintf(&chaine, "%s %s %s", chaine, name, entree);
   //printf("%s\n", chaine); //ca marche tres bien avec make tout, mais il y a qqs problemes avec make lien, c'est bizarre!!!
   //fin creation de la commande
 
   //debut envoi de la commande
-  const char * chaine_system = (const)chaine;
+  const char * chaine_system = (const char *)chaine;
   if(system(chaine_system) == -1)
     {
       perror("system");

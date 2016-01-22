@@ -25,21 +25,19 @@ int main(int argc, char ** argv)
   //debut modifications de la chaine de caracteres
   //debut modification pour apostrophes dans le texte de base
   int nb_carac_en_plus = 0;
-  char chaine[1];
-  sprintf(chaine, "'");
   int i, j;
   for (i = 0; i < len_read; i++)
     {     
-      if (buf[i + nb_carac_en_plus] == chaine[0])
+      if (buf[i + nb_carac_en_plus] == '\'')
 	{
 	  for (j = MAX_LEN - 1; j > i + nb_carac_en_plus + 4 ; j--)
 	    buf[j] = buf[j - 4];
 
-	  buf[i + nb_carac_en_plus] = chaine[0];
+	  buf[i + nb_carac_en_plus] = '\'';
 	  buf[i + nb_carac_en_plus + 1] = '"';
-	  buf[i + nb_carac_en_plus + 2] = chaine[0];
+	  buf[i + nb_carac_en_plus + 2] = '\'';
 	  buf[i + nb_carac_en_plus + 3] = '"';
-	  buf[i + nb_carac_en_plus + 4] = chaine[0];
+	  buf[i + nb_carac_en_plus + 4] = '\'';
 	  nb_carac_en_plus += 4;
 	}
     }
@@ -51,7 +49,7 @@ int main(int argc, char ** argv)
   for (j = MAX_LEN - 1; j > 0 ; j--)
     buf[j] = buf[j - 1];
 
-  buf[0] = chaine[0];
+  buf[0] = '\'';
   len_read++;
 
   nb_carac_en_plus = 0;
@@ -62,16 +60,16 @@ int main(int argc, char ** argv)
 	  for (j = MAX_LEN - 1; j > i + nb_carac_en_plus + 2 ; j--)
 	    buf[j] = buf[j - 2];
 
-	  buf[i + nb_carac_en_plus] = chaine[0];
+	  buf[i + nb_carac_en_plus] = '\'';
 	  buf[i + nb_carac_en_plus + 1] = ' ';
-	  buf[i + nb_carac_en_plus + 2] = chaine[0];
+	  buf[i + nb_carac_en_plus + 2] = '\'';
 	  nb_carac_en_plus += 2;
 	}
     }
 
   len_read +=  (ssize_t)nb_carac_en_plus;
 
-  buf[(int)len_read] = chaine[0];
+  buf[(int)len_read] = '\'';
   len_read++;
   //fin modification pour les apostrophes autour des mots
   //fin modifications de la chaine de caracteres
