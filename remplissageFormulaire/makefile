@@ -6,7 +6,7 @@ parse:
 	php parse.php 'France' 'Jean-Michel' 'DUPOND' 'JeanDUPOND@gmail.com' 'ID.png' '02/02/2016' 'je' 'n'"'"'aime' 'pas' 'cette' 'photo,' 'oui' 'c'"'"'est' 'une' 'virgule!' 'exclamation' 'et' 'les' 'accents' 'é' 'à' 'è' 'ù' 'ê' 'î' 'ô' 'û' 'â' 'ï' 'enfin' 'point.' 'interrogation?' 'caracteres' 'speciaux' 'commentaire\\' 'retourligne\n' '\\' '\n' '//' 'lepluscomplique' '\\n' 'fin_explication' 'http://premiereadereferencer.com' 'http://deuxiemeadereferencer.fr' 'FIN_TEXTE' 'BORNE_SECU'
 
 envoi:
-	php formulaire.php 'France' 'Jean-Michel' 'DUPOND' 'JeanDUPOND@gmail.com' 'ID.png' '02/02/2016' 'je' 'n'"'"'aime' 'pas' 'cette' 'photo,' 'oui' 'c'"'"'est' 'une' 'virgule!' 'exclamation' 'et' 'les' 'accents' 'é' 'à' 'è' 'ù' 'ê' 'î' 'ô' 'û' 'â' 'ï' 'enfin' 'point.' 'interrogation?' 'caracteres' 'speciaux' 'commentaire\\' 'retourligne\n' '\\' '\n' '//' 'lepluscomplique' '\\n' 'fin_explication' 'http://premiereadereferencer.com' 'http://deuxiemeadereferencer.fr'
+	php formulaire.php 'France' 'Jean-Michel' 'DUPOND' 'JeanDUPOND@gmail.com' 'ID.png' '02/02/2016' 'je' 'n'"'"'aime' 'pas' 'cette' 'photo,' 'oui' 'c'"'"'est' 'une' 'virgule!' 'exclamation' 'et' 'les' 'accents' 'é' 'à' 'è' 'ù' 'ê' 'î' 'ô' 'û' 'â' 'ï' 'enfin' 'point.' 'interrogation?' 'caracteres' 'speciaux' 'commentaire\\' 'retourligne\n' '\\' '\n' '//' 'lepluscomplique' '\\n' 'fin_explication' 'http://premiereadereferencer.com' 'http://deuxiemeadereferencer.fr' 'FIN_TEXTE' 'BORNE_SECU'
 
 tout: Fichier_texte Preparse Exec_liaison ## on doit passer les infos sur l'entree standard de preparse
 	./fichier_texte | ./preparse | ./exec_liaison
