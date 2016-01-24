@@ -5,7 +5,8 @@
 
 #define MAX_LEN 500 //attention il faudra mettre une limite du nombre de caracteres utilisables
 
-#define TEXTE "France Jean-Michel DUPOND JeanDUPOND@gmail.com ID.png 02/02/2016 je n'aime pas cette photo, oui c'est une virgule! exclamation et les accents é à è ù ê î ô û â ï enfin point. interrogation? fin_explication http://premiereadereferencer.com http://deuxiemeadereferencer.fr"
+#define TEXTE "France Jean-Michel DUPOND JeanDUPOND@gmail.com ID.png 02/02/2016 je n'aime pas cette photo, oui c'est une virgule! exclamation et les accents é à è ù ê î ô û â ï enfin point. interrogation? caracteres speciaux commentaire\\ retourligne\n \\ \n // lepluscomplique \\n fin_explication http://premiereadereferencer.com http://deuxiemeadereferencer.fr" //a voir comment le texte sera donne
+                                                                      //il sera code comme dans une chaine de caracteres dans un printf
 
 int main(int argc, char ** argv)
 {
