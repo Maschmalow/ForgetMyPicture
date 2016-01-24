@@ -26,8 +26,11 @@ $i++;
 
 //'url_box3' comme clef
 $list_adr = array(); //URLs a dereferencer, le plus dur a remplir 
-for($j = $i; $j < $argc; $j++)
-  $list_adr[] = $argv[$j]; //ex : http://premiereadereferencer.com , http://deuxiemeadereferencer.fr
+while($argv[$i] != 'FIN_TEXTE') //FIN_TEXTE est une balise pour indiquer la fin du texte
+  {
+    $list_adr[] = $argv[$i]; //ex : http://premiereadereferencer.com , http://deuxiemeadereferencer.fr
+    $i++;
+  }
 
 ///////////fin ~parseur////////////////
 
