@@ -33,10 +33,10 @@ Exec_liaison:
 	gcc -o exec_liaison exec_liaison.c
 
 Opti:
-	gcc -g -O0 -o opti opti.c
+	gcc -o opti opti.c
 
 Version_finale:
-	gcc -g -O0 -o version_finale version_finale.c
+	gcc -o version_finale version_finale.c
 
 clean:
 	rm *~ fichier_texte exec_liaison preparse opti version_finale
