@@ -3,7 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#define MAX_LEN 500 //attention il faudra mettre une limite du nombre de caracteres utilisables
+#include "constante.h"
 
 #define FILE_NAME "parse.php"
 
