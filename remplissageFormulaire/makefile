@@ -20,6 +20,9 @@ preparseur: Fichier_texte Preparse ## on doit passer les infos sur l'entree stan
 opti: Opti
 	./opti
 
+opti2: Opti2
+	./opti2
+
 Fichier_texte:
 	gcc -o fichier_texte fichier_texte.c
 
@@ -30,7 +33,10 @@ Exec_liaison:
 	gcc -o exec_liaison exec_liaison.c
 
 Opti:
-	gcc -o opti opti.c
+	gcc -g -O0 -o opti opti.c
+
+Opti2:
+	gcc -g -O0 -o opti2 opti2.c
 
 clean:
-	rm *~ fichier_texte exec_liaison preparse opti
+	rm *~ fichier_texte exec_liaison preparse opti opti2
