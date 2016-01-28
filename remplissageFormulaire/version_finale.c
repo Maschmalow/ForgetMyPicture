@@ -36,7 +36,7 @@ int main(int argc, char ** argv)
     }
   //fin lecture de l'entree standard mis dans une chaine de caracteres
 
-  char * buf;
+  char * buf, * autre_buf;
   asprintf(&buf, "%s", texte);
   
   //debut modifications de la chaine de caracteres
@@ -47,7 +47,10 @@ int main(int argc, char ** argv)
     {
       if (buf[i + nb_carac_en_plus] == '\'')
 	{
+	  autre_buf = buf;
 	  asprintf(&buf, "%s1234", buf); //il faut que l'on ait 4 cases de plus disponibles avant de faire le decalage
+	  free(autre_buf);
+
 	  for (j = strlen(buf) - 1; j > i + nb_carac_en_plus + 4 ; j--)
 	    buf[j] = buf[j - 4];
 
@@ -64,7 +67,10 @@ int main(int argc, char ** argv)
   //fin modification pour apostrophes dans le texte de base
 
   //debut modification pour les apostrophes autour des mots
+  autre_buf = buf;
   asprintf(&buf, "%s1", buf); //il faut que l'on ait 1 case de plus disponible avant de faire le decalage
+  free(autre_buf);
+
   for (j = strlen(buf) - 1; j > 0 ; j--)
     buf[j] = buf[j - 1];
 
@@ -76,7 +82,10 @@ int main(int argc, char ** argv)
     {  
       if (buf[i + nb_carac_en_plus] == ' ')
 	{
+	  autre_buf = buf;
 	  asprintf(&buf, "%s12", buf); //il faut que l'on ait 2 cases de plus disponibles avant de faire le decalage
+	  free(autre_buf);
+
 	  for (j = strlen(buf) - 1; j > i + nb_carac_en_plus + 2 ; j--)
 	    buf[j] = buf[j - 2];
 
@@ -89,7 +98,9 @@ int main(int argc, char ** argv)
 
   len_read +=  (ssize_t)nb_carac_en_plus;
 
+  autre_buf = buf;
   asprintf(&buf, "%s1", buf); //il faut que l'on ait 1 case de plus disponible pour écrire ce caractere
+  free(autre_buf);
   buf[(int)len_read] = '\'';
   len_read++;
   //fin modification pour les apostrophes autour des mots
