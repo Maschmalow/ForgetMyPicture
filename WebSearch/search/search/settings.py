@@ -49,9 +49,10 @@ NEWSPIDER_MODULE = 'search.spiders'
 
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    'search.middlewares.MyCustomDownloaderMiddleware': 543,
-#}
+DOWNLOADER_MIDDLEWARES = {
+    'scrapy.contrib.downloadermiddleware.useragent.UserAgentMiddleware': None,
+    'random_useragent.RandomUserAgentMiddleware': 400
+}
 
 # Enable or disable extensions
 # See http://scrapy.readthedocs.org/en/latest/topics/extensions.html
@@ -83,3 +84,5 @@ NEWSPIDER_MODULE = 'search.spiders'
 #HTTPCACHE_DIR='httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES=[]
 #HTTPCACHE_STORAGE='scrapy.extensions.httpcache.FilesystemCacheStorage'
+
+USER_AGENT_LIST = "user-agents.txt"
