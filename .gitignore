@@ -28,3 +28,6 @@
 *.app
 
 *.pcapng
+
+# wtf?
+AndroidApp/.idea/workspace.xml
