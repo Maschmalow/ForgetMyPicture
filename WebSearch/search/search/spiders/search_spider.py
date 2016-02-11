@@ -9,7 +9,7 @@ class SearchSpider(scrapy.Spider):
     name = "search"
     allowed_domains = ["google.fr"]
     start_urls = [
-        "http://www.google.fr/search?tbm=isch&q="
+        "http://www.google.fr/search?tbm=isch&safe=off&hl=fr&site=imghp&q="
     ]
     
     
@@ -33,7 +33,10 @@ class SearchSpider(scrapy.Spider):
             
     
     def parse(self, response):
-        for result in response.xpath('//div[@data-ri and @data-row]/a'):
+        f = open("response.html", 'wb')
+        f.write(response.body)
+        return
+        for result in response.xpath('//img'):
             item = SearchItem()
             link_url_query = parse_qs(urlparse(result.xpath('@href').extract()[0]).query)
             
