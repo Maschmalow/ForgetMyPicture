@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">ForgetMyPicture</string>
-    <string name="Search_title">Search</string>
+    <string name="search_activity_name">Search</string>
+    <string name="search_title">Please enter keywords:</string>
+    <string name="search_keywords_send_btn">Send</string>
+    <string name="search_keywords_hint">Enter keywords here</string>
 </resources>

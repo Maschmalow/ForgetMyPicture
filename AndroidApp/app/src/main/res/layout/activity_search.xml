@@ -11,7 +11,40 @@
     tools:context="net.tenwame.forgetmypicture.SearchActivity">
 
     <TextView
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"/>
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="@dimen/activity_margin"
+        android:text="@string/search_title"
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+    <EditText
+        android:id="@+id/keywords_field"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/title"
+        android:layout_margin="@dimen/activity_margin"
+        android:hint="@string/search_keywords_hint"
+        android:inputType="textMultiLine"/>
+
+    <Button
+        android:id="@+id/send_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/keywords_field"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/keywords_field"
+        android:layout_margin="@dimen/activity_margin"
+        android:onClick="startSearchFromUI"
+        android:text="@string/search_keywords_send_btn"/>
+
 </RelativeLayout>
