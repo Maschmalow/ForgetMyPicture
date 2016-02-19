@@ -1,10 +1,12 @@
 package net.tenwame.forgetmypicture;
 
+import android.net.UrlQuerySanitizer;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -71,7 +73,7 @@ public class Searcher {
     private List<Result> scrapeData() {
         lastRequest = System.currentTimeMillis();
         List<Result> results = new ArrayList<>();
-        Document doc;
+        final Document doc;
 
         try {
             doc = Jsoup.connect(URL).data(queryData).userAgent(userAgent).get();
@@ -79,7 +81,15 @@ public class Searcher {
             Log.e(TAG, "Could not start search.", e);
             return results;
         }
-        Log.d(TAG, "Request:\n" + doc.baseUri() + "\nScrapped:\n" + doc.html()); //TODO: print this somewhere else
+        Log.d(TAG, "Request:\n" + doc.baseUri());
+
+
+        for( Element elem : doc.select("div.rg_di.rg_el.ivg-i > a")) {
+            UrlQuerySanitizer query = new UrlQuerySanitizer(elem.attr("href"));
+            results.add(new Result(query.getValue("imgurl"), query.getValue("imgrefurl")));
+        }
+
+        Log.i(TAG,"\nParsed: " + results.size() + "results.\n");
         return results;
     }
 
@@ -110,26 +120,26 @@ public class Searcher {
 
     static public class Result{
 
-        private String picDirectURL;
-        private String picSourceURL;
+        private String picURL;
+        private String picRefURL;
 
-        private Result(String picDirectURL, String picSourceURL) {
-            this.picSourceURL = picSourceURL;
-            this.picDirectURL = picDirectURL;
+        private Result(String picURL, String picRefURL) {
+            this.picRefURL = picRefURL;
+            this.picURL = picURL;
         }
 
-        public String getPicSourceURL() {
-            return picSourceURL;
+        public String getPicRefURL() {
+            return picRefURL;
         }
 
-        public String getPicDirectURL() {
-            return picDirectURL;
+        public String getPicURL() {
+            return picURL;
         }
 
         @Override
         public boolean equals(Object o) {
             return !(o == null || (o.getClass() != this.getClass())) &&
-                    picSourceURL.equals(((Result) o).picSourceURL);
+                    picURL.equals(((Result) o).picURL);
         }
     }
 
