@@ -1,8 +1,12 @@
-test_mail: Envoi_mail
-	./envoi_mail enseirb-matmeca.fr 
+test_mail: Who_is Parseur
+	./who_is enseirb-matmeca.fr > mail.txt
+	./parseur mail.txt
 
-Envoi_mail:
-	gcc -o envoi_mail envoi_mail.c
+Parseur:
+	gcc -o parseur parseur.c
+
+Who_is:
+	gcc -o who_is who_is.c
 
 clean:
-	rm *~ envoi_mail
+	rm *~ who_is parseur mail.txt
