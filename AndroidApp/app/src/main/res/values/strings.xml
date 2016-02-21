@@ -1,7 +1,19 @@
 <resources>
     <string name="app_name">ForgetMyPicture</string>
-    <string name="search_activity_name">Search</string>
+
+    <string name="search_activity_name">Start a new search</string>
     <string name="search_title">Please enter keywords:</string>
     <string name="search_keywords_send_btn">Send</string>
     <string name="search_keywords_hint">Enter keywords here</string>
+
+    <string name="user_setup_activity_name">Setup your data</string>
+    <string name="user_setup_title">Please fill in this form:</string>
+    <string name="user_setup_name">Name:</string>
+    <string name="user_setup_forename">Forename:</string>
+    <string name="user_setup_email">E-mail:</string>
+    <string name="user_setup_selfie">Please take or select a selfie:</string>
+    <string name="user_setup_idcard">Please take or select a picture of your ID card:</string>
+    <string name="user_setup_save_btn">Save</string>
+    <string name="user_setup_save_toast">Saved</string>
+    <string name="search_started_toast">Search started</string>
 </resources>
