@@ -16,9 +16,12 @@
             android:label="@string/search_activity_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".UserSetupActivity"
+            android:label="@string/user_setup_activity_name">
         </activity>
     </application>
 

@@ -25,18 +25,8 @@ public class Searcher {
 
     private static final String TAG = Searcher.class.getCanonicalName();
     private static final String URL = "https://www.google.fr/search";
-    private static final long DELAY = 360000; //time in milli sec between each requests (6 min)
+    private static final long DELAY = 60000; //time in milli sec between each requests (1 min)
 
-    private static Searcher instance = null;
-    public static Searcher getInstance() {
-        if(instance == null)
-            synchronized (Searcher.class) {
-                if(instance == null)
-                    instance = new Searcher();
-            }
-
-        return instance;
-    }
 
     private long lastRequest;
     private String userAgent;
@@ -49,17 +39,17 @@ public class Searcher {
     }
 
 
-    public void startSearch(String[] keywords) {
+    public static void startSearch(String[] keywords) {
         new AsyncTask<String, Void, Void>() {
             @Override
             protected final Void doInBackground(String... keywords) {
-                startSearchOnThread(Arrays.asList(keywords));
+                new Searcher().startSearchOnThread(Arrays.asList(keywords));
                 return null;
             }
         }.execute(keywords);
     }
 
-    public void startSearchOnThread(List<String> keywords) {
+    private void startSearchOnThread(List<String> keywords) {
         for(List<String> subset : powerSet(keywords)) {
             if(subset.size() == 0) continue; // we can remove this once name has been made permanent keyword
             setCurKeywords(subset);
