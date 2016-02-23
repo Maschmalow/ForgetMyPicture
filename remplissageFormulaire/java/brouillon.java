@@ -10,10 +10,23 @@ public class Envoi {
 	HttpClient client = new HttpClient();
 
 	// Le HTTPMethod qui sera un Post en lui indiquant l’URL du traitement du formulaire
-	PostMethod methode = new PostMethod(“http://www.pexiweb.be/demo/form/traitement.php”);
+	PostMethod methode = new PostMethod(“https://support.google.com/legal/contact/lr_eudpa?product=websearch&hl=en”);
 					    
-	// On ajoute les parametres du formulaire
-	methode.addParameter(“champ”, “Hello World !”); // (champs, valeur)
+	// On ajoute les parametres du formulaire, aller chercher les infos du client, il faudra mettre les bonnes valeurs
+	methode.addParameter(“selected_country”, “France”); // (champs, valeur)
+	methode.addParameter(“name_searched”, “Jean DUPOND”);
+	methode.addParameter(“requestor_name”, “Jean DUPOND”);
+	methode.addParameter(“contact_email_noprefill”, “JeanDUPOND@gmail.com”);
+
+	// Ici c'est pour les URLs, il faudra faire qqc de particulier
+	methode.addParameter(“url_box3”, “http://premiereadereferencer.com”);
+	methode.addParameter(“url_box3”, “http://deuxiemeadereferencer.fr”);
+
+	methode.addParameter(“eudpa_explain”, “Cette URL me concerne, car…”);
+	methode.addParameter(“legal_idupload”, “carte_identitee.png”);
+	methode.addParameter(“eudpa_consent_statement”, “agree”); //celui-ci est bon
+	methode.addParameter(“signature”, “Jean DUPOND”);
+	methode.addParameter(“signature_date”, “01/30/2016”);
 
 	// Le buffer qui nous servira a recuperer le code de la page
 	BufferedReader br = null;
