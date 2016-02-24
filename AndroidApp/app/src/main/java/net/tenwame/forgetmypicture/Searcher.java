@@ -13,26 +13,35 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by Antoine on 16/02/2016.
  * Class that performs actual requests and send results to the server
- * Only one instance at a time
+ * Only one instance per search, in one thread.
+ * Only static data should be shared inbetween threads
+ * limited to one instance for now
  */
 public class Searcher {
 
-    private static final String TAG = Searcher.class.getCanonicalName();
+    private static final String TAG = Searcher.class.getSimpleName();
     private static final String URL = "https://www.google.fr/search";
     private static final long DELAY = 60000; //time in milli sec between each requests (1 min)
 
+    private static long lastRequest = System.currentTimeMillis() - DELAY; //make first request start immediately
+    private static long curRequestId = 0;
 
-    private long lastRequest;
     private String userAgent;
     private Map<String, String> queryData;
+    private Set<Result> results;
+    private long requestId;
 
     private Searcher() {
+        requestId = curRequestId++;
+        results = new HashSet<>();
         queryData = new HashMap<>();
         queryData.put("tbm", "isch");
         queryData.put("safe", "off");
@@ -40,6 +49,10 @@ public class Searcher {
 
 
     public static void startSearch(String[] keywords) {
+        if(!UserData.getInstance().isSet()) {
+            Log.e(TAG, "Search aborted: user data is not set.");
+            return;
+        }
         new AsyncTask<String, Void, Void>() {
             @Override
             protected final Void doInBackground(String... keywords) {
@@ -51,18 +64,25 @@ public class Searcher {
 
     private void startSearchOnThread(List<String> keywords) {
         for(List<String> subset : powerSet(keywords)) {
-            if(subset.size() == 0) continue; // we can remove this once name has been made permanent keyword
             setCurKeywords(subset);
             setCurUserAgent();
-            scrapeData();
             delay();
+            handleNewResults(scrapeData());
         }
     }
 
+    private void handleNewResults(List<Result> scraped) {
+        List<Result> toSend = new ArrayList<>();
+        for(Result result : scraped)
+            if(results.add(result))
+                toSend.add(result);
+        //serv.send(toSend, requestId);
+    }
 
-    private List<Result> scrapeData() {
+
+    private List<Result> scrapeData() { //// TODO: 23/02/2016 thread safety
         lastRequest = System.currentTimeMillis();
-        List<Result> results = new ArrayList<>();
+        List<Result> results = new ArrayList<>(); //should this be a set?
         final Document doc;
 
         try {
@@ -89,14 +109,14 @@ public class Searcher {
 
 
     private void setCurKeywords(Collection<String> keywords) {
-        String joined = "";
+        String joined = UserData.getInstance().getForename() + " " + UserData.getInstance().getName() + " ";
         for( String keyword : keywords ) {
             joined += keyword + " ";
         }
         queryData.put("q", joined);
     }
 
-    private void delay() {
+    private void delay() { //TODO: thread safety
         long elapsedTime = System.currentTimeMillis() - lastRequest;
         while( elapsedTime < DELAY) {
             try {
@@ -126,10 +146,15 @@ public class Searcher {
             return picURL;
         }
 
+        // equals and hashCode are used in hashSet, so make sur this is what we want
         @Override
         public boolean equals(Object o) {
-            return !(o == null || (o.getClass() != this.getClass())) &&
-                    picURL.equals(((Result) o).picURL);
+            return this == o || !(o == null || getClass() != o.getClass()) && picURL.equals(((Result) o).picURL);
+        }
+
+        @Override
+        public int hashCode() {
+            return picURL.hashCode();
         }
     }
 

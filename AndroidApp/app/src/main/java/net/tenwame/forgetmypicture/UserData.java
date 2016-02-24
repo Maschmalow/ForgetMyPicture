@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.provider.Settings.Secure;
 import android.util.JsonReader;
 import android.util.JsonWriter;
+import android.util.Log;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -16,9 +17,11 @@ import java.io.IOException;
 
 /**
  * Created by Antoine on 20/02/2016.
- * class used as a gateway to the user personnal data
+ * class used as a gateway to the user personal data
  */
 public class UserData {
+    private static final String TAG = UserData.class.getSimpleName();
+
     private static final String SELFIE_SUFFIX = "_selfie";
     private static final String IDCARD_SUFFIX = "_idcard";
     private Context context = ForgetMyPictureApp.getAppContext();
@@ -53,7 +56,7 @@ public class UserData {
     }
 
     public void setupUserData(Bitmap idCard, Bitmap selfie, String name, String forename, String email) {
-        if(!userIsNotSet)
+        if(isSet())
             throw new RuntimeException("User data is already set");
 
         this.idCard = idCard;
@@ -62,7 +65,16 @@ public class UserData {
         this.forename = forename;
         this.email = email;
 
-        storeToFile();
+        if(!isDataValid())
+            return;  //isSet() == false
+
+        try {
+            storeToFile();
+        } catch (IOException e) {
+            throw new RuntimeException("Could not save user data");
+        }
+
+        //isSet() == true
     }
 
     private void loadFromFile() {
@@ -92,12 +104,16 @@ public class UserData {
             selfie = BitmapFactory.decodeStream(dataFile);
             dataFile.close();
 
-        } catch(IOException e) {
+        } catch(IOException | IllegalArgumentException e) {
+            wipe();
             throw new RuntimeException("User data is incorrectly stored", e);
         }
 
-        if(selfie == null || idCard == null || name == null || forename == null || email == null)
-            throw new RuntimeException("User data is incorrectly stored");
+        if(!isDataValid()) {
+            wipe();
+            throw new RuntimeException("User data is not valid");
+        }
+        Log.i(TAG, "Parsed data from file");
 
     }
 
@@ -109,10 +125,11 @@ public class UserData {
         else if("email".equals(property))
             email = value;
         else
-            throw new RuntimeException("Property " + property + " does not exists.");
+            throw new IllegalArgumentException("Property " + property + " does not exists.");
     }
 
-    private void storeToFile() {
+    private void storeToFile() throws IOException{
+
         FileOutputStream dataFile;
         try {
             dataFile = context.openFileOutput(deviceId, Context.MODE_PRIVATE);
@@ -137,10 +154,28 @@ public class UserData {
             dataFile.close();
 
         } catch (IOException e) {
-            throw new RuntimeException("Error while writing User Data", e);
+            wipe();
+            throw e;
         }
 
         userIsNotSet = false;
+        Log.i(TAG, "Stored data to file");
+    }
+
+    private boolean isDataValid() { //TODO: also check for non-null values validity
+        return selfie != null && idCard != null && name != null && forename != null && email != null;
+    }
+
+    public void wipe() {
+        context.deleteFile(deviceId);
+        context.deleteFile(deviceId + IDCARD_SUFFIX);
+        context.deleteFile(deviceId + SELFIE_SUFFIX);
+        selfie = idCard = null;
+        name = forename = email = null;
+
+        userIsNotSet = true;
+        Log.w(TAG, "User data wiped");
+
     }
 
     public Bitmap getIdCard() {
