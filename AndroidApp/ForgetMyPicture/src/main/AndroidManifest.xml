@@ -16,13 +16,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".SearchActivity"
+            android:name=".activities.SearchActivity"
             android:label="@string/search_activity_name"></activity>
         <activity
-            android:name=".UserSetupActivity"
+            android:name=".activities.UserSetupActivity"
             android:label="@string/user_setup_activity_name"></activity>
         <activity
-            android:name=".HomepageActivity"
+            android:name=".activities.HomepageActivity"
             android:label="@string/homepage_activity_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

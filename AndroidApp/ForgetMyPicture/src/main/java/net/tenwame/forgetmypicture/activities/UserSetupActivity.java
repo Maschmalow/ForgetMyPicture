@@ -1,4 +1,4 @@
-package net.tenwame.forgetmypicture;
+package net.tenwame.forgetmypicture.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -10,6 +10,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import net.tenwame.forgetmypicture.R;
+import net.tenwame.forgetmypicture.UserData;
 
 /**
  * Created by Antoine on 21/02/2016.
