@@ -1,4 +1,4 @@
-package net.tenwame.forgetmypicture;
+package net.tenwame.forgetmypicture.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -9,6 +9,9 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import net.tenwame.forgetmypicture.R;
+import net.tenwame.forgetmypicture.Searcher;
 
 public class SearchActivity extends Activity {
 
