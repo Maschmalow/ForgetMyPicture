@@ -14,18 +14,23 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Antoine on 20/02/2016.
  * class used as a gateway to the user personal data
+ * //TODO: big refactoring
  */
 public class UserData {
     private static final String TAG = UserData.class.getSimpleName();
 
     private static final String SELFIE_SUFFIX = "_selfie";
-    private static final String IDCARD_SUFFIX = "_idcard";
-    private Context context = ForgetMyPictureApp.getAppContext();
-    private final String deviceId = Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
+    private static final String IDCARD_SUFFIX = "_idCard";
+    private static Context context = ForgetMyPictureApp.getAppContext();
+    private static final String DEVICE_ID = Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
 
     private static UserData instance = null;
     public static UserData getInstance() {
@@ -40,14 +45,43 @@ public class UserData {
 
     private boolean userIsNotSet = false;
 
-    private Bitmap idCard;
-    private Bitmap selfie;
-    private String name;
-    private String forename;
-    private String email;
+    public Bitmap getSelfie() {
+        return selfie.getValue();
+    }
+
+    public String getName() {
+        return name.getValue();
+    }
+
+    public Bitmap getIdCard() {
+        return idCard.getValue();
+    }
+
+    public String getEmail() {
+        return email.getValue();
+    }
+
+    public String getForename() {
+        return forename.getValue();
+    }
+
+    private final UserProperty<Bitmap> idCard = new UserProperty<>("idCard", DEVICE_ID + IDCARD_SUFFIX);
+    private final UserProperty<Bitmap> selfie = new UserProperty<>("selfie", DEVICE_ID + SELFIE_SUFFIX);
+    private final UserProperty<String> name = new UserProperty<>("name", DEVICE_ID);
+    private final UserProperty<String> forename = new UserProperty<>("forename", DEVICE_ID);
+    private final UserProperty<String> email = new UserProperty<>("email", DEVICE_ID);
+
+    private final Map<String, UserProperty<?>> properties = new HashMap<>();
 
 
     private UserData() {
+        properties.put(idCard.getName(), idCard);
+        properties.put(selfie.getName(), selfie);
+        properties.put(name.getName(), name);
+        properties.put(forename.getName(), forename);
+        properties.put(email.getName(), email);
+
+
         loadFromFile();
     }
 
@@ -59,11 +93,11 @@ public class UserData {
         if(isSet())
             throw new RuntimeException("User data is already set");
 
-        this.idCard = idCard;
-        this.selfie = selfie;
-        this.name = name;
-        this.forename = forename;
-        this.email = email;
+        this.idCard.setValue(idCard);
+        this.selfie.setValue(selfie);
+        this.name.setValue(name);
+        this.forename.setValue(forename);
+        this.email.setValue(email);
 
         if(!isDataValid())
             return;  //isSet() == false
@@ -81,7 +115,7 @@ public class UserData {
         FileInputStream dataFile;
 
         try {
-            dataFile = context.openFileInput(deviceId);
+            dataFile = context.openFileInput(DEVICE_ID);
         } catch (FileNotFoundException e) {
             userIsNotSet = true;
             return;
@@ -91,17 +125,17 @@ public class UserData {
             JsonReader reader = new JsonReader(new FileReader(dataFile.getFD()));
             reader.beginObject();
             while (reader.hasNext()) {
-                setUserProperty(reader.nextName(), reader.nextString());
+                ((UserProperty<String>) properties.get(reader.nextName())).setValue(reader.nextString());
             }
             reader.endObject();
             reader.close();
 
-            dataFile = context.openFileInput(deviceId + IDCARD_SUFFIX);
-            idCard = BitmapFactory.decodeStream(dataFile);
+            dataFile = context.openFileInput(DEVICE_ID + IDCARD_SUFFIX);
+            idCard.setValue(BitmapFactory.decodeStream(dataFile));
             dataFile.close();
 
-            dataFile = context.openFileInput(deviceId + SELFIE_SUFFIX);
-            selfie = BitmapFactory.decodeStream(dataFile);
+            dataFile = context.openFileInput(DEVICE_ID + SELFIE_SUFFIX);
+            selfie.setValue(BitmapFactory.decodeStream(dataFile));
             dataFile.close();
 
         } catch(IOException | IllegalArgumentException e) {
@@ -117,40 +151,30 @@ public class UserData {
 
     }
 
-    private void setUserProperty(String property, String value) {
-        if("name".equals(property))
-            name = value;
-        else if("forename".equals(property))
-            forename = value;
-        else if("email".equals(property))
-            email = value;
-        else
-            throw new IllegalArgumentException("Property " + property + " does not exists.");
-    }
 
     private void storeToFile() throws IOException{
 
         FileOutputStream dataFile;
         try {
-            dataFile = context.openFileOutput(deviceId, Context.MODE_PRIVATE);
+            dataFile = context.openFileOutput(DEVICE_ID, Context.MODE_PRIVATE);
 
             JsonWriter writer = new JsonWriter(new FileWriter(dataFile.getFD()));
             writer.beginObject();
-            writer.name("name");
-            writer.value(name);
-            writer.name("forename");
-            writer.value(forename);
-            writer.name("email");
-            writer.value(email);
+            for(UserProperty<?> up : properties.values()) {
+                if (up.getURI().equals(DEVICE_ID)) {
+                    writer.name(up.getName());
+                    writer.value((String) up.getValue());
+                }
+            }
             writer.endObject();
             writer.close();
 
-            dataFile = context.openFileOutput(deviceId + SELFIE_SUFFIX, Context.MODE_PRIVATE);
-            selfie.compress(Bitmap.CompressFormat.PNG, 0, dataFile);
+            dataFile = context.openFileOutput(selfie.getURI(), Context.MODE_PRIVATE);
+            selfie.getValue().compress(Bitmap.CompressFormat.PNG, 0, dataFile);
             dataFile.close();
 
-            dataFile = context.openFileOutput(deviceId + IDCARD_SUFFIX, Context.MODE_PRIVATE);
-            idCard.compress(Bitmap.CompressFormat.PNG, 0, dataFile);
+            dataFile = context.openFileOutput(idCard.getURI(), Context.MODE_PRIVATE);
+            idCard.getValue().compress(Bitmap.CompressFormat.PNG, 0, dataFile);
             dataFile.close();
 
         } catch (IOException e) {
@@ -163,39 +187,59 @@ public class UserData {
     }
 
     private boolean isDataValid() { //TODO: also check for non-null values validity
-        return selfie != null && idCard != null && name != null && forename != null && email != null;
+        return selfie.getValue() != null && idCard.getValue() != null && name.getValue() != null && forename.getValue() != null && email.getValue() != null;
     }
 
     public void wipe() {
-        context.deleteFile(deviceId);
-        context.deleteFile(deviceId + IDCARD_SUFFIX);
-        context.deleteFile(deviceId + SELFIE_SUFFIX);
-        selfie = idCard = null;
-        name = forename = email = null;
+        for(UserProperty<?> up : properties.values()) {
+            context.deleteFile(up.getURI());
+            up.setValue(null);
+        }
 
         userIsNotSet = true;
         Log.w(TAG, "User data wiped");
+    }
+
+    public UserProperty<?> getProperty(String name) {
+        return properties.get(name);
+    }
+
+    public static String getDeviceId() {
+        return DEVICE_ID;
+    }
+
+    public static InputStream openFile(String URI) throws FileNotFoundException {
+        return context.openFileInput(URI);
+    }
+
+    public static class UserProperty<T> {
+        private String URI;
+        private String name;
+        private T value;
+
+        private UserProperty(String name, String URI) {
+            this.name = name;
+            this.URI = URI;
+            this.value = null;
+        }
+
+        private void setValue(T value) {
+            this.value = value;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public T getValue() {
+            return value;
+        }
+
+        public String getURI() {
+            return URI;
+        }
 
     }
 
-    public Bitmap getIdCard() {
-        return idCard;
-    }
-
-    public Bitmap getSelfie() {
-        return selfie;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getForename() {
-        return forename;
-    }
-
-    public String getEmail() {
-        return email;
-    }
 
 }

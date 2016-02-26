@@ -32,12 +32,12 @@ public class Searcher {
     private static final long DELAY = 60000; //time in milli sec between each requests (1 min)
 
     private static long lastRequest = System.currentTimeMillis() - DELAY; //make first request start immediately
-    private static long curRequestId = 0;
+    private static Integer curRequestId = 0;
 
     private String userAgent;
     private Map<String, String> queryData;
     private Set<Result> results;
-    private long requestId;
+    private Integer requestId;
 
     private Searcher() {
         requestId = curRequestId++;
@@ -76,7 +76,11 @@ public class Searcher {
         for(Result result : scraped)
             if(results.add(result))
                 toSend.add(result);
-        //serv.send(toSend, requestId);
+        try {
+            ServerInterface.feedNewResults(toSend, requestId);
+        } catch (IOException e) {
+            throw new RuntimeException("couldn't send new reults", e);
+        }
     }
 
 
