@@ -9,7 +9,8 @@ public class Envoi {
 	// On cree le client
 	HttpClient client = new HttpClient();
 
-	// Le HTTPMethod qui sera un Post en lui indiquant l’URL du traitement du formulaire
+	// Le HTTPMethod qui sera un Post en lui indiquant l’URL du traitement du formulaire (celle qui se trouve normalement après le "action="
+	// Mettre la bonne adresse
 	PostMethod methode = new PostMethod(“https://support.google.com/legal/contact/lr_eudpa?product=websearch&hl=en”);
 					    
 	// On ajoute les parametres du formulaire, aller chercher les infos du client, il faudra mettre les bonnes valeurs
