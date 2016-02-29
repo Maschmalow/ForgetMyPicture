@@ -15,7 +15,11 @@ int main(int argc, char ** argv)
   int i, j;
   fgets(line, SIZE_ADR*sizeof(char), fichier);
 
-  for (i = 0; line[0] != 'F' || line[1] != 'I' || line[2] != 'N'; i++)
+  for (i = 0;
+       line[0] != '@' || line[1] != '!' || line[2] != '@' || line[3] != '!' || line[4] != '@' || line[5] != '!'
+	 || line[6] != 'F' || line[7] != 'I' || line[8] != 'N'
+	 || line[9] != '@' || line[10] != '!' || line[11] != '@' || line[12] != '!' || line[13] != '@' || line[14] != '!';
+       i++)
     {
       if (i < NB_ADR)
 	{
