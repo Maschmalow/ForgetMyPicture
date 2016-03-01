@@ -32,10 +32,11 @@ int main(int argc, char ** argv)
 
   fclose(fichier);
   
+  system("telnet smtp.enseirb-matmeca.fr 25");
+  system("HELO enseirb.fr");
+
   for (j = 0; j < i && j < NB_ADR; j++)
     {
-      system("telnet smtp.enseirb-matmeca.fr 25");
-      system("HELO enseirb.fr");
       system("MAIL FROM:FMP@enseirb-matmeca.fr");
       char * chaine;
       asprintf(&chaine, "RCPT TO:%s", adr[j]);
@@ -43,10 +44,10 @@ int main(int argc, char ** argv)
       free(chaine);
       system("DATA");
       system("Dear ..."); //ici on mettra le contenu/texte du mail
-      system("");
-      system(".");
-      system("QUIT");    
+      system(".");   
     }
+
+  system("QUIT"); 
  
   return 0; 
 }
