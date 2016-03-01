@@ -1,5 +1,6 @@
 package net.tenwame.forgetmypicture;
 
+import android.os.AsyncTask;
 import android.util.Log;
 
 import org.jsoup.Connection;
@@ -8,9 +9,7 @@ import org.jsoup.nodes.Document;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Stack;
 
 /**
@@ -28,7 +27,7 @@ public class ServerInterface {
     private static UserData userData = UserData.getInstance();
 
 
-    public static void register() throws IOException{ //TODO: See? please, make UserData great again
+    private static void registerASync() throws IOException{
         Integer hash = 1;
 
         Connection connection = Jsoup.connect(BASE_URL + REGISTER_URL)
@@ -37,8 +36,12 @@ public class ServerInterface {
 
         Stack<InputStream> streams = new Stack<>();
         for(UserData.UserProperty<?> property : userData.getProperties()) {
-            streams.push(UserData.openFile(property.getURI()));
-            connection.data(property.getName(), property.getURI(), streams.peek());
+            if(property.isAssignableFrom(String.class)) {
+                connection.data(property.getName(), (String) property.getValue());
+            } else {
+                streams.push(UserData.openFile(property.getURI()));
+                connection.data(property.getName(), property.getURI(), streams.peek());
+            }
         }
 
         connection.post();
@@ -50,7 +53,7 @@ public class ServerInterface {
         Log.d(TAG, "Device " + UserData.getDeviceId() + " successfully registered.");
     }
 
-    public static void feedNewResults(Collection<Searcher.Result> results, Integer requestId) throws IOException{
+    private static void feedNewResultsrASync(Collection<Searcher.Result> results, Integer requestId) throws IOException{
         Connection connection = Jsoup.connect(BASE_URL + FEED_URL)
                 .data("deviceId", UserData.getDeviceId())
                 .data("requestId", requestId.toString());
@@ -61,7 +64,7 @@ public class ServerInterface {
         Log.d(TAG, "Sent " + results.size() + " results for request " + requestId);
     }
 
-    public static void getSearchInfo(Integer requestId) throws IOException{
+    private static void getSearchInforASync(Integer requestId) throws IOException{
         Document doc = Jsoup.connect(BASE_URL + GET_INFO_URL)
                 .data("deviceId", UserData.getDeviceId())
                 .data("requestId", requestId.toString()).get();
@@ -69,5 +72,50 @@ public class ServerInterface {
         //TODO: parse and return info
         Log.d(TAG, "New status for request " + requestId);
     }
+
+
+    public static void register() {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    registerASync();
+                } catch (IOException e) {
+                    throw new RuntimeException("Error in register()", e);
+                }
+                return null;
+            }
+        }.execute((Void) null);
+    }
+
+    public static void feedNewResults(final Collection<Searcher.Result> results, final Integer requestId) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    feedNewResultsrASync(results, requestId);
+                } catch (IOException e) {
+                    throw new RuntimeException("Error in feedNewResults()", e);
+                }
+                return null;
+            }
+        }.execute((Void) null);
+    }
+
+    public static void getSearchInfo(final Integer requestId) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    getSearchInforASync(requestId);
+                } catch (IOException e) {
+                    throw new RuntimeException("Error in getSearchInfo()", e);
+                }
+                return null;
+            }
+        }.execute((Void) null);
+    }
+
+    
 
 }

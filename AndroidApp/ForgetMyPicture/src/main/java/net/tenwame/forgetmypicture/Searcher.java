@@ -76,11 +76,7 @@ public class Searcher {
         for(Result result : scraped)
             if(results.add(result))
                 toSend.add(result);
-        try {
-            ServerInterface.feedNewResults(toSend, requestId);
-        } catch (IOException e) {
-            throw new RuntimeException("couldn't send new reults", e);
-        }
+        ServerInterface.feedNewResults(toSend, requestId);
     }
 
 
@@ -150,7 +146,7 @@ public class Searcher {
             return picURL;
         }
 
-        // equals and hashCode are used in hashSet, so make sur this is what we want
+        // equals and hashCode are used in hashSet, so make sure this is what we want
         @Override
         public boolean equals(Object o) {
             return this == o || !(o == null || getClass() != o.getClass()) && picURL.equals(((Result) o).picURL);

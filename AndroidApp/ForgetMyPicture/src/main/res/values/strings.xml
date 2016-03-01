@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ForgetMyPicture</string>
+    <string name="app_full_name">ForgetMyPicture</string>
 
     <string name="search_activity_name">Start a new search</string>
     <string name="search_title">Please enter keywords:</string>
@@ -16,8 +16,9 @@
     <string name="user_setup_idcard">Please take a picture of your ID card:</string>
     <string name="user_setup_save_btn">Save</string>
     <string name="user_setup_save_toast">Saved</string>
+    <string name="user_setup_invalid_toast">Invalid data entered.</string>
 
-    <string name="homepage_activity_name">Forget My Picture</string>
+    <string name="homepage_activity_name">ForgetMyPicture</string>
     <string name="homepage_new_search">Start a new search</string>
     <string name="homepage_setup_data_toast">Please set up your data before starting a new Search</string>
 

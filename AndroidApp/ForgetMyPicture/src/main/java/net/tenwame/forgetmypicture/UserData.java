@@ -16,6 +16,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,46 +44,46 @@ public class UserData {
         return instance;
     }
 
-    private boolean userIsNotSet = false;
+
 
     public Bitmap getSelfie() {
-        return selfie.getValue();
+        return getProperty("selfie", Bitmap.class);
     }
 
     public String getName() {
-        return name.getValue();
+        return getProperty("name", String.class);
     }
 
     public Bitmap getIdCard() {
-        return idCard.getValue();
+        return getProperty("idCard", Bitmap.class);
     }
 
     public String getEmail() {
-        return email.getValue();
+        return getProperty("email", String.class);
     }
 
     public String getForename() {
-        return forename.getValue();
+        return getProperty("forename", String.class);
     }
 
-    private final UserProperty<Bitmap> idCard = new UserProperty<>("idCard", DEVICE_ID + IDCARD_SUFFIX);
-    private final UserProperty<Bitmap> selfie = new UserProperty<>("selfie", DEVICE_ID + SELFIE_SUFFIX);
-    private final UserProperty<String> name = new UserProperty<>("name", DEVICE_ID);
-    private final UserProperty<String> forename = new UserProperty<>("forename", DEVICE_ID);
-    private final UserProperty<String> email = new UserProperty<>("email", DEVICE_ID);
 
-    private final Map<String, UserProperty<?>> properties = new HashMap<>();
+    private final Map<String, UserProperty<?>> properties;
+    private boolean userIsNotSet = false;
 
 
     private UserData() {
-        properties.put(idCard.getName(), idCard);
-        properties.put(selfie.getName(), selfie);
-        properties.put(name.getName(), name);
-        properties.put(forename.getName(), forename);
-        properties.put(email.getName(), email);
-
+        Map<String, UserProperty<?>> props = new HashMap<>();
+        addProperty(props, new UserProperty<>("idCard", DEVICE_ID + IDCARD_SUFFIX, Bitmap.class));
+        addProperty(props, new UserProperty<>("selfie", DEVICE_ID + SELFIE_SUFFIX, Bitmap.class));
+        addProperty(props, new UserProperty<>("name", DEVICE_ID, String.class));
+        addProperty(props, new UserProperty<>("forename", DEVICE_ID, String.class));
+        addProperty(props, new UserProperty<>("email", DEVICE_ID, String.class));
+        properties = Collections.unmodifiableMap(props);
 
         loadFromFile();
+    }
+    private void addProperty(Map<String, UserProperty<?>> props, UserProperty<?> property) {
+        props.put(property.getName(), property);
     }
 
     public boolean isSet() {
@@ -93,11 +94,11 @@ public class UserData {
         if(isSet())
             throw new RuntimeException("User data is already set");
 
-        this.idCard.setValue(idCard);
-        this.selfie.setValue(selfie);
-        this.name.setValue(name);
-        this.forename.setValue(forename);
-        this.email.setValue(email);
+        setProperty("idCard", idCard);
+        setProperty("selfie", selfie);
+        setProperty("name", name);
+        setProperty("forename", forename);
+        setProperty("email", email);
 
         if(!isDataValid())
             return;  //isSet() == false
@@ -124,19 +125,18 @@ public class UserData {
         try {
             JsonReader reader = new JsonReader(new FileReader(dataFile.getFD()));
             reader.beginObject();
-            while (reader.hasNext()) {
-                ((UserProperty<String>) properties.get(reader.nextName())).setValue(reader.nextString());
-            }
+            while (reader.hasNext())
+                setProperty(reader.nextName(), reader.nextString());
             reader.endObject();
             reader.close();
 
-            dataFile = context.openFileInput(DEVICE_ID + IDCARD_SUFFIX);
-            idCard.setValue(BitmapFactory.decodeStream(dataFile));
-            dataFile.close();
+            for( UserProperty<?> property : getProperties() )
+                if(property.isAssignableFrom(Bitmap.class)) {
+                    dataFile = context.openFileInput(property.getURI());
+                    checkedCast(property, Bitmap.class).setValue(BitmapFactory.decodeStream(dataFile));
+                    dataFile.close();
+                }
 
-            dataFile = context.openFileInput(DEVICE_ID + SELFIE_SUFFIX);
-            selfie.setValue(BitmapFactory.decodeStream(dataFile));
-            dataFile.close();
 
         } catch(IOException | IllegalArgumentException e) {
             wipe();
@@ -160,22 +160,21 @@ public class UserData {
 
             JsonWriter writer = new JsonWriter(new FileWriter(dataFile.getFD()));
             writer.beginObject();
-            for(UserProperty<?> up : properties.values()) {
-                if (up.getURI().equals(DEVICE_ID)) {
-                    writer.name(up.getName());
-                    writer.value((String) up.getValue());
+            for(UserProperty<?> property : properties.values()) {
+                if(property.isAssignableFrom(String.class)) {
+                    writer.name(property.getName());
+                    writer.value((String) property.getValue());
                 }
             }
             writer.endObject();
             writer.close();
 
-            dataFile = context.openFileOutput(selfie.getURI(), Context.MODE_PRIVATE);
-            selfie.getValue().compress(Bitmap.CompressFormat.PNG, 0, dataFile);
-            dataFile.close();
-
-            dataFile = context.openFileOutput(idCard.getURI(), Context.MODE_PRIVATE);
-            idCard.getValue().compress(Bitmap.CompressFormat.PNG, 0, dataFile);
-            dataFile.close();
+            for( UserProperty<?> property : getProperties() )
+                if(property.isAssignableFrom(Bitmap.class)) {
+                    dataFile = context.openFileOutput(property.getURI(), Context.MODE_PRIVATE);
+                    checkedCast(property, Bitmap.class).getValue().compress(Bitmap.CompressFormat.PNG, 0, dataFile);
+                    dataFile.close();
+                }
 
         } catch (IOException e) {
             wipe();
@@ -187,7 +186,10 @@ public class UserData {
     }
 
     private boolean isDataValid() { //TODO: also check for non-null values validity
-        return selfie.getValue() != null && idCard.getValue() != null && name.getValue() != null && forename.getValue() != null && email.getValue() != null;
+        for(UserProperty<?> property :getProperties())
+            if(property.getValue() == null)
+                return  false;
+        return true;
     }
 
     public void wipe() {
@@ -200,8 +202,27 @@ public class UserData {
         Log.w(TAG, "User data wiped");
     }
 
-    public UserProperty<?> getProperty(String name) {
-        return properties.get(name);
+    public Collection<UserProperty<?>> getProperties() {
+        return properties.values();
+    }
+
+    private <T> boolean setProperty(String name, T value) { //if the type is wrong, NPE
+        if(value == null) {
+            properties.get(name).setValue(null);
+            return true;
+        }
+        checkedCast(properties.get(name), (Class<T>) value.getClass()).setValue(value);
+        return true;
+    }
+
+    public <T> T getProperty(String name, Class<T> c) { //if the type is wrong, NPE
+        return checkedCast(properties.get(name), c).getValue();
+    }
+
+    @SuppressWarnings("unchecked") //checks for type compatibility, and cast if successful, return null otherwise
+    private static <T> UserProperty<T> checkedCast(UserProperty<?> property, Class<T> c) {
+        if(property == null || !property.isAssignableFrom(c)) return null;
+        return (UserProperty<T>) property;
     }
 
     public static String getDeviceId() {
@@ -216,15 +237,22 @@ public class UserData {
         private String URI;
         private String name;
         private T value;
+        private Class<T> type;
 
-        private UserProperty(String name, String URI) {
+        private UserProperty(String name, String URI, Class<T> type) {
             this.name = name;
             this.URI = URI;
             this.value = null;
+            this.type = type;
         }
 
         private void setValue(T value) {
+            if(value != null && !isAssignableFrom(value.getClass())) return;
             this.value = value;
+        }
+
+        public boolean isAssignableFrom(Class<?> c) {
+            return type.isAssignableFrom(c);
         }
 
         public String getName() {

@@ -15,8 +15,6 @@ import net.tenwame.forgetmypicture.R;
 import net.tenwame.forgetmypicture.ServerInterface;
 import net.tenwame.forgetmypicture.UserData;
 
-import java.io.IOException;
-
 /**
  * Created by Antoine on 21/02/2016.
  * Activity that asks user information
@@ -55,11 +53,11 @@ public class UserSetupActivity extends Activity {
 
     public void saveDataFromUI(View view) {
         data.setupUserData(idcardBitmap, selfieBitmap, nameField.getText().toString(), forenameField.getText().toString(), emailField.getText().toString());
-        try {
-            ServerInterface.register();
-        } catch (IOException e) {
-            throw new RuntimeException("Couldn't register", e);
+        if(!data.isSet()) {
+            Toast.makeText(this, R.string.user_setup_invalid_toast, Toast.LENGTH_SHORT).show();
+            return;
         }
+        ServerInterface.register();
         Toast.makeText(this, R.string.user_setup_save_toast, Toast.LENGTH_SHORT).show();
         finish();
     }
