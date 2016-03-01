@@ -189,7 +189,7 @@ public class UserData {
         for(UserProperty<?> property :getProperties()) {
             if( property.getValue() == null )
                 return false;
-            if( checkedCast(property, String.class).getValue().isEmpty() )
+            if( checkedCast(property, String.class) != null && checkedCast(property, String.class).getValue().isEmpty() )
                 return false;
         }
         return true;
