@@ -186,9 +186,12 @@ public class UserData {
     }
 
     private boolean isDataValid() { //TODO: also check for non-null values validity
-        for(UserProperty<?> property :getProperties())
-            if(property.getValue() == null)
-                return  false;
+        for(UserProperty<?> property :getProperties()) {
+            if( property.getValue() == null )
+                return false;
+            if( checkedCast(property, String.class).getValue().isEmpty() )
+                return false;
+        }
         return true;
     }
 
