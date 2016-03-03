@@ -1,3 +1,5 @@
+package net.tenwame.forgetmypicture;
+
 import android.util.Log;
 
 import org.jsoup.Connection;

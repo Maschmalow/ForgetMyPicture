@@ -47,23 +47,23 @@ public class UserData {
 
 
     public Bitmap getSelfie() {
-        return getProperty("selfie", Bitmap.class);
+        return getPropertyValue("selfie", Bitmap.class);
     }
 
     public String getName() {
-        return getProperty("name", String.class);
+        return getPropertyValue("name", String.class);
     }
 
     public Bitmap getIdCard() {
-        return getProperty("idCard", Bitmap.class);
+        return getPropertyValue("idCard", Bitmap.class);
     }
 
     public String getEmail() {
-        return getProperty("email", String.class);
+        return getPropertyValue("email", String.class);
     }
 
     public String getForename() {
-        return getProperty("forename", String.class);
+        return getPropertyValue("forename", String.class);
     }
 
 
@@ -218,7 +218,11 @@ public class UserData {
         return true;
     }
 
-    public <T> T getProperty(String name, Class<T> c) { //if the type is wrong, NPE
+    public UserProperty<?> getProperty(String name) {
+        return properties.get(name);
+    }
+
+    public <T> T getPropertyValue(String name, Class<T> c) { //if the type is wrong, NPE
         return checkedCast(properties.get(name), c).getValue();
     }
 
