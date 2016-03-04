@@ -112,7 +112,7 @@ public class UserData {
         //isSet() == true
     }
 
-    private void loadFromFile() {
+    private void loadFromFile() { //TODO use new json lib
         FileInputStream dataFile;
 
         try {
