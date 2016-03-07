@@ -2,7 +2,6 @@ package net.tenwame.forgetmypicture;
 
 import android.content.Context;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -32,17 +31,24 @@ public class Util {
         return job;
     }
 
-    public static JsonStructure readJsonStructure(String URI, Context context) throws FileNotFoundException {
-        JsonReader reader = Json.createReader(context.openFileInput(URI));
-        JsonStructure st = reader.read();
-        reader.close();
+    public static JsonStructure readJsonStructure(String URI, Context context) {
+        JsonStructure st;
+        try (JsonReader reader = Json.createReader(context.openFileInput(URI))) {
+            st = reader.read();
+        } catch (Exception e) {
+            return null;
+        }
         return st;
     }
 
-    public static void writeJsonStructure(JsonStructure st, String URI, Context context) throws FileNotFoundException {
-        JsonWriter writer = Json.createWriter(context.openFileOutput(URI, Context.MODE_PRIVATE));
-        writer.write(st);
-        writer.close();
+    public static boolean writeJsonStructure(JsonStructure st, String URI, Context context)  {
+        try (JsonWriter writer = Json.createWriter(context.openFileOutput(URI, Context.MODE_PRIVATE))) {
+            writer.write(st);
+        } catch (Exception e) {
+            return false;
+        }
+
+        return true;
     }
 
 

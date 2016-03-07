@@ -34,16 +34,14 @@ public class Searcher extends IntentService{
     private static final String URL = "https://www.google.fr/search";
     private static final long DELAY = 60000; //time in milli sec between each requests (1 min)
 
-    private static long lastRequest = System.currentTimeMillis() - DELAY; //make first request start immediately
+    private static long lastRequest;
 
     private String userAgent;
     private Map<String, String> queryData;
-    private List<Data.Search> searches;
     private Data.Search curSearch;
 
     public Searcher() {
         super("SearcherService");
-        searches = Data.getSearches();
         queryData = new HashMap<>();
         queryData.put("tbm", "isch");
         queryData.put("safe", "off");
@@ -53,22 +51,41 @@ public class Searcher extends IntentService{
 
     @Override
     protected void onHandleIntent(Intent intent) {
-    }
+        curSearch = Data.getSearch(0);
+        if(curSearch == null) return;
 
+        int curSearchProgress = curSearch.getProgress();
+        while(curSearchProgress != 0) {
 
+            for( Data.Search search : Data.getSearches() )
+                if( search.getStatus() == Data.Search.Status.FETCHING ) {
+                    int progress;
+                    if( (progress = search.getProgress()) < curSearchProgress ) {
+                        curSearch = search;
+                        curSearchProgress = progress;
+                    }
+                }
 
-    private void startSearch() {
-        for(List<String> subset : Util.powerSet(curSearch.getKeywords())) {
-            setCurKeywords(subset);
-            setCurUserAgent();
-            delay();
-            handleNewResults(scrapeData());
+            doSearch();
         }
+
     }
 
-    private void handleNewResults(Set<Result> scraped) {
-        ServerInterface.feedNewResults(curSearch.addResults(scraped), curSearch.getId());
+
+
+    private void doSearch() {
+        int progress = curSearch.getProgress();
+        List<List<String>> keywordsSets = Util.powerSet(curSearch.getKeywords());
+        setCurKeywords(keywordsSets.get(progress));
+        setCurUserAgent();
+        Set<Result> newResults = curSearch.addResults(scrapeData());
+        ServerInterface.feedNewResults(newResults, curSearch.getId());
+        curSearch.setProgres(++progress);
+        if(progress == keywordsSets.size() -1)
+            curSearch.setStatus(Data.Search.Status.PROCESSING);
+        delay();
     }
+
 
 
     private Set<Result> scrapeData() {
@@ -90,7 +107,7 @@ public class Searcher extends IntentService{
             results.add(new Result(query.getValue("imgurl"), query.getValue("imgrefurl")));
         }
 
-        Log.d(TAG,"\nParsed: " + results.size() + "results.");
+        Log.d(TAG, "\nParsed: " + results.size() + "results.");
         return results;
     }
 
@@ -145,6 +162,10 @@ public class Searcher extends IntentService{
 
         public String getPicURL() {
             return picURL;
+        }
+
+        public boolean isProcessed() {
+            return match == -1;
         }
 
         // equals and hashCode are used in hashSet, so make sure this is what we want

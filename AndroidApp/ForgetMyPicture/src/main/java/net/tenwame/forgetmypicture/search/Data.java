@@ -5,7 +5,6 @@ import android.content.Context;
 import net.tenwame.forgetmypicture.ForgetMyPictureApp;
 import net.tenwame.forgetmypicture.Util;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -15,7 +14,6 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
-import javax.json.JsonString;
 import javax.json.JsonStructure;
 import javax.json.JsonValue;
 
@@ -28,7 +26,7 @@ public class Data {
     private static final String SEARCH_URI_PREFIX = "search_";
 
     public static Search getSearch(Integer id) {
-        if(id == null || id < 0 || id > getCurId()) return null;
+        if(id == null || id < 0 || id >= getCurId()) return null;
         return new Search(id);
     }
 
@@ -41,14 +39,13 @@ public class Data {
     }
 
     private static Integer getCurId() {
-        JsonArray arr = Util.readJsonStructure(SEARCH_URI_PREFIX + "curId", context);
+        JsonArray arr = (JsonArray) Util.readJsonStructure(SEARCH_URI_PREFIX + "curId", context);
         return arr.getInt(0);
     }
 
     public static Search newSearch(List<String> keywords) {
         Integer curId = getCurId();
-        curId++;
-        Util.writeJsonStructure(Json.createArrayBuilder().add(curId).build(), SEARCH_URI_PREFIX + "curId", context);
+        Util.writeJsonStructure(Json.createArrayBuilder().add(curId+1).build(), SEARCH_URI_PREFIX + "curId", context);
 
         Search ret = new Search(curId);
         ret.setStatus(Search.Status.FETCHING);
@@ -77,25 +74,37 @@ public class Data {
         }
 
         public Status getStatus() { //Status must be setup one time on creation (no default value)
-            JsonObject obj = readJsonStructure();
+            JsonObject obj = (JsonObject) readJsonStructure();
             return Status.valueOf(obj.getString("status"));
         }
 
         public void setStatus(Status status) {
             if(status == null) return;
-            JsonObject obj = readJsonStructure();
+            JsonObject obj = (JsonObject) readJsonStructure();
             obj = Util.jsonObjectToBuilder(obj).add("status", status.toString()).build();
             writeJsonStructure(obj);
         }
 
+        public int getProgress() {
+            return ((JsonObject) readJsonStructure()).getInt("progress", 0);
+        }
+
+        public void setProgres(int progress) {
+            JsonObject obj = (JsonObject) readJsonStructure();
+            obj = Util.jsonObjectToBuilder(obj).add("progress", progress).build();
+            writeJsonStructure(obj);
+        }
+
         public String getMotive() {
-            JsonString string = ((JsonObject) readJsonStructure()).getJsonString("motive");
-            return string == null? null : string.getString();
+            return  ((JsonObject) readJsonStructure()).getString("motive", null);
         }
 
         public void setMotive(String motive) {
-            JsonObject obj = readJsonStructure();
-            obj = Util.jsonObjectToBuilder(obj).add("motive", (motive == null)? JsonValue.NULL : motive).build();
+            JsonObject obj = (JsonObject) readJsonStructure();
+            if(motive == null)
+                obj = Util.jsonObjectToBuilder(obj).add("motive", JsonValue.NULL).build();
+            else
+                obj = Util.jsonObjectToBuilder(obj).add("motive", motive).build();
             writeJsonStructure(obj);
         }
 
@@ -108,7 +117,7 @@ public class Data {
         }
         
         public void setKeywords(List<String> keywords) {
-            JsonObject obj = readJsonStructure();
+            JsonObject obj = (JsonObject) readJsonStructure();
             JsonArrayBuilder arrayBuilder =  Json.createArrayBuilder();
             for( String keyword : keywords)
                 arrayBuilder.add(keyword);
@@ -124,7 +133,7 @@ public class Data {
                 if(curResults.add(result))
                     newResults.add(result);
 
-            JsonObject obj = readJsonStructure();
+            JsonObject obj = (JsonObject) readJsonStructure();
             JsonArrayBuilder arrayBuilder =  Json.createArrayBuilder();
             for( Searcher.Result result : curResults)
                 arrayBuilder.add(Json.createObjectBuilder()
@@ -139,7 +148,7 @@ public class Data {
         }
 
         public Set<Searcher.Result> getResults() {
-            JsonObject obj = readJsonStructure();
+            JsonObject obj = (JsonObject) readJsonStructure();
             Set<Searcher.Result> results = new HashSet<>();
             if(obj.getJsonArray("results") == null) return results;
             for(JsonValue result : obj.getJsonArray("results")) {
@@ -152,12 +161,12 @@ public class Data {
             return results;
         }
     
-        private JsonStructure readJsonStructure() throws FileNotFoundException {
+        private JsonStructure readJsonStructure() {
             return Util.readJsonStructure(URI, context);
         }
     
-        private void writeJsonStructure(JsonStructure st) throws FileNotFoundException {
-            Util.writeJsonStructure(st, URI, context);
+        private boolean writeJsonStructure(JsonStructure st)  {
+            return Util.writeJsonStructure(st, URI, context);
         }
         
     }

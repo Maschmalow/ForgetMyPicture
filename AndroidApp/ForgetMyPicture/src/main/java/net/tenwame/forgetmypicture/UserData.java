@@ -4,21 +4,21 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.provider.Settings.Secure;
-import android.util.JsonReader;
-import android.util.JsonWriter;
 import android.util.Log;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 
 /**
  * Created by Antoine on 20/02/2016.
@@ -30,7 +30,7 @@ public class UserData {
 
     private static final String SELFIE_SUFFIX = "_selfie";
     private static final String IDCARD_SUFFIX = "_idCard";
-    private static Context context = ForgetMyPictureApp.getAppContext();
+    private static final Context context = ForgetMyPictureApp.getAppContext();
     private static final String DEVICE_ID = Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
 
     private static UserData instance = null;
@@ -112,33 +112,37 @@ public class UserData {
         //isSet() == true
     }
 
-    private void loadFromFile() { //TODO use new json lib
-        FileInputStream dataFile;
-
+    private void checkUserSet() {
         try {
-            dataFile = context.openFileInput(DEVICE_ID);
+            context.openFileInput(DEVICE_ID);
         } catch (FileNotFoundException e) {
             userIsNotSet = true;
             return;
         }
+        userIsNotSet = false;
+    }
+
+    private void loadFromFile() { //TODO use new json lib
+
+        checkUserSet();
+        if(userIsNotSet) return;
 
         try {
-            JsonReader reader = new JsonReader(new FileReader(dataFile.getFD()));
-            reader.beginObject();
-            while (reader.hasNext())
-                setProperty(reader.nextName(), reader.nextString());
-            reader.endObject();
-            reader.close();
 
-            for( UserProperty<?> property : getProperties() )
-                if(property.isAssignableFrom(Bitmap.class)) {
-                    dataFile = context.openFileInput(property.getURI());
+            JsonObject stringProps = (JsonObject) Util.readJsonStructure(DEVICE_ID, context);
+            for( UserProperty<?> property : getProperties() ) {
+                if( property.isAssignableFrom(Bitmap.class) ) {
+                    FileInputStream dataFile = context.openFileInput(property.getURI());
                     checkedCast(property, Bitmap.class).setValue(BitmapFactory.decodeStream(dataFile));
                     dataFile.close();
                 }
+                if(property.isAssignableFrom(String.class)) {
+                    checkedCast(property, String.class).setValue(stringProps.getString(property.getName()));
+                }
+            }
 
 
-        } catch(IOException | IllegalArgumentException e) {
+        } catch(Exception e) {
             wipe();
             throw new RuntimeException("User data is incorrectly stored", e);
         }
@@ -154,27 +158,20 @@ public class UserData {
 
     private void storeToFile() throws IOException{
 
-        FileOutputStream dataFile;
         try {
-            dataFile = context.openFileOutput(DEVICE_ID, Context.MODE_PRIVATE);
-
-            JsonWriter writer = new JsonWriter(new FileWriter(dataFile.getFD()));
-            writer.beginObject();
-            for(UserProperty<?> property : properties.values()) {
+            JsonObjectBuilder stringBuilder = Json.createObjectBuilder();
+            for(UserProperty<?> property : getProperties()) {
                 if(property.isAssignableFrom(String.class)) {
-                    writer.name(property.getName());
-                    writer.value((String) property.getValue());
+                    stringBuilder.add(property.getName(), (String) property.getValue());
                 }
-            }
-            writer.endObject();
-            writer.close();
-
-            for( UserProperty<?> property : getProperties() )
                 if(property.isAssignableFrom(Bitmap.class)) {
-                    dataFile = context.openFileOutput(property.getURI(), Context.MODE_PRIVATE);
+                    FileOutputStream dataFile = context.openFileOutput(property.getURI(), Context.MODE_PRIVATE);
                     checkedCast(property, Bitmap.class).getValue().compress(Bitmap.CompressFormat.PNG, 0, dataFile);
                     dataFile.close();
                 }
+            }
+
+            Util.writeJsonStructure(stringBuilder.build(), DEVICE_ID, context);
 
         } catch (IOException e) {
             wipe();
@@ -185,11 +182,13 @@ public class UserData {
         Log.i(TAG, "Stored data to file");
     }
 
-    private boolean isDataValid() { //TODO: also check for non-null values validity
+    //cached values check
+    private boolean isDataValid() { //TODO: also check for non-null values validity (ie. email is an address...)
         for(UserProperty<?> property :getProperties()) {
             if( property.getValue() == null )
                 return false;
-            if( checkedCast(property, String.class) != null && checkedCast(property, String.class).getValue().isEmpty() )
+            UserProperty<String> stringProp = checkedCast(property, String.class);
+            if( stringProp != null && stringProp.getValue().isEmpty() )
                 return false;
         }
         return true;
