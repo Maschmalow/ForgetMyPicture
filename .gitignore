@@ -69,11 +69,11 @@ gen/
 *AndroidApp/*.project
 
 # Android Studio
-*AndroidApp/.navigation/
-*AndroidApp/captures/
+**/AndroidApp/.navigation/
+**/AndroidApp/captures/
 *.iml
-*AndroidApp/.idea/workspace.xml 
-*AndroidApp/.idea/librairies
+**/.idea/workspace.xml 
+**/.idea/librairies/
 
 #NDK
 obj/

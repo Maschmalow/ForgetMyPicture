@@ -3,6 +3,8 @@ package net.tenwame.forgetmypicture;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import net.tenwame.forgetmypicture.search.Searcher;
+
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -75,6 +77,7 @@ public class ServerInterface {
 
 
     public static void register() {
+        Log.d(TAG, "register");
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
@@ -89,6 +92,7 @@ public class ServerInterface {
     }
 
     public static void feedNewResults(final Collection<Searcher.Result> results, final Integer requestId) {
+        Log.d(TAG, "feeding " + results.size() + " results for request " + requestId);
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
@@ -103,6 +107,7 @@ public class ServerInterface {
     }
 
     public static void getSearchInfo(final Integer requestId) {
+        Log.d(TAG, "get info for request " + requestId);
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {

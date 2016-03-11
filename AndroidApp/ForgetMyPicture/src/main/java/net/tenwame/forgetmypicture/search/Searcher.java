@@ -1,16 +1,19 @@
-package net.tenwame.forgetmypicture;
+package net.tenwame.forgetmypicture.search;
 
+import android.app.IntentService;
+import android.content.Intent;
 import android.net.UrlQuerySanitizer;
-import android.os.AsyncTask;
 import android.util.Log;
+
+import net.tenwame.forgetmypicture.ServerInterface;
+import net.tenwame.forgetmypicture.UserData;
+import net.tenwame.forgetmypicture.Util;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -25,64 +28,69 @@ import java.util.Set;
  * Only static data should be shared inbetween threads
  * limited to one instance for now
  */
-public class Searcher {
+public class Searcher extends IntentService{
 
     private static final String TAG = Searcher.class.getSimpleName();
     private static final String URL = "https://www.google.fr/search";
     private static final long DELAY = 60000; //time in milli sec between each requests (1 min)
 
-    private static long lastRequest = System.currentTimeMillis() - DELAY; //make first request start immediately
-    private static Integer curRequestId = 0;
+    private static long lastRequest;
 
     private String userAgent;
     private Map<String, String> queryData;
-    private Set<Result> results;
-    private Integer requestId;
+    private Data.Search curSearch;
 
-    private Searcher() {
-        requestId = curRequestId++;
-        results = new HashSet<>();
+    public Searcher() {
+        super("SearcherService");
         queryData = new HashMap<>();
         queryData.put("tbm", "isch");
         queryData.put("safe", "off");
+        queryData.put("qws_rd", "ssl"); //try to see if it works without this
     }
 
 
-    public static void startSearch(String[] keywords) {
-        if(!UserData.getInstance().isSet()) {
-            Log.e(TAG, "Search aborted: user data is not set.");
-            return;
+    @Override
+    protected void onHandleIntent(Intent intent) {
+        curSearch = Data.getSearch(0);
+        if(curSearch == null) return;
+
+        int curSearchProgress = curSearch.getProgress();
+        while(curSearchProgress != 0) {
+
+            for( Data.Search search : Data.getSearches() )
+                if( search.getStatus() == Data.Search.Status.FETCHING ) {
+                    int progress;
+                    if( (progress = search.getProgress()) < curSearchProgress ) {
+                        curSearch = search;
+                        curSearchProgress = progress;
+                    }
+                }
+
+            doSearch();
         }
-        new AsyncTask<String, Void, Void>() {
-            @Override
-            protected final Void doInBackground(String... keywords) {
-                new Searcher().startSearchOnThread(Arrays.asList(keywords));
-                return null;
-            }
-        }.execute(keywords);
-    }
 
-    private void startSearchOnThread(List<String> keywords) {
-        for(List<String> subset : powerSet(keywords)) {
-            setCurKeywords(subset);
-            setCurUserAgent();
-            delay();
-            handleNewResults(scrapeData());
-        }
-    }
-
-    private void handleNewResults(List<Result> scraped) {
-        List<Result> toSend = new ArrayList<>();
-        for(Result result : scraped)
-            if(results.add(result))
-                toSend.add(result);
-        ServerInterface.feedNewResults(toSend, requestId);
     }
 
 
-    private List<Result> scrapeData() { //// TODO: 23/02/2016 thread safety
+
+    private void doSearch() {
+        int progress = curSearch.getProgress();
+        List<List<String>> keywordsSets = Util.powerSet(curSearch.getKeywords());
+        setCurKeywords(keywordsSets.get(progress));
+        setCurUserAgent();
+        Set<Result> newResults = curSearch.addResults(scrapeData());
+        ServerInterface.feedNewResults(newResults, curSearch.getId());
+        curSearch.setProgres(++progress);
+        if(progress == keywordsSets.size() -1)
+            curSearch.setStatus(Data.Search.Status.PROCESSING);
+        delay();
+    }
+
+
+
+    private Set<Result> scrapeData() {
         lastRequest = System.currentTimeMillis();
-        List<Result> results = new ArrayList<>(); //should this be a set?
+        Set<Result> results = new HashSet<>(); //convert this to a list to support server prioritisation
         final Document doc;
 
         try {
@@ -99,7 +107,7 @@ public class Searcher {
             results.add(new Result(query.getValue("imgurl"), query.getValue("imgrefurl")));
         }
 
-        Log.i(TAG,"\nParsed: " + results.size() + "results.\n");
+        Log.d(TAG, "\nParsed: " + results.size() + "results.");
         return results;
     }
 
@@ -116,7 +124,7 @@ public class Searcher {
         queryData.put("q", joined);
     }
 
-    private void delay() { //TODO: thread safety
+    private void delay() {
         long elapsedTime = System.currentTimeMillis() - lastRequest;
         while( elapsedTime < DELAY) {
             try {
@@ -132,10 +140,20 @@ public class Searcher {
 
         private String picURL;
         private String picRefURL;
+        private double match;
 
-        private Result(String picURL, String picRefURL) {
+        Result(String picURL, String picRefURL) {
             this.picRefURL = picRefURL;
             this.picURL = picURL;
+            match = -1;
+        }
+
+        public double getMatch() {
+            return match;
+        }
+
+        public void setMatch(double match) {
+            this.match = match;
         }
 
         public String getPicRefURL() {
@@ -144,6 +162,10 @@ public class Searcher {
 
         public String getPicURL() {
             return picURL;
+        }
+
+        public boolean isProcessed() {
+            return match == -1;
         }
 
         // equals and hashCode are used in hashSet, so make sure this is what we want
@@ -158,28 +180,4 @@ public class Searcher {
         }
     }
 
-    //I would like this to be hidden somewhere in a library, but I couldn't find anything.
-    private static <T> List<List<T>> powerSet(Collection<T> list) {
-        List<List<T>> ps = new ArrayList<>();
-        ps.add(new ArrayList<T>());   // add the empty set
-
-        // for every item in the original list
-        for (T item : list) {
-            List<List<T>> newPs = new ArrayList<>();
-
-            for (List<T> subset : ps) {
-                // copy all of the current powerSet's subsets
-                newPs.add(subset);
-
-                // plus the subsets appended with the current item
-                List<T> newSubset = new ArrayList<>(subset);
-                newSubset.add(item);
-                newPs.add(newSubset);
-            }
-
-            // powerSet is now powerSet of list.subList(0, list.indexOf(item)+1)
-            ps = newPs;
-        }
-        return ps;
-    }
 }

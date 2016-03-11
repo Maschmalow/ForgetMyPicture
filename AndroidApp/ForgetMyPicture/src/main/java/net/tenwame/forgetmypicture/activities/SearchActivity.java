@@ -11,7 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import net.tenwame.forgetmypicture.R;
-import net.tenwame.forgetmypicture.Searcher;
+import net.tenwame.forgetmypicture.search.Searcher;
 
 public class SearchActivity extends Activity {
 
