@@ -1,58 +1,57 @@
 package net.tenwame.forgetmypicture;
 
+import android.graphics.Bitmap;
 import android.util.Log;
-
-import net.tenwame.forgetmypicture.UserData;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
+
+import java.text.DateFormat;
+import java.util.Date;
 
 public class FormFiller {
     private static final String TAG = FormFiller.class.getSimpleName();
     
     private FormFiller(){}
 
-    public static int fillForm() {
+    public static int fillForm(SearchData.Request request) {
+        //pending because the work isn't done unless we did fill the form
+        if(request.getStatus() != SearchData.Request.Status.PENDING) return -1;
 
-        // Le HTTPMethod qui sera un Post en lui indiquant l’URL du traitement du formulaire (celle qui se trouve normalement après le "action="
-        Connection methode = Jsoup.connect("https://support.google.com/legal/contact/lr_eudpa?product=websearch&hl=en").method(Connection.Method.POST);
-        //UserData.getInstance().
-        // On ajoute les parametres du formulaire, aller chercher les infos du client, il faudra mettre les bonnes valeurs
-        methode.data("selected_country", "France"/*UserData.getInstance().*/); // (champs, valeur)
-        methode.data("name_searched", UserData.getInstance().getForename() + " " + UserData.getInstance().getName());
-        methode.data("requestor_name", UserData.getInstance().getForename() + " " + UserData.getInstance().getName());
-        methode.data("contact_email_noprefill", UserData.getInstance().getEmail());
-
-        // Ici c'est pour les URLs, il faudra faire qqc de particulier
-        methode.data("url_box3", "http://premiereadereferencer.com");
-        methode.data("url_box3", "http://deuxiemeadereferencer.fr");
-
-        methode.data("eudpa_explain", "Cette URL me concerne, car…");
-        methode.data("legal_idupload", "carte_identitee.png");
-        methode.data("eudpa_consent_statement", "agree");
-        methode.data("signature", UserData.getInstance().getForename() + " " + UserData.getInstance().getName());
-        methode.data("signature_date", "01/30/2016"); // ex : "01/30/2016"
+        Connection method = Jsoup.connect("https://support.google.com/legal/contact/lr_eudpa?product=websearch&hl=en").method(Connection.Method.POST);
 
 
-        int retour = -1;
+        method.data("selected_country", "France"); // (champs, valeur)
+        method.data("name_searched", UserData.getInstance().getForename() + " " + UserData.getInstance().getName());
+        method.data("requestor_name", UserData.getInstance().getForename() + " " + UserData.getInstance().getName());
+        method.data("contact_email_noprefill", UserData.getInstance().getEmail());
 
+        // Ici c'est pour les URLs, il faudra faire qqc de particulier$
+        for( SearchService.Result result : request.getResults())
+            method.data("url_box3", result.getPicURL());
+
+        method.data("eudpa_explain", request.getMotive());
+
+        method.data("legal_idupload", "carte identite", UserData.getInstance().getProperty("idCard", Bitmap.class).openStream());
+        method.data("eudpa_consent_statement", "agree");
+        method.data("signature", UserData.getInstance().getForename() + " " + UserData.getInstance().getName());
+        method.data("signature_date", DateFormat.getDateTimeInstance().format(new Date()));
+
+        int code;
         try
         {
-            Connection.Response response = methode.execute();
-            retour = response.statusCode();
+            Connection.Response response = method.execute();
+            code = response.statusCode();
 
-                    // Pour la gestion des erreurs ou un debuggage, on recupere le nombre renvoye.
-            Log.i(TAG, "La reponse est : " + retour );
+            Log.i(TAG, "Status code: " + code );
             Log.i(TAG, response.body());
-
-
         }
         catch (Exception e)
         {
             throw new RuntimeException(e);
         }
 
-
-        return retour;
+        request.setStatus(SearchData.Request.Status.FINISHED);
+        return code;
     }
 }

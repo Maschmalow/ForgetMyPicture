@@ -217,11 +217,11 @@ public class UserData {
         return true;
     }
 
-    public UserProperty<?> getProperty(String name) {
-        return properties.get(name);
+    public <T> UserProperty<T> getProperty(String name, Class<T> c) { //if the type is wrong, NPE
+        return checkedCast(properties.get(name), c);
     }
 
-    public <T> T getPropertyValue(String name, Class<T> c) { //if the type is wrong, NPE
+    public <T> T getPropertyValue(String name, Class<T> c) {
         return checkedCast(properties.get(name), c).getValue();
     }
 
@@ -271,6 +271,10 @@ public class UserData {
 
         public String getURI() {
             return URI;
+        }
+
+        public InputStream openStream() throws FileNotFoundException {
+            return openFile(URI);
         }
 
     }
