@@ -23,7 +23,7 @@ import javax.json.JsonObjectBuilder;
 /**
  * Created by Antoine on 20/02/2016.
  * class used as a gateway to the user personal data
- * //TODO: big refactoring
+ * user data is only useful while the UI is shown, so values can be cached into memory
  */
 public class UserData {
     private static final String TAG = UserData.class.getSimpleName();
@@ -122,7 +122,7 @@ public class UserData {
         userIsNotSet = false;
     }
 
-    private void loadFromFile() { //TODO use new json lib
+    private void loadFromFile() {
 
         checkUserSet();
         if(userIsNotSet) return;

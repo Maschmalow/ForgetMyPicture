@@ -19,8 +19,8 @@ import net.tenwame.forgetmypicture.UserData;
  * Created by Antoine on 21/02/2016.
  * Activity that asks user information
  */
-public class UserSetupActivity extends Activity {
-    private static final String TAG = UserSetupActivity.class.getSimpleName();
+public class UserSetup extends Activity {
+    private static final String TAG = UserSetup.class.getName();
 
     private static final int REQUEST_SELFIE_PIC =1;
     private static final int REQUEST_IDCARD_PIC =2;

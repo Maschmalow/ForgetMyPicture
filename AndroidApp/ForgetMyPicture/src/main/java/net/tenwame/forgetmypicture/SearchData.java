@@ -1,9 +1,6 @@
-package net.tenwame.forgetmypicture.search;
+package net.tenwame.forgetmypicture;
 
 import android.content.Context;
-
-import net.tenwame.forgetmypicture.ForgetMyPictureApp;
-import net.tenwame.forgetmypicture.Util;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -19,54 +16,63 @@ import javax.json.JsonValue;
 
 /**
  * Created by Antoine on 04/03/2016.
- * a class used as a gateway for stored searches
+ * a class used as a gateway for stored requests
+ * requests data can be modified in background, so we're not dealing with cached values for the demo
  */
-public class Data {
+public class SearchData {
     private static final Context context = ForgetMyPictureApp.getAppContext();
-    private static final String SEARCH_URI_PREFIX = "search_";
+    private static final String REQUEST_URI_PREFIX = "request_";
 
-    public static Search getSearch(Integer id) {
+    public static Request getRequest(Integer id) {
         if(id == null || id < 0 || id >= getCurId()) return null;
-        return new Search(id);
+        return new Request(id);
     }
 
-    public static List<Search> getSearches() {
-        List<Search> searches = new ArrayList<>();
+    public static List<Request> getRequests() {
+        List<Request> requests = new ArrayList<>();
         int curId = getCurId();
         for(int i =0; i< curId; i++)
-            searches.add(i, new Search(i));
-        return searches;
+            requests.add(i, new Request(i));
+        return requests;
     }
 
     private static Integer getCurId() {
-        JsonArray arr = (JsonArray) Util.readJsonStructure(SEARCH_URI_PREFIX + "curId", context);
+        JsonArray arr = (JsonArray) Util.readJsonStructure(REQUEST_URI_PREFIX + "curId", context);
         return arr.getInt(0);
     }
 
-    public static Search newSearch(List<String> keywords) {
-        Integer curId = getCurId();
-        Util.writeJsonStructure(Json.createArrayBuilder().add(curId+1).build(), SEARCH_URI_PREFIX + "curId", context);
-
-        Search ret = new Search(curId);
-        ret.setStatus(Search.Status.FETCHING);
-        ret.setKeywords(keywords);
-
-        return new Search(curId);
+    private static void setCurId(Integer id) {
+        Util.writeJsonStructure(Json.createArrayBuilder().add(id).build(), REQUEST_URI_PREFIX + "curId", context);
     }
 
-    //A Search instance still represents an acess to the storage
-    //it is only focused on a particular search
-    public static class Search {
+    static Request newRequest(List<String> keywords) {
+        Integer curId = getCurId();
+        setCurId(curId+1);
 
-        public enum Status {FETCHING, PROCESSING, FINISHED}
+        Request ret = new Request(curId);
+        ret.setStatus(Request.Status.FETCHING);
+        ret.setKeywords(keywords);
+
+        return new Request(curId);
+    }
+
+    //A Request instance still represents an access to the storage
+    //it is only focused on a particular search
+    public static class Request {
+
+        public enum Status {
+            FETCHING, //still searching for new pictures
+            PROCESSING, //some pictures are being processed
+            PENDING, //waiting for user to take action
+            FINISHED } //done
 
         private final Integer id;
         private final String URI;
 
-        private Search(Integer id) {
+        private Request(Integer id) {
             if(id ==  null) throw new IllegalArgumentException("id can't be null");
             this.id = id;
-            URI = SEARCH_URI_PREFIX + id.toString();
+            URI = REQUEST_URI_PREFIX + id.toString();
         }
 
         public Integer getId() {
@@ -78,14 +84,14 @@ public class Data {
             return Status.valueOf(obj.getString("status"));
         }
 
-        public void setStatus(Status status) {
+        void setStatus(Status status) {
             if(status == null) return;
             JsonObject obj = (JsonObject) readJsonStructure();
             obj = Util.jsonObjectToBuilder(obj).add("status", status.toString()).build();
             writeJsonStructure(obj);
         }
 
-        public int getProgress() {
+        public int getProgress() { //progress is the number of keywords combination done
             return ((JsonObject) readJsonStructure()).getInt("progress", 0);
         }
 
@@ -115,7 +121,7 @@ public class Data {
                 keywords.add(arr.getString(i));
             return keywords;
         }
-        
+
         public void setKeywords(List<String> keywords) {
             JsonObject obj = (JsonObject) readJsonStructure();
             JsonArrayBuilder arrayBuilder =  Json.createArrayBuilder();
@@ -126,16 +132,20 @@ public class Data {
             writeJsonStructure(obj);
         }
 
-        public Set<Searcher.Result> addResults(Set<Searcher.Result> results) { //returns subset of new results
-            Set<Searcher.Result> curResults = getResults();
-            Set<Searcher.Result> newResults = new HashSet<>();
-            for( Searcher.Result result : results)
-                if(curResults.add(result))
+        public Set<SearchService.Result> addResults(Set<SearchService.Result> results) { //returns subset of new results
+            Set<SearchService.Result> curResults = getResults();
+            Set<SearchService.Result> newResults = new HashSet<>();
+            for( SearchService.Result result : results)
+                if(curResults.contains(result)) {
+                    curResults.remove(result);
+                    curResults.add(result); //because we may want to update the result
+                }
+                else
                     newResults.add(result);
 
             JsonObject obj = (JsonObject) readJsonStructure();
             JsonArrayBuilder arrayBuilder =  Json.createArrayBuilder();
-            for( Searcher.Result result : curResults)
+            for( SearchService.Result result : curResults)
                 arrayBuilder.add(Json.createObjectBuilder()
                         .add("picURL", result.getPicURL())
                         .add("picRefURL", result.getPicRefURL())
@@ -147,13 +157,13 @@ public class Data {
             return newResults;
         }
 
-        public Set<Searcher.Result> getResults() {
+        public Set<SearchService.Result> getResults() {
             JsonObject obj = (JsonObject) readJsonStructure();
-            Set<Searcher.Result> results = new HashSet<>();
+            Set<SearchService.Result> results = new HashSet<>();
             if(obj.getJsonArray("results") == null) return results;
             for(JsonValue result : obj.getJsonArray("results")) {
                 JsonObject resObj = (JsonObject) result;
-                Searcher.Result res = new Searcher.Result(resObj.getString("picURL"), resObj.getString("picRefURL"));
+                SearchService.Result res = new SearchService.Result(resObj.getString("picURL"), resObj.getString("picRefURL"));
                 res.setMatch(Double.valueOf(resObj.getString("match")));
                 results.add(res);
             }

@@ -7,12 +7,20 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".activities.HomepageActivity">
+    tools:context=".activities.Homepage">
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="startNewSearchFromUI"
-        android:text="@string/homepage_new_search"/>
+        android:layout_margin="6dp"
+        android:text="@string/homepage_new_request"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="goToRequestsFromUI"
+        android:layout_margin="6dp"
+        android:text="@string/homepage_requests_panel"/>
 
 </LinearLayout>

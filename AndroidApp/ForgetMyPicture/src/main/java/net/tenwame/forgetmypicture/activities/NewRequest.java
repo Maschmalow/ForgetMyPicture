@@ -10,19 +10,21 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import net.tenwame.forgetmypicture.Manager;
 import net.tenwame.forgetmypicture.R;
-import net.tenwame.forgetmypicture.search.Searcher;
 
-public class SearchActivity extends Activity {
+import java.util.Arrays;
 
-    private static final String TAG = SearchActivity.class.getCanonicalName();
+public class NewRequest extends Activity {
+
+    private static final String TAG = NewRequest.class.getCanonicalName();
 
     private EditText keywordsField;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
+        setContentView(R.layout.activity_new_request);
 
         keywordsField = (EditText) findViewById(R.id.keywords_field);
         keywordsField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -38,9 +40,9 @@ public class SearchActivity extends Activity {
     }
 
     public void startSearchFromUI(View view) {
-        Log.v(TAG, "Search started from UI");
+        Log.v(TAG, "Request started from UI");
         String[] keywords = keywordsField.getText().toString().split(" ");
-        Searcher.startSearch(keywords);
+        Manager.getInstance().startNewRequest(Arrays.asList(keywords));
 
         Toast.makeText(this, R.string.search_started_toast, Toast.LENGTH_SHORT).show();
         finish();

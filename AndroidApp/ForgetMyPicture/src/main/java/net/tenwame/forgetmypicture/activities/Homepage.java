@@ -9,7 +9,7 @@ import android.widget.Toast;
 import net.tenwame.forgetmypicture.R;
 import net.tenwame.forgetmypicture.UserData;
 
-public class HomepageActivity extends Activity {
+public class Homepage extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,9 +20,13 @@ public class HomepageActivity extends Activity {
     public void startNewSearchFromUI(View v) {
         if(!UserData.getInstance().isSet()) {
             Toast.makeText(this, R.string.homepage_setup_data_toast, Toast.LENGTH_LONG).show();
-            startActivity(new Intent(this, UserSetupActivity.class));
+            startActivity(new Intent(this, UserSetup.class));
         } else {
-            startActivity(new Intent(this, SearchActivity.class));
+            startActivity(new Intent(this, NewRequest.class));
         }
+    }
+
+    public void goToRequestsFromUI(View v) {
+        startActivity(new Intent(this, RequestsPanel.class));
     }
 }

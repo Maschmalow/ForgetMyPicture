@@ -1,13 +1,9 @@
-package net.tenwame.forgetmypicture.search;
+package net.tenwame.forgetmypicture;
 
 import android.app.IntentService;
 import android.content.Intent;
 import android.net.UrlQuerySanitizer;
 import android.util.Log;
-
-import net.tenwame.forgetmypicture.ServerInterface;
-import net.tenwame.forgetmypicture.UserData;
-import net.tenwame.forgetmypicture.Util;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -23,25 +19,23 @@ import java.util.Set;
 
 /**
  * Created by Antoine on 16/02/2016.
- * Class that performs actual requests and send results to the server
- * Only one instance per search, in one thread.
- * Only static data should be shared inbetween threads
- * limited to one instance for now
+ * service that do Google searches on behalf of the user
+ * and update requests accordingly
  */
-public class Searcher extends IntentService{
+public class SearchService extends IntentService{
 
-    private static final String TAG = Searcher.class.getSimpleName();
+    private static final String TAG = SearchService.class.getSimpleName();
     private static final String URL = "https://www.google.fr/search";
-    private static final long DELAY = 60000; //time in milli sec between each requests (1 min)
+    private static final long DELAY = 100*60; //time in ms between each search
 
     private static long lastRequest;
 
     private String userAgent;
     private Map<String, String> queryData;
-    private Data.Search curSearch;
+    private SearchData.Request curRequest;
 
-    public Searcher() {
-        super("SearcherService");
+    public SearchService() {
+        super(TAG + "Service");
         queryData = new HashMap<>();
         queryData.put("tbm", "isch");
         queryData.put("safe", "off");
@@ -51,17 +45,17 @@ public class Searcher extends IntentService{
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        curSearch = Data.getSearch(0);
-        if(curSearch == null) return;
+        curRequest = SearchData.getRequest(0);
+        if( curRequest == null) return;
 
-        int curSearchProgress = curSearch.getProgress();
+        int curSearchProgress = curRequest.getProgress();
         while(curSearchProgress != 0) {
 
-            for( Data.Search search : Data.getSearches() )
-                if( search.getStatus() == Data.Search.Status.FETCHING ) {
+            for( SearchData.Request request : SearchData.getRequests() )
+                if( request.getStatus() == SearchData.Request.Status.FETCHING ) {
                     int progress;
-                    if( (progress = search.getProgress()) < curSearchProgress ) {
-                        curSearch = search;
+                    if( (progress = request.getProgress()) < curSearchProgress ) {
+                        curRequest = request;
                         curSearchProgress = progress;
                     }
                 }
@@ -74,15 +68,15 @@ public class Searcher extends IntentService{
 
 
     private void doSearch() {
-        int progress = curSearch.getProgress();
-        List<List<String>> keywordsSets = Util.powerSet(curSearch.getKeywords());
+        int progress = curRequest.getProgress();
+        List<List<String>> keywordsSets = Util.powerSet(curRequest.getKeywords());
         setCurKeywords(keywordsSets.get(progress));
         setCurUserAgent();
-        Set<Result> newResults = curSearch.addResults(scrapeData());
-        ServerInterface.feedNewResults(newResults, curSearch.getId());
-        curSearch.setProgres(++progress);
+        Set<Result> newResults = curRequest.addResults(scrapeData());
+        ServerInterface.feedNewResults(newResults, curRequest);
+        curRequest.setProgres(++progress);
         if(progress == keywordsSets.size() -1)
-            curSearch.setStatus(Data.Search.Status.PROCESSING);
+            curRequest.setStatus(SearchData.Request.Status.PROCESSING);
         delay();
     }
 
