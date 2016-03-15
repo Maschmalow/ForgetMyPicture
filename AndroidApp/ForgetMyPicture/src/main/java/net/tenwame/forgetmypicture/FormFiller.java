@@ -2,6 +2,8 @@ package net.tenwame.forgetmypicture;
 
 import android.util.Log;
 
+import net.tenwame.forgetmypicture.UserData;
+
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 
@@ -16,10 +18,10 @@ public class FormFiller {
         Connection methode = Jsoup.connect("https://support.google.com/legal/contact/lr_eudpa?product=websearch&hl=en").method(Connection.Method.POST);
         //UserData.getInstance().
         // On ajoute les parametres du formulaire, aller chercher les infos du client, il faudra mettre les bonnes valeurs
-        methode.data("selected_country", "France"); // (champs, valeur)
-        methode.data("name_searched", "Jean DUPOND");
-        methode.data("requestor_name", "Jean DUPOND");
-        methode.data("contact_email_noprefill", "JeanDUPOND@gmail.com");
+        methode.data("selected_country", "France"/*UserData.getInstance().*/); // (champs, valeur)
+        methode.data("name_searched", UserData.getInstance().getForename() + " " + UserData.getInstance().getName());
+        methode.data("requestor_name", UserData.getInstance().getForename() + " " + UserData.getInstance().getName());
+        methode.data("contact_email_noprefill", UserData.getInstance().getEmail());
 
         // Ici c'est pour les URLs, il faudra faire qqc de particulier
         methode.data("url_box3", "http://premiereadereferencer.com");
@@ -27,9 +29,9 @@ public class FormFiller {
 
         methode.data("eudpa_explain", "Cette URL me concerne, car…");
         methode.data("legal_idupload", "carte_identitee.png");
-        methode.data("eudpa_consent_statement", "agree"); //celui-ci est bon
-        methode.data("signature", "Jean DUPOND");
-        methode.data("signature_date", "01/30/2016");
+        methode.data("eudpa_consent_statement", "agree");
+        methode.data("signature", UserData.getInstance().getForename() + " " + UserData.getInstance().getName());
+        methode.data("signature_date", "01/30/2016"); // ex : "01/30/2016"
 
 
         int retour = -1;
