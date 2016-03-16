@@ -25,7 +25,7 @@ int is_cropped(const pnm * image1, const pnm * image2, int cols1, int rows1, int
   pnm small, big;
   int smallCols, smallRows, bigCols, bigRows;
   
-  if (cols1 >= cols2 && rows1 >= rows2) //on prend le parti que l'une des 2 images est plus petite que l'autre comme elle est rognée.
+  if (cols1 >= cols2 && rows1 >= rows2) // One image is cropped. This image is smalller than the other one: this image has less rows and less columns than the other one.
     {
       small = *image2;
       smallCols = cols2;
@@ -137,7 +137,7 @@ void process(char *ims, char *imt)
   grey(&reverse2, &grey_reverse2, cols2, rows2);
 
   int reussite = -1;
-  // on peut enlever les else, mais on perdrait en temps de calcul
+  // These next "else" are used for improving execution time
   if (is_identical(&image1, &image2, cols1, rows1, cols2, rows2))
     reussite = 0;
   else
@@ -189,43 +189,43 @@ void process(char *ims, char *imt)
   switch(reussite)
     {
     case 0:
-      printf("Ces 2 images sont les mêmes\n");
+      printf("These 2 images are the same\n");
       break;
     case 1:
-      printf("Ces 2 images sont les mêmes à une opération miroir près\n");
+      printf("These 2 images are the same after being reversed\n");
       break;
     case 2:
-      printf("Ces 2 images sont les mêmes avec l'une en couleur et l'autre en noir et blanc\n");
+      printf("These 2 images are the same, except that one is a black and white image and the other one is a colour image\n");
       break;
     case 3:
-      printf("Ces 2 images sont les mêmes à une opération miroir près et avec l'une en couleur et l'autre en noir et blanc\n");
+      printf("These 2 images are the same after being reversed, except that one is a black and white image and the other one is a colour image\n");
       break;
     case 4:
-      printf("Ces 2 images sont les mêmes à une opération de rognage près\n");
+      printf("These 2 images are the same after being cropped\n");
       break;
     case 5:
-      printf("Ces 2 images sont les mêmes à une opération miroir et de rognage près\n");
+      printf("These 2 images are the same after being cropped and reversed\n");
       break;
     case 6:
-      printf("Ces 2 images sont les mêmes à une opération de rognage près et avec l'une en couleur et l'autre en noir et blanc\n");
+      printf("These 2 images are the same after being cropped, except that one is a black and white image and the other one is a colour image\n");
       break;
     case 7:
-      printf("Ces 2 images sont les mêmes à une opération miroir et de rognage près, et avec l'une en couleur et l'autre en noir et blanc\n");
+      printf("These 2 images are the same after being cropped and reversed, except that one is a black and white image and the other one is a colour image\n");
       break;
     case 8:
-      printf("Ces 2 images sont les mêmes à une opération de redimensionnement près\n");
+      printf("These 2 images are the same after being resized\n");
       break;
     case 9:
-      printf("Ces 2 images sont les mêmes à une opération miroir et de redimensionnement près\n");
+      printf("These 2 images are the same after being resized and reversed\n");
       break;
     case 10:
-      printf("Ces 2 images sont les mêmes à une opération de redimensionnement près et avec l'une en couleur et l'autre en noir et blanc\n");
+      printf("These 2 images are the same after being resized, except that one is a black and white image and the other one is a colour image\n");
       break;
     case 11:
-      printf("Ces 2 images sont les mêmes à une opération miroir et de redimensionnement près, et avec l'une en couleur et l'autre en noir et blanc\n");
+      printf("These 2 images are the same after being resized and reversed, except that one is a black and white image and the other one is a colour image\n");
       break;
     default:
-      printf("Ces 2 images ne sont pas les mêmes à une opération miroir, de rognage ou de redimensionnement près, ou avec l'une en couleur et l'autre en noir et blanc\n");
+      printf("These 2 images are NOT the same after being resized, cropped or reversed, or with a black and white image and a colour image\n");
     }
 
   pnm_free(image1);
