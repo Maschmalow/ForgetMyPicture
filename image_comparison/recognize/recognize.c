@@ -137,7 +137,7 @@ void process(char *ims, char *imt)
   grey(&reverse2, &grey_reverse2, cols2, rows2);
 
   int reussite = -1;
-  // These next "else" are used for improving execution time
+  // These next "else" are used for improving execution time.
   if (is_identical(&image1, &image2, cols1, rows1, cols2, rows2))
     reussite = 0;
   else
@@ -189,43 +189,43 @@ void process(char *ims, char *imt)
   switch(reussite)
     {
     case 0:
-      printf("These 2 images are the same\n");
+      printf("These 2 images are the same.\n");
       break;
     case 1:
-      printf("These 2 images are the same after being reversed\n");
+      printf("These 2 images are the same after being reversed.\n");
       break;
     case 2:
-      printf("These 2 images are the same, except that one is a black and white image and the other one is a colour image\n");
+      printf("These 2 images are the same, except that one is a black and white image and the other one is a colour image.\n");
       break;
     case 3:
-      printf("These 2 images are the same after being reversed, except that one is a black and white image and the other one is a colour image\n");
+      printf("These 2 images are the same after being reversed, except that one is a black and white image and the other one is a colour image.\n");
       break;
     case 4:
-      printf("These 2 images are the same after being cropped\n");
+      printf("These 2 images are the same after being cropped.\n");
       break;
     case 5:
-      printf("These 2 images are the same after being cropped and reversed\n");
+      printf("These 2 images are the same after being cropped and reversed.\n");
       break;
     case 6:
-      printf("These 2 images are the same after being cropped, except that one is a black and white image and the other one is a colour image\n");
+      printf("These 2 images are the same after being cropped, except that one is a black and white image and the other one is a colour image.\n");
       break;
     case 7:
-      printf("These 2 images are the same after being cropped and reversed, except that one is a black and white image and the other one is a colour image\n");
+      printf("These 2 images are the same after being cropped and reversed, except that one is a black and white image and the other one is a colour image.\n");
       break;
     case 8:
-      printf("These 2 images are the same after being resized\n");
+      printf("These 2 images are the same after being resized.\n");
       break;
     case 9:
-      printf("These 2 images are the same after being resized and reversed\n");
+      printf("These 2 images are the same after being resized and reversed.\n");
       break;
     case 10:
-      printf("These 2 images are the same after being resized, except that one is a black and white image and the other one is a colour image\n");
+      printf("These 2 images are the same after being resized, except that one is a black and white image and the other one is a colour image.\n");
       break;
     case 11:
-      printf("These 2 images are the same after being resized and reversed, except that one is a black and white image and the other one is a colour image\n");
+      printf("These 2 images are the same after being resized and reversed, except that one is a black and white image and the other one is a colour image.\n");
       break;
     default:
-      printf("These 2 images are NOT the same after being resized, cropped or reversed, or with a black and white image and a colour image\n");
+      printf("These 2 images are NOT the same after being resized, cropped or reversed, or with a black and white image and a colour image.\n");
     }
 
   pnm_free(image1);
