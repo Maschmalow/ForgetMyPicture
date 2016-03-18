@@ -1,3 +1,9 @@
+/**
+ *  \file do_transformation.c
+ *  \brief Create a destination image with one transformation from a source image. 
+ *  \author Pierre PLUMIER
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -6,6 +12,13 @@
 #include "transformation.h"
 
 
+/**
+ * \fn void usage (char *s, char * transformation)
+ * \brief Print the argument error and exit the program. 
+ *
+ * \param *s Name of the program
+ * \param *transformation Name of the transformation
+ */
 void usage (char *s, char * transformation)
 {
   if (!strcmp(transformation, "resize"))
@@ -20,6 +33,19 @@ void usage (char *s, char * transformation)
 }
 
 
+/**
+ * \fn void process(char * ims, char * imd, char * transformation, int nb_cols, int nb_rows, int first_col, int first_row, char * s)
+ * \brief Create a destination image with one transformation from a source image.  
+ *
+ * \param *ims Path of the source image
+ * \param *imd Path of the destination image
+ * \param *transformation Name of the transformation
+ * \param nb_cols It is only used to crop or resize. Number of columns of the destination image.
+ * \param nb_rows It is only used to crop or resize. Number of rows of the destination image.
+ * \param first_col It is only used to crop. Column of the source image which is the first column of the destination image.
+ * \param first_row It is only used to crop. Row of the source image which is the first row of the destination image.
+ * \param *s Name of the program
+ */
 void process(char * ims, char * imd, char * transformation, int nb_cols, int nb_rows, int first_col, int first_row, char * s)
 {
   pnm originImage = pnm_load(ims);
@@ -58,7 +84,12 @@ void process(char * ims, char * imd, char * transformation, int nb_cols, int nb_
 
 #define UNUSED_AND_NON_VALID_PARAMETER -1 // it is a parameter just to have the same number of arguments
 
-
+/**
+ *  \fn int main()
+ *  \brief Program start.
+ *
+ *  \return EXIT_SUCCESS - Normal program end
+ */
 int main(int argc, char *argv[])
 {
   if (!strcmp(argv[3], "resize"))
