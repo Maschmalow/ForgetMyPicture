@@ -21,8 +21,8 @@ void resize(const pnm * originImage, pnm * finalImage, int new_nb_cols, int new_
 {  
   int m, l, k;
 
-  for(m = 1; m < new_nb_cols; m++)
-    for(l = 1; l < new_nb_rows; l++)
+  for(m = 0; m < new_nb_cols; m++)
+    for(l = 0; l < new_nb_rows; l++)
       for(k = 0; k < 3; k++)
 	{
 	  float x = (float)m * ((float)cols / (float)new_nb_cols);
