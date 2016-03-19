@@ -82,6 +82,7 @@ int is_cropped(const pnm * image1, const pnm * image2, int cols1, int rows1, int
   int best_matching = 0;
   int current_matching;
 
+  // Determine if the smallest image is included in the biggest image
   for (m = 0; m < bigCols - smallCols; m++)
     for (l = 0; l < bigRows - smallRows; l++)
       {
@@ -177,6 +178,7 @@ int is_resized(const pnm * image1, const pnm * image2, int cols1, int rows1, int
  */
 void process(char *ims, char *imt)
 {
+  // Create all needed images.
   pnm image1 = pnm_load(ims);
   int cols1 = pnm_get_width(image1);
   int rows1 = pnm_get_height(image1);
@@ -205,6 +207,7 @@ void process(char *ims, char *imt)
 
   int reussite = -1;
   // These next "else" are used for improving execution time.
+  // Determine if these 2 images are the same after some basic transformations. And determine which transformations are done to have one of the images from the other one.
   if (is_identical(&image1, &image2, cols1, rows1, cols2, rows2))
     reussite = 0;
   else
@@ -253,6 +256,7 @@ void process(char *ims, char *imt)
 			    is_resized(&grey_reverse2, &image1, cols2, rows2, cols1, rows1))
 			  reussite = 11;
 
+  // Print the result.
   switch(reussite)
     {
     case 0:
@@ -295,7 +299,7 @@ void process(char *ims, char *imt)
       printf("These 2 images are NOT the same after being resized, cropped or reversed, or with a black and white image and a colour image.\n");
     }
 
-  // free the heap memory
+  // Free the heap memory.
   pnm_free(image1);
   pnm_free(image2);
   pnm_free(reverse1);
