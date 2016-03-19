@@ -1,3 +1,9 @@
+/**
+ * \file recognize.c
+ * \brief Determine if 2 images are the same after some basic transformations.
+ * \author Pierre PLUMIER
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
@@ -8,6 +14,19 @@
 #define RESIZE_PRECISION 25
 
 
+/**
+ * \fn int same_pixel(const pnm * big, const pnm * small, int bigCol, int bigRow, int smallCol, int smallRow)
+ * \brief Compare a pixel of an image to a pixel of another image.
+ *
+ * \param *big an Image
+ * \param *small another Image
+ * \param bigCol the big image pixel column
+ * \param bigRow the big image pixel row
+ * \param smallCol the small image pixel column
+ * \param smallRow the small image pixel row
+ *
+ * \return if the pixel row bigRow and column bigCol of the big image and the pixel row smallRow and column smallCol of the small image are the same
+ */
 int same_pixel(const pnm * big, const pnm * small, int bigCol, int bigRow, int smallCol, int smallRow)
 {
   int k;
@@ -20,6 +39,19 @@ int same_pixel(const pnm * big, const pnm * small, int bigCol, int bigRow, int s
 }
 
 
+/**
+ * \fn int is_cropped(const pnm * image1, const pnm * image2, int cols1, int rows1, int cols2, int rows2)
+ * \brief 
+ *
+ * \param *image1
+ * \param *image2
+ * \param cols1
+ * \param rows1
+ * \param cols2
+ * \param rows2
+ *
+ * \return 
+ */
 int is_cropped(const pnm * image1, const pnm * image2, int cols1, int rows1, int cols2, int rows2)
 {
   pnm small, big;
@@ -66,6 +98,19 @@ int is_cropped(const pnm * image1, const pnm * image2, int cols1, int rows1, int
 }
 
 
+/**
+ * \fn int is_identical(const pnm * image1, const pnm * image2, int cols1, int rows1, int cols2, int rows2)
+ * \brief 
+ *
+ * \param *image1
+ * \param *image2
+ * \param cols1
+ * \param rows1
+ * \param cols2
+ * \param rows2
+ *
+ * \return 
+ */
 int is_identical(const pnm * image1, const pnm * image2, int cols1, int rows1, int cols2, int rows2)
 {
   if (cols1 != cols2 || rows1 != rows2)
@@ -83,6 +128,19 @@ int is_identical(const pnm * image1, const pnm * image2, int cols1, int rows1, i
 }
 
 
+/**
+ * \fn int is_resized(const pnm * image1, const pnm * image2, int cols1, int rows1, int cols2, int rows2)
+ * \brief 
+ *
+ * \param *image1
+ * \param *image2
+ * \param cols1
+ * \param rows1
+ * \param cols2
+ * \param rows2
+ *
+ * \return 
+ */
 int is_resized(const pnm * image1, const pnm * image2, int cols1, int rows1, int cols2, int rows2)
 {
   int k, l, m;
@@ -108,6 +166,13 @@ int is_resized(const pnm * image1, const pnm * image2, int cols1, int rows1, int
 }
 
 
+/**
+ * \fn void process(char *ims, char *imt)
+ * \brief   
+ *
+ * \param *ims Path of the first image
+ * \param *imt Path of the second image
+ */
 void process(char *ims, char *imt)
 {
   pnm image1 = pnm_load(ims);
@@ -228,6 +293,7 @@ void process(char *ims, char *imt)
       printf("These 2 images are NOT the same after being resized, cropped or reversed, or with a black and white image and a colour image.\n");
     }
 
+  // free the heap memory
   pnm_free(image1);
   pnm_free(image2);
   pnm_free(reverse1);
@@ -238,13 +304,31 @@ void process(char *ims, char *imt)
   pnm_free(grey_reverse2);
 }
 
+
+/**
+ * \fn void usage (char *s)
+ * \brief Print the argument error and exit the recognize program. 
+ *
+ * \param *s Name of the recognize program
+ */
 void usage (char *s)
 {
   fprintf(stderr, "Usage: %s <ims> <imt>\n", s);
   exit(EXIT_FAILURE);
 }
 
+
 #define param 2
+
+/**
+ * \fn int main(int argc, char *argv[])
+ * \brief recognize program start.
+ *
+ * \param argc Number of arguments
+ * \param *argv[] Array of arguments
+ *
+ * \return EXIT_SUCCESS - Normal recognize program end
+ */
 int main(int argc, char *argv[])
 {
   if (argc != param+1)
