@@ -1,6 +1,6 @@
 /**
  * \file recognize.c
- * \brief Determine if 2 images are the same after some basic transformations.
+ * \brief Determine if 2 images are the same after some basic transformations. Try to determine if both images come from the same photo.
  * \author Pierre PLUMIER
  */
 
@@ -11,21 +11,21 @@
 #include <bcl.h>
 #include "transformation.h"
 
-#define RESIZE_PRECISION 25
+#define RESIZE_PRECISION 25 // There are different methods to resize an image. So 2 images resized from the same image with a different method could have some pixels which are slightly different. Therefore RESIZE_PRECISION is used to accept a slight difference between both resized images. 
 
 
 /**
  * \fn int same_pixel(const pnm * big, const pnm * small, int bigCol, int bigRow, int smallCol, int smallRow)
  * \brief Compare a pixel of an image to a pixel of another image.
  *
- * \param *big an Image
- * \param *small another Image
- * \param bigCol the big image pixel column
- * \param bigRow the big image pixel row
- * \param smallCol the small image pixel column
- * \param smallRow the small image pixel row
+ * \param *big An Image
+ * \param *small Another Image
+ * \param bigCol The big image pixel column
+ * \param bigRow The big image pixel row
+ * \param smallCol The small image pixel column
+ * \param smallRow The small image pixel row
  *
- * \return if the pixel row bigRow and column bigCol of the big image and the pixel row smallRow and column smallCol of the small image are the same
+ * \return True (ie 1) if and only if the pixel row bigRow and column bigCol of the big image and the pixel row smallRow and column smallCol of the small image are the same
  */
 int same_pixel(const pnm * big, const pnm * small, int bigCol, int bigRow, int smallCol, int smallRow)
 {
@@ -41,23 +41,25 @@ int same_pixel(const pnm * big, const pnm * small, int bigCol, int bigRow, int s
 
 /**
  * \fn int is_cropped(const pnm * image1, const pnm * image2, int cols1, int rows1, int cols2, int rows2)
- * \brief 
+ * \brief Determine if one image is a cropped image of the other image.
  *
- * \param *image1
- * \param *image2
- * \param cols1
- * \param rows1
- * \param cols2
- * \param rows2
+ * \param *image1 The first image
+ * \param *image2 The second image
+ * \param cols1 Number of columns of image1
+ * \param rows1 Number of rows of image1
+ * \param cols2 Number of columns of image2
+ * \param rows2 Number of rows of image2
  *
- * \return 
+ * \return True (ie 1) if and only if one image is a cropped image of the other image
  */
 int is_cropped(const pnm * image1, const pnm * image2, int cols1, int rows1, int cols2, int rows2)
 {
   pnm small, big;
   int smallCols, smallRows, bigCols, bigRows;
   
-  if (cols1 >= cols2 && rows1 >= rows2) // One image is cropped. This image is smalller than the other one: this image has less rows and less columns than the other one.
+  // One image is cropped. This image is smalller than the other one: this image has less rows and less columns than the other one.
+  // So the smallest image and the biggest image are determined.
+  if (cols1 >= cols2 && rows1 >= rows2) 
     {
       small = *image2;
       smallCols = cols2;
@@ -100,16 +102,16 @@ int is_cropped(const pnm * image1, const pnm * image2, int cols1, int rows1, int
 
 /**
  * \fn int is_identical(const pnm * image1, const pnm * image2, int cols1, int rows1, int cols2, int rows2)
- * \brief 
+ * \brief Determine if both images are the same.
  *
- * \param *image1
- * \param *image2
- * \param cols1
- * \param rows1
- * \param cols2
- * \param rows2
+ * \param *image1 The first image
+ * \param *image2 The second image
+ * \param cols1 Number of columns of image1
+ * \param rows1 Number of rows of image1
+ * \param cols2 Number of columns of image2
+ * \param rows2 Number of rows of image2
  *
- * \return 
+ * \return True (ie 1) if and only if both images are the same
  */
 int is_identical(const pnm * image1, const pnm * image2, int cols1, int rows1, int cols2, int rows2)
 {
@@ -130,16 +132,16 @@ int is_identical(const pnm * image1, const pnm * image2, int cols1, int rows1, i
 
 /**
  * \fn int is_resized(const pnm * image1, const pnm * image2, int cols1, int rows1, int cols2, int rows2)
- * \brief 
+ * \brief Determine if the resized image1 image (resize1) and image2 seem to be the same.
  *
- * \param *image1
- * \param *image2
- * \param cols1
- * \param rows1
- * \param cols2
- * \param rows2
+ * \param *image1 The first image which is resized to have the same numbers of colums and rows than image2 
+ * \param *image2 The second image
+ * \param cols1 Number of columns of image1
+ * \param rows1 Number of rows of image1
+ * \param cols2 Number of columns of image2
+ * \param rows2 Number of rows of image2
  *
- * \return 
+ * \return True (ie 1) if and only if the resized image1 image (resize1) and image2 seem to be the same
  */
 int is_resized(const pnm * image1, const pnm * image2, int cols1, int rows1, int cols2, int rows2)
 {
@@ -168,7 +170,7 @@ int is_resized(const pnm * image1, const pnm * image2, int cols1, int rows1, int
 
 /**
  * \fn void process(char *ims, char *imt)
- * \brief   
+ * \brief Determine if these 2 images are the same after some basic transformations. Try to determine if both images come from the same photo.
  *
  * \param *ims Path of the first image
  * \param *imt Path of the second image
