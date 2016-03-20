@@ -3,6 +3,7 @@ import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
+import com.j256.ormlite.table.TableUtils;
 
 import java.sql.SQLException;
 import java.util.HashSet;
@@ -14,23 +15,26 @@ import java.util.logging.Logger;
 
 import database.Request;
 import database.Result;
+import database.Selfie;
 import database.User;
 
 
 public class Main {
     private static final Logger logger = Logger.getLogger(Main.class.getName());
-    private static final String DB_PATH = "sqlite:/var/databases/forgetmypicture.db";
+    private static final String DB_PATH = "jdbc:sqlite:/var/databases/ForgetMyPicture.db";
     private static final int NB_WORKERS = 16;
-    private static final int REFRESH_RATE = 100; //ms
+    private static final int REFRESH_RATE = 500; //ms
 
     private static Main instance = null;
 
     private Dao<User, String> userDao;
     private Dao<Request, Integer> requestDao;
     private Dao<Result, String> resultDao;
+    private Dao<Selfie, String> selfieDao;
 
     public static void main(String[] args) throws Exception {
         JdbcConnectionSource source = new JdbcPooledConnectionSource(DB_PATH);
+        setupTables(source);
 
         new Main(source).run();
 
@@ -42,6 +46,7 @@ public class Main {
         userDao = DaoManager.createDao(source, User.class);
         requestDao = DaoManager.createDao(source, Request.class);
         resultDao = DaoManager.createDao(source, Result.class);
+        selfieDao = DaoManager.createDao(source, Selfie.class);
 
         instance = this;
     }
@@ -80,6 +85,13 @@ public class Main {
         }
     }
 
+    private static void setupTables(ConnectionSource source) throws SQLException {
+        TableUtils.createTableIfNotExists(source,Request.class);
+        TableUtils.createTableIfNotExists(source,Result.class);
+        TableUtils.createTableIfNotExists(source,Selfie.class);
+        TableUtils.createTableIfNotExists(source,User.class);
+    }
+
     public static Dao<User, String> getUserDao() {
         return instance.userDao;
     }
@@ -90,6 +102,10 @@ public class Main {
 
     public static Dao<Result, String> getResultDao() {
         return instance.resultDao;
+    }
+
+    public static Dao<Selfie, String> getSelfieDao() {
+        return instance.selfieDao;
     }
 
 }

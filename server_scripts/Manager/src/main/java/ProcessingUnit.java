@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 
 import database.Request;
 import database.Result;
+import database.Selfie;
 import database.User;
 
 /**
@@ -62,7 +63,10 @@ public class ProcessingUnit implements Runnable {
         if(request.getKind() == Request.Kind.EXHAUSTIVE) {
             args.add(FR_PATH);
             args.add(result.getPicTempPath());
-            args.addAll(user.getSelfies());
+            for( Selfie selfie : user.getSelfies() ) {
+                Main.getSelfieDao().refresh(selfie);
+                args.add(selfie.getPath());
+            }
         }else {
             args.add(IC_PATH);
             args.add(result.getPicTempPath());

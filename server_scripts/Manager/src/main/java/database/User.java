@@ -20,13 +20,13 @@ public class User {
     private String email; //this one is used only in php
 
     @ForeignCollectionField()
-    private ForeignCollection<String> selfies;
+    private ForeignCollection<Selfie> selfies;
 
     public String getDeviceId() {
         return deviceId;
     }
 
-    public ForeignCollection<String> getSelfies() {
+    public ForeignCollection<Selfie> getSelfies() {
         return selfies;
     }
 }
