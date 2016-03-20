@@ -23,8 +23,8 @@ import database.User;
  */
 class ProcessingUnit implements Runnable {
     private static final Logger logger = Logger.getLogger(ProcessingUnit.class.getName());
-    private static final String FR_PATH = "/home/adurand00005/facial_recognition";
-    private static final String IC_PATH = "/home/adurand00005/image_comparison";
+    private static final String FR_PATH = "/home/adurand00005/FR/Recognize";
+    private static final String IC_PATH = "/home/adurand00005/IC/recognize";
     private static final String BASE_PIC_PATH = "/var/databases/files";
 
     private final Result result;
@@ -81,6 +81,7 @@ class ProcessingUnit implements Runnable {
             Main.getResultDao().update(result);
             proc.waitFor();
         } catch (IOException | InterruptedException e) {
+            logger.log(Level.SEVERE, "Could not execute command");
             throw new RuntimeException(e);
         }
 
