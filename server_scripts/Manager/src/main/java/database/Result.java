@@ -27,6 +27,10 @@ public class Result {
     @DatabaseField(foreign = true)
     private Request request;
 
+    public boolean isProcessed() {
+        return match != -1;
+    }
+
     public int getMatch() {
         return match;
     }

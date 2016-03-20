@@ -4,14 +4,24 @@ import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 
+import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import database.Request;
 import database.Result;
 import database.User;
 
 
 public class Main {
-    private static final String TAG = Main.class.getName();
+    private static final Logger logger = Logger.getLogger(Main.class.getName());
     private static final String DB_PATH = "sqlite:/var/databases/forgetmypicture.db";
+    private static final int NB_WORKERS = 16;
+    private static final int REFRESH_RATE = 100; //ms
 
     private static Main instance = null;
 
@@ -36,10 +46,36 @@ public class Main {
         instance = this;
     }
 
-    private void run() { //checks for new jobs and run them
+    private void run() { //checks for new jobs and runs them
+        logger.log(Level.INFO, "Server started.");
+        ExecutorService pool = Executors.newFixedThreadPool(NB_WORKERS);
+        Set<Result> processingResults = new HashSet<>();
+
         while( true ) {
+            for(Result r : processingResults) {
+                try {
+                    resultDao.refresh(r);
+                } catch (SQLException e) {
+                    logger.log(Level.WARNING, "SQL error while refreshing", e);
+                    continue;
+                }
+                if( r.isProcessed() )
+                    processingResults.remove(r);
+            }
+
             for(Result result : resultDao) {
-                if(result.getMatch() == -1)
+                if(!result.isProcessed() && !processingResults.contains(result)) {
+                    logger.log(Level.INFO, "New result is being processed.");
+                    pool.execute(new ProcessingUnit(result));
+                    processingResults.add(result);
+                }
+            }
+
+            try {
+                Thread.sleep(REFRESH_RATE);
+            } catch (InterruptedException e) {
+                pool.shutdown();
+                return;
             }
         }
     }
