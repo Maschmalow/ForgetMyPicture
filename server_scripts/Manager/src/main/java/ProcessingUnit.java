@@ -21,15 +21,15 @@ import database.User;
  * Created by Antoine on 19/03/2016.
  * class that runs algorithms
  */
-public class ProcessingUnit implements Runnable {
+class ProcessingUnit implements Runnable {
     private static final Logger logger = Logger.getLogger(ProcessingUnit.class.getName());
     private static final String FR_PATH = "/home/adurand00005/facial_recognition";
     private static final String IC_PATH = "/home/adurand00005/image_comparison";
     private static final String BASE_PIC_PATH = "/var/databases/files";
 
-    private Result result;
+    private final Result result;
 
-    public ProcessingUnit(Result toProcess) {
+    ProcessingUnit(Result toProcess) {
         result = toProcess;
     }
 

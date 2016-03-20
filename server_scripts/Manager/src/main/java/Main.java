@@ -19,7 +19,7 @@ import database.Selfie;
 import database.User;
 
 
-public class Main {
+class Main {
     private static final Logger logger = Logger.getLogger(Main.class.getName());
     private static final String DB_PATH = "jdbc:sqlite:/var/databases/ForgetMyPicture.db";
     private static final int NB_WORKERS = 16;
@@ -92,19 +92,19 @@ public class Main {
         TableUtils.createTableIfNotExists(source,User.class);
     }
 
-    public static Dao<User, String> getUserDao() {
+    static Dao<User, String> getUserDao() {
         return instance.userDao;
     }
 
-    public static Dao<Request, Integer> getRequestDao() {
+    static Dao<Request, Integer> getRequestDao() {
         return instance.requestDao;
     }
 
-    public static Dao<Result, String> getResultDao() {
+    static Dao<Result, String> getResultDao() {
         return instance.resultDao;
     }
 
-    public static Dao<Selfie, String> getSelfieDao() {
+    static Dao<Selfie, String> getSelfieDao() {
         return instance.selfieDao;
     }
 

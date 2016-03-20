@@ -10,19 +10,12 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "request")
 public class Request {
 
-
-
-    public enum Status {FETCHING, PROCESSING, WAITING, FINISHED}
-
     public enum Kind {QUICK, EXHAUSTIVE}
 
     public Request() {}
 
     @DatabaseField(id = true)
     private int id;
-
-    @DatabaseField(canBeNull = false)
-    private String status;
 
     @DatabaseField(canBeNull = false)
     private String kind;
@@ -35,14 +28,6 @@ public class Request {
 
     public int getId() {
         return id;
-    }
-
-    public Status getStatus() {
-        return Status.valueOf(status);
-    }
-
-    public void setStatus(Status status) {
-        this.status = status.toString();
     }
 
     public Kind getKind() {
