@@ -205,59 +205,59 @@ void process(char *ims, char *imt)
   pnm grey_reverse2 = pnm_new(cols2, rows2, PnmRawPpm);
   grey(&reverse2, &grey_reverse2, cols2, rows2);
 
-  int reussite = -1;
+  int result = -1;
   // These next "else" are used for improving execution time.
   // Determine if these 2 images are the same after some basic transformations. And determine which transformations are done to have one of the images from the other one.
   if (is_identical(&image1, &image2, cols1, rows1, cols2, rows2))
-    reussite = 0;
+    result = 0;
   else
     if (is_identical(&reverse1, &image2, cols1, rows1, cols2, rows2))
-      reussite = 1;
+      result = 1;
     else
       if (is_identical(&grey1, &image2, cols1, rows1, cols2, rows2) ||
 	  is_identical(&image1, &grey2, cols1, rows1, cols2, rows2))
-	reussite = 2;
+	result = 2;
       else
 	if (is_identical(&grey_reverse1, &image2, cols1, rows1, cols2, rows2) ||
 	    is_identical(&image1, &grey_reverse2, cols1, rows1, cols2, rows2))
-	  reussite = 3;
+	  result = 3;
 	else
 	  if (is_cropped(&image1, &image2, cols1, rows1, cols2, rows2))
-	    reussite = 4;
+	    result = 4;
 	  else
 	    if (is_cropped(&reverse1, &image2, cols1, rows1, cols2, rows2))
-	      reussite = 5;	
+	      result = 5;
 	    else
 	      if (is_cropped(&grey1, &image2, cols1, rows1, cols2, rows2) ||
 		  is_cropped(&image1, &grey2, cols1, rows1, cols2, rows2))
-		reussite = 6;
+		result = 6;
 	      else
 		if (is_cropped(&grey_reverse1, &image2, cols1, rows1, cols2, rows2) ||
 		    is_cropped(&image1, &grey_reverse2, cols1, rows1, cols2, rows2))
-		  reussite = 7;
+		  result = 7;
 		else
 		  if (is_resized(&image1, &image2, cols1, rows1, cols2, rows2) ||
 		      is_resized(&image2, &image1, cols2, rows2, cols1, rows1))
-		    reussite = 8;
+		    result = 8;
 		  else
 		    if (is_resized(&reverse1, &image2, cols1, rows1, cols2, rows2) ||
 			is_resized(&image2, &reverse1, cols2, rows2, cols1, rows1))
-		      reussite = 9;
+		      result = 9;
 		    else
 		      if (is_resized(&grey1, &image2, cols1, rows1, cols2, rows2) ||
 			  is_resized(&image2, &grey1, cols2, rows2, cols1, rows1) ||
 			  is_resized(&image1, &grey2, cols1, rows1, cols2, rows2) ||
 			  is_resized(&grey2, &image1, cols2, rows2, cols1, rows1))
-			reussite = 10;
+			result = 10;
 		      else
 			if (is_resized(&grey_reverse1, &image2, cols1, rows1, cols2, rows2) ||
 			    is_resized(&image2, &grey_reverse1, cols2, rows2, cols1, rows1) ||
 			    is_resized(&image1, &grey_reverse2, cols1, rows1, cols2, rows2) ||
 			    is_resized(&grey_reverse2, &image1, cols2, rows2, cols1, rows1))
-			  reussite = 11;
+			  result = 11;
 
   // Print the result.
-  switch(reussite)
+  switch(result)
     {
     case 0:
       printf("These 2 images are the same.\n");
