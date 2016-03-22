@@ -311,20 +311,26 @@ void process(char *ims, char *imt)
 }
 
 
+#define PARAM 3
+#define ERROR_FILE "error.txt"
+
 /**
- * \fn void usage (char *s)
+ * \fn void use (char * s, char * path)
  * \brief Print the argument error and exit the recognize program. 
  *
  * \param *s Name of the recognize program
+ * \param *path Path of the file to write the possible errors
+ * \param argc Number of arguments
  */
-void usage (char *s)
+void use(char * s, char * path, int argc)
 {
-  fprintf(stderr, "Usage: %s <ims> <imt>\n", s);
-  exit(EXIT_FAILURE);
+
+  FILE *file = fopen(path, "a");
+  fprintf(file, "There are %d arguments, but this program needs to have %d arguments.\nUse: %s <first image> <second image> <path of the error file>\n", argc - 1, PARAM, s);
+  fclose(file);
+  exit(EXIT_SUCCESS); //exit(EXIT_FAILURE);
 }
 
-
-#define param 2
 
 /**
  * \fn int main(int argc, char *argv[])
@@ -337,8 +343,13 @@ void usage (char *s)
  */
 int main(int argc, char *argv[])
 {
-  if (argc != param+1)
-    usage(argv[0]);
+  if (argc != PARAM+1 && argc != PARAM) // If there is not just the path of the error file which is the last argument, it is not a problem.
+    {
+      if (argc > PARAM+1)
+	use(argv[0], argv[3], argc);
+      else
+	use(argv[0], ERROR_FILE, argc);
+    }
 
   process(argv[1], argv[2]);
   return EXIT_SUCCESS;

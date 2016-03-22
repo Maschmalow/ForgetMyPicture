@@ -13,21 +13,21 @@
 
 
 /**
- * \fn void usage (char *s, char * transformation)
+ * \fn void use (char * s, char * transformation)
  * \brief Print the argument error and exit the do_transformation program. 
  *
  * \param *s Name of the do_transformation program
  * \param *transformation Name of the transformation
  */
-void usage (char *s, char * transformation)
+void use(char * s, char * transformation)
 {
   if (!strcmp(transformation, "resize"))
-    fprintf(stderr, "Usage: %s <ims> <imd> <transformation> <nb_cols> <nb_rows>\n", s);
+    fprintf(stderr, "Use: %s <source> <destination> <transformation> <nb_cols> <nb_rows>\n", s);
   else
     if (!strcmp(transformation, "crop"))
-      fprintf(stderr, "Usage: %s <ims> <imd> <transformation> <nb_cols> <nb_rows> <first_col> <first_row>\n", s);
+      fprintf(stderr, "Use: %s <source> <destination> <transformation> <nb_cols> <nb_rows> <first_col> <first_row>\n", s);
     else
-      fprintf(stderr, "Usage: %s <ims> <imd> <transformation>\n", s);
+      fprintf(stderr, "Use: %s <source> <destination> <transformation>\n", s);
 
   exit(EXIT_FAILURE);
 }
@@ -73,7 +73,7 @@ void process(char * ims, char * imd, char * transformation, int nb_cols, int nb_
 	  fprintf(stderr, "transformation not defined\n");
 	  pnm_free(finalImage);
 	  pnm_free(originImage);
-	  usage(s, transformation);
+	  use(s, transformation);
 	}
 
   pnm_save(finalImage, PnmRawPpm, imd);
@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
   if (!strcmp(argv[3], "resize"))
     {
       if (argc != 6)
-	usage(argv[0], argv[3]);
+	use(argv[0], argv[3]);
 
       process(argv[1], argv[2], argv[3], atoi(argv[4]), atoi(argv[5]), UNUSED_AND_NON_VALID_PARAMETER, UNUSED_AND_NON_VALID_PARAMETER, argv[0]);
     }
@@ -106,14 +106,14 @@ int main(int argc, char *argv[])
     if (!strcmp(argv[3], "crop"))
       {
 	if (argc != 8)
-	  usage(argv[0], argv[3]);
+	  use(argv[0], argv[3]);
 
 	process(argv[1], argv[2], argv[3], atoi(argv[4]), atoi(argv[5]), atoi(argv[6]), atoi(argv[7]), argv[0]);
       }
     else
       {
 	if (argc != 4)
-	  usage(argv[0], argv[3]);
+	  use(argv[0], argv[3]);
 
 	process(argv[1], argv[2], argv[3], UNUSED_AND_NON_VALID_PARAMETER, UNUSED_AND_NON_VALID_PARAMETER, UNUSED_AND_NON_VALID_PARAMETER, UNUSED_AND_NON_VALID_PARAMETER, argv[0]);
       }

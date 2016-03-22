@@ -15,5 +15,8 @@ Send_mail:
 Who_is:
 	gcc -o who_is who_is.c
 
-clean:
-	rm *~ who_is parseur send_mail adr_mail.txt
+cleanall:
+	rm -rf who_is parseur send_mail adr_mail.txt *~
+
+.PHONY :
+	clean all

@@ -1,6 +1,6 @@
 /**
  * \file parseur.c
- * \brief To test if the addresses are the good ones
+ * \brief In order to test if the addresses are the good ones
  * \author Pierre PLUMIER
  */
 
@@ -9,7 +9,7 @@
 #include <string.h>
 
 #define SIZE_ADR 256 // Maximum size of an e-mail address
-#define NB_ADR 10 // Maximum number of addresses
+#define NB_ADR 20 // Maximum number of addresses
 
 
 /**
