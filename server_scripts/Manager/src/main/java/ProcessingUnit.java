@@ -6,7 +6,9 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -25,7 +27,7 @@ class ProcessingUnit implements Runnable {
     private static final Logger logger = Logger.getLogger(ProcessingUnit.class.getName());
     private static final String FR_PATH = "/home/adurand00005/FR/Recognize";
     private static final String IC_PATH = "/home/adurand00005/IC/recognize";
-    private static final String BASE_PIC_PATH = "/var/databases/files";
+    private static final String BASE_FILES_PATH = "/var/databases/files/";
 
     private final Result result;
 
@@ -52,7 +54,7 @@ class ProcessingUnit implements Runnable {
         User user = request.getUser();
         Main.getUserDao().refresh(user);
 
-        String dst = BASE_PIC_PATH + user.getDeviceId() + "_" +
+        String dst = BASE_FILES_PATH + user.getDeviceId() + "_" +
                 request.getId() + "_" + UUID.randomUUID() +
                 result.getPicURL().substring(0,result.getPicRefURL().lastIndexOf('.'));
         result.setPicTempPath(dst);
@@ -72,6 +74,7 @@ class ProcessingUnit implements Runnable {
             args.add(result.getPicTempPath());
             args.add(request.getOriginalPicPath());
         }
+        args.add(BASE_FILES_PATH + "error_log_" + new SimpleDateFormat("dd.MM.yyyy_HH.mm.ss.SS").format(Calendar.getInstance().getTime()));
 
         try {
             logger.log(Level.INFO, "Starting process...");
