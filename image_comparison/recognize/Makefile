@@ -21,8 +21,9 @@ do_transformation.o: do_transformation.c
 
 transformation.o: transformation.h transformation.c
 
-error: cleanall recognize
+error: recognize
 # test if there is an error (the number of arguments is not respected)
+	@rm -rf error.txt
 	@echo
 	@./recognize ../data/lena-color.ppm ../data/lena-color.ppm error.txt one_more_argument
 	@echo Now the content of the error file is\:
