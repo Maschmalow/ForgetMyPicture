@@ -13,6 +13,11 @@
 
 #define RESIZE_PRECISION 25 // There are different methods to resize an image. So 2 images resized from the same image with a different method could have some pixels which are slightly different. Therefore RESIZE_PRECISION is used to accept a slight difference between both resized images. 
 
+#ifndef TEST_OR_SERVER
+#define TEST_OR_SERVER 0 // The recognize program prints a sentence for the test and a number (100 = recognized, 0 = NOT recognized) for the server.
+// So this variable is used to know if it is for the test or for the server.
+// This varaible is equal to 0 for the test and is not equal to 0 (for example 1) for the server. 
+#endif
 
 /**
  * \fn int same_pixel(const pnm * big, const pnm * small, int bigCol, int bigRow, int smallCol, int smallRow)
@@ -257,46 +262,56 @@ void process(char *ims, char *imt)
 			  result = 11;
 
   // Print the result.
-  switch(result)
-    {
-    case 0:
-      printf("These 2 images are the same.\n");
-      break;
-    case 1:
-      printf("These 2 images are the same after being reversed.\n");
-      break;
-    case 2:
-      printf("These 2 images are the same, except that one is a black and white image and the other one is a colour image.\n");
-      break;
-    case 3:
-      printf("These 2 images are the same after being reversed, except that one is a black and white image and the other one is a colour image.\n");
-      break;
-    case 4:
-      printf("These 2 images are the same after being cropped.\n");
-      break;
-    case 5:
-      printf("These 2 images are the same after being cropped and reversed.\n");
-      break;
-    case 6:
-      printf("These 2 images are the same after being cropped, except that one is a black and white image and the other one is a colour image.\n");
-      break;
-    case 7:
-      printf("These 2 images are the same after being cropped and reversed, except that one is a black and white image and the other one is a colour image.\n");
-      break;
-    case 8:
-      printf("These 2 images are the same after being resized.\n");
-      break;
-    case 9:
-      printf("These 2 images are the same after being resized and reversed.\n");
-      break;
-    case 10:
-      printf("These 2 images are the same after being resized, except that one is a black and white image and the other one is a colour image.\n");
-      break;
-    case 11:
-      printf("These 2 images are the same after being resized and reversed, except that one is a black and white image and the other one is a colour image.\n");
-      break;
-    default:
-      printf("These 2 images are NOT the same after being resized, cropped or reversed, or with a black and white image and a colour image.\n");
+  if (TEST_OR_SERVER)
+    { // If the recognize program runs for the server.
+      if (result == -1)
+	printf("0\n"); // If these 2 images are NOT the same after being resized, cropped or reversed, or with a black and white image and a colour image.
+      else
+	printf("100\n"); // If these 2 images are the same after being resized, cropped or reversed, and/or with a black and white image and a colour image.
+    }
+  else
+    { // If the recognize program runs for the test.
+      switch(result)
+	{
+	case 0:
+	  printf("These 2 images are the same.\n");
+	  break;
+	case 1:
+	  printf("These 2 images are the same after being reversed.\n");
+	  break;
+	case 2:
+	  printf("These 2 images are the same, except that one is a black and white image and the other one is a colour image.\n");
+	  break;
+	case 3:
+	  printf("These 2 images are the same after being reversed, except that one is a black and white image and the other one is a colour image.\n");
+	  break;
+	case 4:
+	  printf("These 2 images are the same after being cropped.\n");
+	  break;
+	case 5:
+	  printf("These 2 images are the same after being cropped and reversed.\n");
+	  break;
+	case 6:
+	  printf("These 2 images are the same after being cropped, except that one is a black and white image and the other one is a colour image.\n");
+	  break;
+	case 7:
+	  printf("These 2 images are the same after being cropped and reversed, except that one is a black and white image and the other one is a colour image.\n");
+	  break;
+	case 8:
+	  printf("These 2 images are the same after being resized.\n");
+	  break;
+	case 9:
+	  printf("These 2 images are the same after being resized and reversed.\n");
+	  break;
+	case 10:
+	  printf("These 2 images are the same after being resized, except that one is a black and white image and the other one is a colour image.\n");
+	  break;
+	case 11:
+	  printf("These 2 images are the same after being resized and reversed, except that one is a black and white image and the other one is a colour image.\n");
+	  break;
+	default:
+	  printf("These 2 images are NOT the same after being resized, cropped or reversed, or with a black and white image and a colour image.\n");
+	}
     }
 
   // Free the heap memory.
