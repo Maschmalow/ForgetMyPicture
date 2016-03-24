@@ -56,7 +56,7 @@ class ProcessingUnit implements Runnable {
 
         String dst = BASE_FILES_PATH + user.getDeviceId() + "_" +
                 request.getId() + "_" + UUID.randomUUID() +
-                result.getPicURL().substring(0,result.getPicRefURL().lastIndexOf('.'));
+                result.getPicURL().substring(result.getPicURL().lastIndexOf('.'));
         result.setPicTempPath(dst);
         Main.getResultDao().update(result);
         savePic(result.getPicURL(), dst);

@@ -28,7 +28,7 @@ class Main {
     private static Main instance = null;
 
     private Dao<User, String> userDao;
-    private Dao<Request, Integer> requestDao;
+    private Dao<Request, String> requestDao;
     private Dao<Result, String> resultDao;
     private Dao<Selfie, String> selfieDao;
 
@@ -96,7 +96,7 @@ class Main {
         return instance.userDao;
     }
 
-    static Dao<Request, Integer> getRequestDao() {
+    static Dao<Request, String> getRequestDao() {
         return instance.requestDao;
     }
 

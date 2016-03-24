@@ -19,9 +19,6 @@ public class Result {
     private String picTempPath;
 
     @DatabaseField(canBeNull = false)
-    private String picRefURL;
-
-    @DatabaseField(canBeNull = false)
     private int match;
 
     @DatabaseField(foreign = true)
@@ -43,9 +40,6 @@ public class Result {
         return picURL;
     }
 
-    public String getPicRefURL() {
-        return picRefURL;
-    }
 
     public String getPicTempPath() {
         return picTempPath;
