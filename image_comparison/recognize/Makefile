@@ -23,7 +23,7 @@ do_transformation.o: do_transformation.c
 
 transformation.o: transformation.h transformation.c
 
-error: recognize
+error_test: recognize
 # test if there is an error (the number of arguments is not respected)
 	@rm -rf error.txt
 	@echo
