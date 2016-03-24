@@ -1,25 +1,39 @@
 <?php
 require 'rb.php';
-R::setup('sqlite:/var/databases/forgetmypicture.db');
+R::setup('sqlite:/var/databases/ForgetMyPicture.db');
 
-$hash = _POST['hash']
-// check hash here
+if(R::load('user', $_POST['deviceId'])->deviceId != '0')  {
+    http_response_code(400)
+    exit()
+}
+
+$hash = $_POST['hash']
+if($hash != 1) {
+    http_response_code(400)
+    exit()
+}
+
+
+$selfies_count = 0
+foreach ($filename as $_FILES) {
+        $path = sprintf('/var/databases/files/%s_selfie_%s.png', $_POST['deviceId'], $selfies_count)
+        treat_file($filename, $path)
+        $selfie = R::dispense('selfie')
+        $selfie->user_id = $_POST['deviceId']
+        $selfie->path = $path
+        R::store($selfie)
+        $selfies_count++
+}
 
 $user = R::dispense('user')
-$user->deviceId = _POST['deviceId']
-$user->name = _POST['name']
-$user->forename = _POST['forename']
-$user->email = _POST['email']
+$user->deviceId = $_POST['deviceId']
+$user->email = $_POST['email']
+R::store($user)
 
-$base_path = sprintf('/var/databases/files/%s_', _POST['deviceId'])
-$user->idCard = $base_path + 'idCard.png'
-treat_file('idcard', $base_path + 'idCard.png')
-$user->selfie = $base_path + 'selfie.png'
-treat_file('selfie', $base_path + 'selfie.png')
 
 R::close();
 
-
+http_response_code(200)
 
 function treat_file($filename, $save_location)
 {
@@ -62,7 +76,13 @@ function treat_file($filename, $save_location)
 
     } catch (RuntimeException $e) {
         echo $e->getMessage();
+        http_response_code(400)
+        exit()
     }
+}
+
+function startswith($haystack, $needle) {
+    return substr($haystack, 0, strlen($needle)) === $needle;
 }
 
 ?>
