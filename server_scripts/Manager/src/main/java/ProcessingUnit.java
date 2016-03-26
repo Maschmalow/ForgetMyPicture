@@ -103,7 +103,7 @@ class ProcessingUnit implements Runnable {
     }
 
     private static String convertPic(String path) {
-        String convertedPath = path.substring(0, path.lastIndexOf('.')) + "pgm";
+        String convertedPath = path.substring(0, path.lastIndexOf('.')) + "ppm";
         try {
             new ConvertCmd().run(new IMOperation().addImage().addImage(), path, convertedPath);
             Files.delete(Paths.get(path));
