@@ -1,3 +1,7 @@
+import org.im4java.core.ConvertCmd;
+import org.im4java.core.IM4JavaException;
+import org.im4java.core.IMOperation;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -56,10 +60,10 @@ class ProcessingUnit implements Runnable {
 
         String dst = BASE_FILES_PATH + user.getDeviceId() + "_" +
                 request.getId() + "_" + UUID.randomUUID() +
-                result.getPicURL().substring(result.getPicURL().lastIndexOf('.'));
-        result.setPicTempPath(dst);
-        Main.getResultDao().update(result);
+                result.getPicURL().substring(0,result.getPicURL().lastIndexOf('.'));
         savePic(result.getPicURL(), dst);
+        result.setPicTempPath(convertPic(dst));
+        Main.getResultDao().update(result);
 
         List<String> args = new ArrayList<>();
         if(request.getKind() == Request.Kind.EXHAUSTIVE) {
@@ -84,7 +88,7 @@ class ProcessingUnit implements Runnable {
             Main.getResultDao().update(result);
             proc.waitFor();
         } catch (IOException | InterruptedException e) {
-            logger.log(Level.SEVERE, "Could not execute command");
+            logger.log(Level.SEVERE, "Could process result " + result.getPicURL());
             throw new RuntimeException(e);
         }
 
@@ -94,9 +98,19 @@ class ProcessingUnit implements Runnable {
         try(InputStream in = new URL(url).openStream()){
             Files.copy(in, Paths.get(dst));
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Could not save picture from " + url, e);
         }
     }
 
+    private static String convertPic(String path) {
+        String convertedPath = path.substring(0, path.lastIndexOf('.')) + "pgm";
+        try {
+            new ConvertCmd().run(new IMOperation().addImage().addImage(), path, convertedPath);
+            Files.delete(Paths.get(path));
+        } catch (IOException | IM4JavaException | InterruptedException e) {
+            throw new RuntimeException("Could not convert image", e);
+        }
+        return convertedPath;
+    }
 
 }
