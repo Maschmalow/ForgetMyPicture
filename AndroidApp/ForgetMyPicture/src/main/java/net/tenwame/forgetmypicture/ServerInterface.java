@@ -1,7 +1,15 @@
 package net.tenwame.forgetmypicture;
 
 import android.os.AsyncTask;
+import android.os.Looper;
 import android.util.Log;
+
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+
+import net.tenwame.forgetmypicture.database.Request;
+import net.tenwame.forgetmypicture.database.Result;
+import net.tenwame.forgetmypicture.database.Selfie;
+import net.tenwame.forgetmypicture.database.User;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -22,30 +30,33 @@ import javax.json.JsonObject;
 public class ServerInterface {
     private static final String TAG = ServerInterface.class.getSimpleName();
 
-    private static final String BASE_URL = "https://api.tenwame.net";
-    private static final String REGISTER_URL = "/register";
-    private static final String NEW_REQUEST_URL = "/newRequest";
-    private static final String FEED_URL = "/feed";
-    private static final String GET_INFO_URL = "/getInfo";
+    private static final String BASE_URL = "http://adurand00005.rtrinity.enseirb.fr";
+    private static final String REGISTER_URL = "/register.php";
+    private static final String NEW_REQUEST_URL = "/new_request.php";
+    private static final String FEED_URL = "/feed.php";
+    private static final String GET_INFO_URL = "/get_info.php";
 
-    private static UserData userData = UserData.getInstance();
 
 
     private static void registerASync() throws IOException{
-        Integer hash = 1;
+        if(Looper.myLooper() == Looper.getMainLooper()) {
+            Log.e(TAG, "Server interaction must be done in a separate thread");
+            return;
+        }
 
+        DatabaseHelper helper = OpenHelperManager.getHelper(ForgetMyPictureApp.getContext(), DatabaseHelper.class);
+        User user = UserData.getInstanceUser(helper);
+
+        Integer hash = 1; //TODO
         Connection connection = Jsoup.connect(BASE_URL + REGISTER_URL)
                 .data("h", hash.toString())
-                .data("deviceId", UserData.getDeviceId());
+                .data("deviceId", user.getDeviceId())
+                .data("email", user.getEmail());
 
         Stack<InputStream> streams = new Stack<>();
-        for(UserData.UserProperty<?> property : userData.getProperties()) {
-            if(property.isAssignableFrom(String.class)) {
-                connection.data(property.getName(), (String) property.getValue());
-            } else {
-                streams.push(UserData.openFile(property.getURI()));
-                connection.data(property.getName(), property.getURI(), streams.peek());
-            }
+        for(Selfie selfie : user.getSelfies()) {
+            streams.push(selfie.getPic().openStream());
+            connection.data("selfie[]", "selfie_" + streams.size(), streams.peek());
         }
 
         connection.post();
@@ -57,26 +68,48 @@ public class ServerInterface {
         Log.d(TAG, "Device " + UserData.getDeviceId() + " successfully registered.");
     }
 
-    private static void newRequestASync(SearchData.Request request) throws IOException{
-        Jsoup.connect(BASE_URL + NEW_REQUEST_URL)
+    private static void newRequestASync(Request request) throws IOException{
+        if(Looper.myLooper() == Looper.getMainLooper()) {
+            Log.e(TAG, "Server interaction must be done in a separate thread");
+            return;
+        }
+        Connection connection = Jsoup.connect(BASE_URL + NEW_REQUEST_URL)
                 .data("deviceId", UserData.getDeviceId())
-                .data("requestId", request.getId().toString()).post();
+                .data("requestId", request.getId().toString());
+
+        if(request.getKind() == Request.Kind.QUICK) {
+            InputStream stream = request.getOriginalPic().openStream();
+            connection.data("originalPic", "originalPic", stream).post();
+            stream.close();
+        } else {
+            connection.post();
+        }
+
 
         Log.d(TAG, "new request registered: " + request.getId());
     }
 
-    private static void feedNewResultsASync(Collection<SearchService.Result> results, SearchData.Request request) throws IOException{
+    private static void feedNewResultsASync(Collection<Result> results, Request request) throws IOException{
+        if(Looper.myLooper() == Looper.getMainLooper()) {
+            Log.e(TAG, "Server interaction must be done in a separate thread");
+            return;
+        }
         Connection connection = Jsoup.connect(BASE_URL + FEED_URL)
                 .data("deviceId", UserData.getDeviceId())
                 .data("requestId", request.getId().toString());
-        for(SearchService.Result result : results)
-            connection.data("result", result.getPicURL());
+        for(Result result : results)
+            connection.data("result[]", result.getPicURL());
         connection.post();
 
         Log.d(TAG, "Sent " + results.size() + " results for request " + request.getId());
     }
 
     private static void getRequestInfoASync() throws IOException{
+        if(Looper.myLooper() == Looper.getMainLooper()) {
+            Log.e(TAG, "Server interaction must be done in a separate thread");
+            return;
+        }
+        DatabaseHelper helper = OpenHelperManager.getHelper(ForgetMyPictureApp.getContext(), DatabaseHelper.class);
         String resp = Jsoup.connect(BASE_URL + GET_INFO_URL)
                 .ignoreContentType(true)
                 .method(Connection.Method.GET)
@@ -84,9 +117,17 @@ public class ServerInterface {
 
         JsonObject update = Json.createReader(new StringReader(resp)).readObject();
         for(String strId : update.keySet()) {
-            SearchData.Request request = SearchData.getRequest(Integer.valueOf(strId));
+            Request request = helper.getRequestDao().queryForId(Integer.valueOf(strId));
             JsonObject requestUpdate = update.getJsonObject(strId);
-            for(String resultURL : requestUpdate.keySet());
+            for(String resultURL : requestUpdate.keySet()) {
+                Result result = helper.getResultDao().queryForId(resultURL);
+                result.setMatch(requestUpdate.getInt(resultURL));
+                helper.getResultDao().update(result);
+            }
+
+            for(Result result : request.getResults()) {
+                if(!result.isProcessed()) break;
+            }
 
         }
         //TODO: parse and update info
@@ -109,7 +150,7 @@ public class ServerInterface {
         }.execute((Void) null);
     }
 
-    public static void newRequest(final SearchData.Request request) {
+    public static void newRequest(final Request request) {
         Log.d(TAG, "registering new request " + request.getId());
         new AsyncTask<Void, Void, Void>() {
             @Override
@@ -124,7 +165,7 @@ public class ServerInterface {
         }.execute((Void) null);
     }
 
-    public static void feedNewResults(final Collection<SearchService.Result> results, final SearchData.Request request) {
+    public static void feedNewResults(final Collection<Result> results, final Request request) {
         Log.d(TAG, "feeding " + results.size() + " results for request " + request.getId());
         new AsyncTask<Void, Void, Void>() {
             @Override
@@ -141,6 +182,7 @@ public class ServerInterface {
 
     public static void getRequestInfo() {
         Log.d(TAG, "info update");
+
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
@@ -152,6 +194,7 @@ public class ServerInterface {
                 return null;
             }
         }.execute((Void) null);
+        OpenHelperManager.releaseHelper();
     }
 
     

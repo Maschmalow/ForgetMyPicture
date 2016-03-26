@@ -15,7 +15,7 @@ public class ForgetMyPictureApp extends Application {
         ForgetMyPictureApp.context = getApplicationContext();
     }
 
-    public static Context getAppContext() {
+    public static Context getContext() {
         return ForgetMyPictureApp.context;
     }
 }

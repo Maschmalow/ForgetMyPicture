@@ -23,4 +23,5 @@
     <string name="homepage_setup_data_toast">Please set up your data before starting a new Search</string>
     <string name="homepage_requests_panel">My requests</string>
 
+    <string name="open_helper_classname">DatabaseHelper</string>
 </resources>

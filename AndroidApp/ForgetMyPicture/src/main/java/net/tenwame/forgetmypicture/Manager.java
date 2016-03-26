@@ -6,6 +6,10 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+
+import net.tenwame.forgetmypicture.database.Request;
+
 import java.util.List;
 
 /**
@@ -45,7 +49,7 @@ public class Manager extends BroadcastReceiver{
         }
     });
 
-    private Context curContext = ForgetMyPictureApp.getAppContext();
+    private Context curContext = ForgetMyPictureApp.getContext();
     private boolean isServiceLaunched = false;
 
     @Override
@@ -60,15 +64,18 @@ public class Manager extends BroadcastReceiver{
                 stopTracking();
             }
         }
-        curContext = ForgetMyPictureApp.getAppContext();
+        curContext = ForgetMyPictureApp.getContext();
     }
 
-    public Integer startNewRequest(List<String> keywords) {
-        SearchData.Request request = SearchData.newRequest(keywords);
+    public Request startNewRequest(List<String> keywords) {
+        DatabaseHelper helper = OpenHelperManager.getHelper(curContext, DatabaseHelper.class);
+        Request request = new Request(keywords);
+        helper.getRequestDao().create(request);
+        ServerInterface.newRequest(request);
         if(isNetworkConnected())
             startService();
 
-        return request.getId();
+        return request;
     }
 
 

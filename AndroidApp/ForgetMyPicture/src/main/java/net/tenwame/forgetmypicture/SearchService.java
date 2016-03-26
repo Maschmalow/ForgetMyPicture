@@ -5,6 +5,11 @@ import android.content.Intent;
 import android.net.UrlQuerySanitizer;
 import android.util.Log;
 
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+
+import net.tenwame.forgetmypicture.database.Request;
+import net.tenwame.forgetmypicture.database.Result;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -30,9 +35,10 @@ public class SearchService extends IntentService{
 
     private static long lastRequest;
 
+    private DatabaseHelper helper;
     private String userAgent;
     private Map<String, String> queryData;
-    private SearchData.Request curRequest;
+    private Request curRequest;
 
     public SearchService() {
         super(TAG + "Service");
@@ -45,24 +51,22 @@ public class SearchService extends IntentService{
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        curRequest = SearchData.getRequest(0);
+        helper = OpenHelperManager.getHelper(ForgetMyPictureApp.getContext(), DatabaseHelper.class);
+
+        curRequest = helper.getRequestDao().queryForId(0);
         if( curRequest == null) return;
 
-        int curSearchProgress = curRequest.getProgress();
-        while(curSearchProgress != 0) {
+        while(curRequest.getProgress() != 0) {
 
-            for( SearchData.Request request : SearchData.getRequests() )
-                if( request.getStatus() == SearchData.Request.Status.FETCHING ) {
-                    int progress;
-                    if( (progress = request.getProgress()) < curSearchProgress ) {
+            for( Request request : helper.getRequestDao() )
+                if( request.getStatus() == Request.Status.FETCHING )
+                    if( request.getProgress() < curRequest.getProgress() )
                         curRequest = request;
-                        curSearchProgress = progress;
-                    }
-                }
 
             doSearch();
         }
 
+        OpenHelperManager.releaseHelper();
     }
 
 
@@ -74,10 +78,13 @@ public class SearchService extends IntentService{
         setCurUserAgent();
         Set<Result> newResults = curRequest.addResults(scrapeData());
         ServerInterface.feedNewResults(newResults, curRequest);
-        curRequest.setProgres(++progress);
-        if(progress == keywordsSets.size() -1)
-            curRequest.setStatus(SearchData.Request.Status.PROCESSING);
+        curRequest.setProgress(++progress);
+        if(progress == curRequest.getMaxProgress())
+            curRequest.setStatus(Request.Status.PROCESSING);
+
+        helper.getRequestDao().update(curRequest);
         delay();
+        helper.getRequestDao().refresh(curRequest);
     }
 
 
@@ -98,7 +105,7 @@ public class SearchService extends IntentService{
 
         for( Element elem : doc.select("div.rg_di.rg_el.ivg-i > a")) {
             UrlQuerySanitizer query = new UrlQuerySanitizer(elem.attr("href"));
-            results.add(new Result(query.getValue("imgurl"), query.getValue("imgrefurl")));
+            results.add(new Result(query.getValue("imgurl"), query.getValue("imgrefurl"), curRequest));
         }
 
         Log.d(TAG, "\nParsed: " + results.size() + "results.");
@@ -130,48 +137,5 @@ public class SearchService extends IntentService{
 
     }
 
-    static public class Result{
-
-        private String picURL;
-        private String picRefURL;
-        private double match;
-
-        Result(String picURL, String picRefURL) {
-            this.picRefURL = picRefURL;
-            this.picURL = picURL;
-            match = -1;
-        }
-
-        public double getMatch() {
-            return match;
-        }
-
-        public void setMatch(double match) {
-            this.match = match;
-        }
-
-        public String getPicRefURL() {
-            return picRefURL;
-        }
-
-        public String getPicURL() {
-            return picURL;
-        }
-
-        public boolean isProcessed() {
-            return match == -1;
-        }
-
-        // equals and hashCode are used in hashSet, so make sure this is what we want
-        @Override
-        public boolean equals(Object o) {
-            return this == o || !(o == null || getClass() != o.getClass()) && picURL.equals(((Result) o).picURL);
-        }
-
-        @Override
-        public int hashCode() {
-            return picURL.hashCode();
-        }
-    }
 
 }
