@@ -14,44 +14,32 @@ import java.sql.SQLException;
  * implements singleton pattern for the user table
  */
 public class UserData {
-    private static final String TAG = UserData.class.getSimpleName();
-
     private static final String deviceId = Secure.getString(ForgetMyPictureApp.getContext().getContentResolver(), Secure.ANDROID_ID);
-    private User user;
+    private static User user = setUser();
 
-    private static UserData instance = null;
-    public static UserData getInstance() {
-        if(instance == null)
-            synchronized (UserData.class) {
-                if(instance == null)
-                    instance = new UserData();
-            }
+    private UserData() { }
 
-        return instance;
+    public static User getUser() {
+        if(user == null)
+            setUser();
+
+        return user;
     }
 
-    private UserData() {
+    private static User setUser() {
         DatabaseHelper helper = OpenHelperManager.getHelper(ForgetMyPictureApp.getContext(), DatabaseHelper.class);
-        user = helper.getUserDao().queryForId(deviceId);
-        if(user == null) {
-            user = new User(deviceId);
-            helper.getUserDao().create(user);
+        try {
+            user = helper.getUserDao().queryForId(deviceId);
+            if(user == null) {
+                user = new User(deviceId);
+                helper.getUserDao().create(user);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Could not fetch or create user", e);
         }
-
         OpenHelperManager.releaseHelper();
-    }
 
-    public User getCachedUser() {
         return user;
-    }
-
-    public User getUser(DatabaseHelper helper) throws SQLException {
-        helper.getUserDao().refresh(user);
-        return user;
-    }
-
-    public static User getInstanceUser(DatabaseHelper helper) throws SQLException {
-        return getInstance().getUser(helper);
     }
 
     public static String getDeviceId() {

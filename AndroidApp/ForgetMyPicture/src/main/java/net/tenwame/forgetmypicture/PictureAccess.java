@@ -16,11 +16,9 @@ import java.io.OutputStream;
 public class PictureAccess {
 
     private String path;
-    private PathGenerator generator;
 
-    public PictureAccess(String path, PathGenerator generator) {
+    public PictureAccess(String path) {
         this.path = path;
-        this.generator = generator;
     }
 
     public InputStream openStream() throws FileNotFoundException {
@@ -42,19 +40,12 @@ public class PictureAccess {
             ForgetMyPictureApp.getContext().deleteFile(path);
             return;
         }
-        if(path == null)
-            path = generator.setNewPath();
 
         try(OutputStream stream = ForgetMyPictureApp.getContext().openFileOutput(path, Context.MODE_PRIVATE)) {
             pic.compress(Bitmap.CompressFormat.PNG, 100, stream);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-
-    public interface PathGenerator {
-        String setNewPath();
     }
 
 }

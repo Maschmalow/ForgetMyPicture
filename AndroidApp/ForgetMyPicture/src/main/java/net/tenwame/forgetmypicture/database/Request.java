@@ -42,6 +42,7 @@ public class Request {
         user = UserData.getInstance().getCachedUser();
         this.keywords = new ArrayList<>(keywords);
         if(originalPic == null) throw new IllegalArgumentException("original picture is null");
+        originalPicPath = REQUEST_PREFIX + id + "_original_" + UUID.randomUUID().toString();
         getOriginalPic().set(originalPic);
         progress = 0;
     }
@@ -119,7 +120,7 @@ public class Request {
     }
 
     public int getMaxProgress() {
-        return ( 1 << keywords.size()) -1;
+        return  1 << keywords.size();
     }
 
     public List<String> getKeywords() {
@@ -127,12 +128,7 @@ public class Request {
     }
 
     public PictureAccess getOriginalPic() {
-        return new PictureAccess(originalPicPath, new PictureAccess.PathGenerator() {
-            @Override
-            public String setNewPath() {
-                return originalPicPath = REQUEST_PREFIX + id + "_original_" + UUID.randomUUID().toString();
-            }
-        });
+        return new PictureAccess(originalPicPath);
     }
 
     public ForeignCollection<Result> getResults() {
@@ -149,7 +145,11 @@ public class Request {
     }
 
     public Status updateStatus() {
-        if(getStatus() != Status.PROCESSING) return getStatus();
+        if(getStatus() == Status.FETCHING && progress == getMaxProgress())
+            setStatus(Status.PROCESSING);
+        if(getStatus() != Status.PROCESSING)
+            return getStatus();
+
         for(Result result : results) {
             if(!result.isProcessed())
                 return getStatus();

@@ -5,11 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import net.tenwame.forgetmypicture.database.Request;
 
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -40,6 +42,7 @@ public class Manager extends BroadcastReceiver{
         public void run() {
             while( true ) {
                 ServerInterface.getRequestInfo();
+                startService();
                 try {
                     Thread.sleep(TRACKING_DELAY);
                 } catch (InterruptedException e) {
@@ -70,11 +73,16 @@ public class Manager extends BroadcastReceiver{
     public Request startNewRequest(List<String> keywords) {
         DatabaseHelper helper = OpenHelperManager.getHelper(curContext, DatabaseHelper.class);
         Request request = new Request(keywords);
-        helper.getRequestDao().create(request);
+        try {
+            helper.getRequestDao().create(request);
+        } catch (SQLException e) {
+            Log.e(TAG, "Could not create new request", e);
+            return null;
+        }
         ServerInterface.newRequest(request);
-        if(isNetworkConnected())
-            startService();
+        startService();
 
+        OpenHelperManager.releaseHelper();
         return request;
     }
 

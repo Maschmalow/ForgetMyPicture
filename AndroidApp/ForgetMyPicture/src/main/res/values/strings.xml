@@ -6,6 +6,7 @@
     <string name="search_keywords_send_btn">Send</string>
     <string name="search_keywords_hint">Enter keywords here</string>
     <string name="search_started_toast">Search started</string>
+    <string name="search_failed_toast">Failed to create search. Please retry later.</string>
 
     <string name="user_setup_activity_name">Setup your data</string>
     <string name="user_setup_title">Please fill in this form:</string>
@@ -16,6 +17,7 @@
     <string name="user_setup_idcard">Please take a picture of your ID card:</string>
     <string name="user_setup_save_btn">Save</string>
     <string name="user_setup_save_toast">Saved</string>
+    <string name="user_setup_save_failed_toast">Failed to save data. Please retry later.</string>
     <string name="user_setup_invalid_toast">Invalid data entered.</string>
 
     <string name="homepage_activity_name">ForgetMyPicture</string>

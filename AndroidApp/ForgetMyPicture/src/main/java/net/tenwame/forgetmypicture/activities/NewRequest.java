@@ -42,9 +42,12 @@ public class NewRequest extends Activity {
     public void startSearchFromUI(View view) {
         Log.v(TAG, "Request started from UI");
         String[] keywords = keywordsField.getText().toString().split(" ");
-        Manager.getInstance().startNewRequest(Arrays.asList(keywords));
+        if(Manager.getInstance().startNewRequest(Arrays.asList(keywords)) == null) {
+            Toast.makeText(this, R.string.search_failed_toast, Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, R.string.search_started_toast, Toast.LENGTH_SHORT).show();
+        }
 
-        Toast.makeText(this, R.string.search_started_toast, Toast.LENGTH_SHORT).show();
         finish();
     }
 

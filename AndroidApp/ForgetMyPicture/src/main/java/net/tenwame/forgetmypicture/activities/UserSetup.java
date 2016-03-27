@@ -11,9 +11,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+
+import net.tenwame.forgetmypicture.DatabaseHelper;
 import net.tenwame.forgetmypicture.R;
 import net.tenwame.forgetmypicture.ServerInterface;
 import net.tenwame.forgetmypicture.UserData;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Created by Antoine on 21/02/2016.
@@ -24,10 +31,9 @@ public class UserSetup extends Activity {
 
     private static final int REQUEST_SELFIE_PIC =1;
     private static final int REQUEST_IDCARD_PIC =2;
-    private final UserData data = UserData.getInstance();
 
     private Bitmap idcardBitmap; //TODO: to be removed
-    private Bitmap selfieBitmap;
+    private Collection<Bitmap> selfiesBitmaps = new ArrayList<>();
 
     private EditText nameField;
     private EditText forenameField;
@@ -38,10 +44,6 @@ public class UserSetup extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(data.isSet()) {
-            Log.e(TAG, "User data is already set");
-            finish();
-        }
         setContentView(R.layout.activity_user_setup);
 
         nameField = (EditText) findViewById(R.id.name_field);
@@ -52,10 +54,18 @@ public class UserSetup extends Activity {
     }
 
     public void saveDataFromUI(View view) {
-        data.setupUserData(idcardBitmap, selfieBitmap, nameField.getText().toString(), forenameField.getText().toString(), emailField.getText().toString());
-        if(!data.isSet()) {
+        UserData.getUser().setup(emailField.getText().toString(), nameField.getText().toString(), forenameField.getText().toString(), idcardBitmap, selfiesBitmaps);
+        if(!UserData.getUser().isValid()) {
             Toast.makeText(this, R.string.user_setup_invalid_toast, Toast.LENGTH_SHORT).show();
             return;
+        }
+        DatabaseHelper helper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
+        try {
+            helper.getUserDao().update(UserData.getUser());
+        } catch (SQLException e) {
+            Log.e(TAG, "Could not save user data", e);
+            Toast.makeText(this, R.string.user_setup_save_failed_toast, Toast.LENGTH_LONG).show();
+            finish();
         }
         ServerInterface.register();
         Toast.makeText(this, R.string.user_setup_save_toast, Toast.LENGTH_SHORT).show();
@@ -86,7 +96,7 @@ public class UserSetup extends Activity {
         Bitmap thumb = (Bitmap) data.getExtras().get("data");
 
         if(requestCode == REQUEST_SELFIE_PIC) {
-            selfieBitmap = thumb;
+            selfiesBitmaps.add(thumb);
             selfieThumb.setImageBitmap(thumb);
         }
         if(requestCode == REQUEST_IDCARD_PIC) {

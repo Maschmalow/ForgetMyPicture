@@ -15,10 +15,10 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -28,8 +28,8 @@ import java.util.Set;
  * and update requests accordingly
  */
 public class SearchService extends IntentService{
-
     private static final String TAG = SearchService.class.getSimpleName();
+
     private static final String URL = "https://www.google.fr/search";
     private static final long DELAY = 100*60; //time in ms between each search
 
@@ -53,10 +53,14 @@ public class SearchService extends IntentService{
     protected void onHandleIntent(Intent intent) {
         helper = OpenHelperManager.getHelper(ForgetMyPictureApp.getContext(), DatabaseHelper.class);
 
-        curRequest = helper.getRequestDao().queryForId(0);
+        try {
+            curRequest = helper.getRequestDao().queryForId(0);
+        } catch (SQLException e) {
+            throw new RuntimeException("Could not start service", e);
+        }
         if( curRequest == null) return;
 
-        while(curRequest.getProgress() != 0) {
+        while(curRequest.getStatus() == Request.Status.FETCHING) {
 
             for( Request request : helper.getRequestDao() )
                 if( request.getStatus() == Request.Status.FETCHING )
@@ -73,18 +77,20 @@ public class SearchService extends IntentService{
 
     private void doSearch() {
         int progress = curRequest.getProgress();
-        List<List<String>> keywordsSets = Util.powerSet(curRequest.getKeywords());
-        setCurKeywords(keywordsSets.get(progress));
+        setCurKeywords(Util.powerSet(curRequest.getKeywords()).get(progress));
         setCurUserAgent();
         Set<Result> newResults = curRequest.addResults(scrapeData());
         ServerInterface.feedNewResults(newResults, curRequest);
         curRequest.setProgress(++progress);
-        if(progress == curRequest.getMaxProgress())
-            curRequest.setStatus(Request.Status.PROCESSING);
+        curRequest.updateStatus();
 
-        helper.getRequestDao().update(curRequest);
-        delay();
-        helper.getRequestDao().refresh(curRequest);
+        try {
+            helper.getRequestDao().update(curRequest);
+            delay();
+            helper.getRequestDao().refresh(curRequest);
+        } catch (SQLException e) { //restart service
+            throw new RuntimeException("Could not save or update request", e);
+        }
     }
 
 
@@ -112,13 +118,13 @@ public class SearchService extends IntentService{
         return results;
     }
 
-    private void setCurUserAgent() {
+    private void setCurUserAgent() { //TODO: fetch a credible user-agent from user default browser
         userAgent = "Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76B) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/43.0.2357.65 Mobile Safari/535.19";
     }
 
 
     private void setCurKeywords(Collection<String> keywords) {
-        String joined = UserData.getInstance().getForename() + " " + UserData.getInstance().getName() + " ";
+        String joined = UserData.getUser().getForename() + " " + UserData.getUser().getName() + " ";
         for( String keyword : keywords ) {
             joined += keyword + " ";
         }

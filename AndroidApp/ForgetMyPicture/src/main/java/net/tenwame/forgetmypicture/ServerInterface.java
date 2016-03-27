@@ -1,7 +1,6 @@
 package net.tenwame.forgetmypicture;
 
 import android.os.AsyncTask;
-import android.os.Looper;
 import android.util.Log;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -39,13 +38,8 @@ public class ServerInterface {
 
 
     private static void registerASync() throws IOException{
-        if(Looper.myLooper() == Looper.getMainLooper()) {
-            Log.e(TAG, "Server interaction must be done in a separate thread");
-            return;
-        }
 
-        DatabaseHelper helper = OpenHelperManager.getHelper(ForgetMyPictureApp.getContext(), DatabaseHelper.class);
-        User user = UserData.getInstanceUser(helper);
+        User user = UserData.getUser();
 
         Integer hash = 1; //TODO
         Connection connection = Jsoup.connect(BASE_URL + REGISTER_URL)
@@ -69,10 +63,7 @@ public class ServerInterface {
     }
 
     private static void newRequestASync(Request request) throws IOException{
-        if(Looper.myLooper() == Looper.getMainLooper()) {
-            Log.e(TAG, "Server interaction must be done in a separate thread");
-            return;
-        }
+
         Connection connection = Jsoup.connect(BASE_URL + NEW_REQUEST_URL)
                 .data("deviceId", UserData.getDeviceId())
                 .data("requestId", request.getId().toString());
@@ -90,10 +81,7 @@ public class ServerInterface {
     }
 
     private static void feedNewResultsASync(Collection<Result> results, Request request) throws IOException{
-        if(Looper.myLooper() == Looper.getMainLooper()) {
-            Log.e(TAG, "Server interaction must be done in a separate thread");
-            return;
-        }
+
         Connection connection = Jsoup.connect(BASE_URL + FEED_URL)
                 .data("deviceId", UserData.getDeviceId())
                 .data("requestId", request.getId().toString());
@@ -104,11 +92,8 @@ public class ServerInterface {
         Log.d(TAG, "Sent " + results.size() + " results for request " + request.getId());
     }
 
-    private static void getRequestInfoASync() throws IOException{
-        if(Looper.myLooper() == Looper.getMainLooper()) {
-            Log.e(TAG, "Server interaction must be done in a separate thread");
-            return;
-        }
+    private static void getRequestInfoASync() throws Exception{
+
         DatabaseHelper helper = OpenHelperManager.getHelper(ForgetMyPictureApp.getContext(), DatabaseHelper.class);
         String resp = Jsoup.connect(BASE_URL + GET_INFO_URL)
                 .ignoreContentType(true)
@@ -125,13 +110,11 @@ public class ServerInterface {
                 helper.getResultDao().update(result);
             }
 
-            for(Result result : request.getResults()) {
-                if(!result.isProcessed()) break;
-            }
-
+            request.updateStatus();
+            helper.getRequestDao().update(request);
         }
-        //TODO: parse and update info
-        //Log.d(TAG, "Request " + request.getId());
+
+        Log.d(TAG, "Updated " + update.size() + " requests.");
     }
 
 
@@ -188,13 +171,12 @@ public class ServerInterface {
             protected Void doInBackground(Void... params) {
                 try {
                     getRequestInfoASync();
-                } catch (IOException e) {
+                } catch (Exception e) {
                     throw new RuntimeException("Error in getRequestInfo()", e);
                 }
                 return null;
             }
         }.execute((Void) null);
-        OpenHelperManager.releaseHelper();
     }
 
     

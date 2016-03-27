@@ -26,6 +26,7 @@ public class User {
 
     public User(String deviceId) {
         this.deviceId = deviceId;
+        idCardPath = IDCARD_PREFIX + UUID.randomUUID().toString();
     }
 
     @DatabaseField(id = true)
@@ -49,23 +50,25 @@ public class User {
     @ForeignCollectionField()
     private ForeignCollection<Selfie> selfies;
 
-    public void setupUser(String email, String name, String forename, Bitmap idCard, Collection<Bitmap> selfies) {
+    public void setup(String email, String name, String forename, Bitmap idCard, Collection<Bitmap> selfies) {
         this.email = email;
         this.name = name;
         this.forename = forename;
         getIdCard().set(idCard);
+        this.selfies.clear();
         for( Bitmap selfiePic : selfies )
             this.selfies.add(new Selfie(selfiePic));
+    }
 
+    public boolean isValid() {
+        for(Selfie selfie : selfies)
+            if(selfie.getPic().get() == null)
+                return false;
+        return email != null && name != null && forename != null && getIdCard().get() != null;
     }
 
     public PictureAccess getIdCard() {
-        return new PictureAccess(idCardPath, new PictureAccess.PathGenerator() {
-            @Override
-            public String setNewPath() {
-                return idCardPath = IDCARD_PREFIX + UUID.randomUUID().toString();
-            }
-        });
+        return new PictureAccess(idCardPath);
     }
 
     public String getDeviceId() {

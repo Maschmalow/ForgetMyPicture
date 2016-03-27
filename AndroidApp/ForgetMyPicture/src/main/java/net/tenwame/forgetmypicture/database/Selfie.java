@@ -19,6 +19,7 @@ public class Selfie {
     Selfie() {}
 
     public Selfie(Bitmap selfie) {
+        path = SELFIE_PREFIX + UUID.randomUUID().toString();
         getPic().set(selfie);
         this.user = UserData.getInstance().getCachedUser();
     }
@@ -34,11 +35,6 @@ public class Selfie {
     }
 
     public PictureAccess getPic() {
-        return new PictureAccess(path, new PictureAccess.PathGenerator() {
-            @Override
-            public String setNewPath() {
-                return path = SELFIE_PREFIX + UUID.randomUUID().toString();
-            }
-        });
+        return new PictureAccess(path);
     }
 }

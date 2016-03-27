@@ -18,7 +18,7 @@ public class Homepage extends Activity {
     }
 
     public void startNewSearchFromUI(View v) {
-        if(!UserData.getInstance().isSet()) {
+        if(!UserData.getUser().isValid()) {
             Toast.makeText(this, R.string.homepage_setup_data_toast, Toast.LENGTH_LONG).show();
             startActivity(new Intent(this, UserSetup.class));
         } else {
