@@ -26,4 +26,5 @@
     <string name="homepage_requests_panel">My requests</string>
 
     <string name="open_helper_classname">DatabaseHelper</string>
+    <string name="user_setup_take_pic">Go</string>
 </resources>

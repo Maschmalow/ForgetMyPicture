@@ -15,7 +15,7 @@ import java.io.OutputStream;
  */
 public class PictureAccess {
 
-    private String path;
+    private final String path;
 
     public PictureAccess(String path) {
         this.path = path;

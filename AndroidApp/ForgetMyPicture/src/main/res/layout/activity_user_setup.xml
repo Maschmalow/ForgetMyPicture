@@ -107,7 +107,7 @@
                     <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Go"
+                        android:text="@string/user_setup_take_pic"
                         android:id="@+id/take_selfie_btn"
                         android:onClick="takePictureFromUI"/>
 
@@ -141,7 +141,7 @@
                     <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Go"
+                        android:text="@string/user_setup_take_pic"
                         android:id="@+id/take_idcard_btn"
                         android:onClick="takePictureFromUI"/>
 

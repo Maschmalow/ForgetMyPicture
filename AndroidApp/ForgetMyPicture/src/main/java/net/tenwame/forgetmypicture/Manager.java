@@ -107,12 +107,14 @@ public class Manager extends BroadcastReceiver{
     private boolean startService() {
         if(isServiceLaunched || !isNetworkConnected()) return false;
         curContext.startService(new Intent(curContext, SearchService.class));
+        isServiceLaunched = true;
         return true;
     }
 
     private boolean stopService() {
         if(!isServiceLaunched) return false;
         curContext.stopService(new Intent(curContext, SearchService.class));
+        isServiceLaunched = false;
         return true;
     }
 }
