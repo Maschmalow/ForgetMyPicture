@@ -29,4 +29,8 @@ public class Homepage extends Activity {
     public void goToRequestsFromUI(View v) {
         startActivity(new Intent(this, RequestsPanel.class));
     }
+
+    public void goToDataFromUI(View view) {
+        startActivity(new Intent(this, UserSetup.class));
+    }
 }

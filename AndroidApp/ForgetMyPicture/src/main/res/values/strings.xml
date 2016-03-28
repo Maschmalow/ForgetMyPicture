@@ -7,6 +7,9 @@
     <string name="search_keywords_hint">Enter keywords here</string>
     <string name="search_started_toast">Search started</string>
     <string name="search_failed_toast">Failed to create search. Please retry later.</string>
+    <string name="open_helper_classname">DatabaseHelper</string>
+    <string name="search_kind_checkbox">Quick search</string>
+    <string name="search_select_original_pic">Select picture</string>
 
     <string name="user_setup_activity_name">Setup your data</string>
     <string name="user_setup_title">Please fill in this form:</string>
@@ -25,6 +28,8 @@
     <string name="homepage_new_request">Start a new request</string>
     <string name="homepage_setup_data_toast">Please set up your data before starting a new Search</string>
     <string name="homepage_requests_panel">My requests</string>
+    <string name="homepage_user_setup">Setup my data</string>
+    <string name="search_no_picture_selected">No Picture selected</string>
 
-    <string name="open_helper_classname">DatabaseHelper</string>
+
 </resources>

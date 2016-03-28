@@ -3,6 +3,7 @@ package net.tenwame.forgetmypicture;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
@@ -70,9 +71,11 @@ public class Manager extends BroadcastReceiver{
         curContext = ForgetMyPictureApp.getContext();
     }
 
-    public Request startNewRequest(List<String> keywords) {
+
+
+    public Request startNewRequest(List<String> keywords, Bitmap originalPic) {
         DatabaseHelper helper = OpenHelperManager.getHelper(curContext, DatabaseHelper.class);
-        Request request = new Request(keywords);
+        Request request = new Request(keywords, originalPic);
         try {
             helper.getRequestDao().create(request);
         } catch (SQLException e) {

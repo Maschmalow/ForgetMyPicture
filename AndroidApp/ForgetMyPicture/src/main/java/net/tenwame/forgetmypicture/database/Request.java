@@ -36,24 +36,23 @@ public class Request {
 
     Request() {}
 
-    public Request(List<String> keywords, Bitmap originalPic) {
-        setStatus(Status.FETCHING);
-        setKind(Kind.QUICK);
-        user = UserData.getInstance().getCachedUser();
-        this.keywords = new ArrayList<>(keywords);
-        if(originalPic == null) throw new IllegalArgumentException("original picture is null");
-        originalPicPath = REQUEST_PREFIX + id + "_original_" + UUID.randomUUID().toString();
-        getOriginalPic().set(originalPic);
-        progress = 0;
+    public Request(List<String> keywords) {
+        this(keywords, null);
     }
 
-    public Request(List<String> keywords) {
+    public Request(List<String> keywords, Bitmap originalPic) {
         this.keywords = new ArrayList<>(keywords);
         setStatus(Status.FETCHING);
-        setKind(Kind.EXHAUSTIVE);
-        user = UserData.getInstance().getCachedUser();
+        user = UserData.getUser();
         progress = 0;
 
+        if(originalPic == null) {
+            setKind(Kind.EXHAUSTIVE);
+        } else {
+            setKind(Kind.QUICK);
+            originalPicPath = REQUEST_PREFIX + id + "_original_" + UUID.randomUUID().toString();
+            getOriginalPic().set(originalPic);
+        }
     }
 
     @DatabaseField(id = true)
