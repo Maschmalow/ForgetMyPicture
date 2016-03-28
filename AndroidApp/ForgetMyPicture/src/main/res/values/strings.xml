@@ -19,6 +19,7 @@
     <string name="user_setup_save_toast">Saved</string>
     <string name="user_setup_save_failed_toast">Failed to save data. Please retry later.</string>
     <string name="user_setup_invalid_toast">Invalid data entered.</string>
+    <string name="user_setup_take_pic">Go</string>
 
     <string name="homepage_activity_name">ForgetMyPicture</string>
     <string name="homepage_new_request">Start a new request</string>
@@ -26,5 +27,4 @@
     <string name="homepage_requests_panel">My requests</string>
 
     <string name="open_helper_classname">DatabaseHelper</string>
-    <string name="user_setup_take_pic">Go</string>
 </resources>
