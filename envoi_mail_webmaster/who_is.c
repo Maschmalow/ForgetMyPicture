@@ -39,14 +39,15 @@ int main(int argc, char ** argv)
 	{
 	  if (argv[1][i+1] == 'f' &&  argv[1][i+2] == 'r')
 	    {
-	      asprintf(&domain_name, "%s.fr", tmp);
+	      asprintf(&domain_name, "%s.%c%c", tmp, argv[1][i+1], argv[1][i+2]);
 	      found = 1;
 	    }
 	  else
 	    {
-	      if (argv[1][i+1] == 'n' &&  argv[1][i+2] == 'e' &&  argv[1][i+3] == 't')
+	      if ((argv[1][i+1] == 'n' &&  argv[1][i+2] == 'e' &&  argv[1][i+3] == 't') ||
+		  (argv[1][i+1] == 'o' &&  argv[1][i+2] == 'r' &&  argv[1][i+3] == 'g'))
 		{
-		  asprintf(&domain_name, "%s.net", tmp);
+		  asprintf(&domain_name, "%s.%c%c%c", tmp, argv[1][i+1], argv[1][i+2], argv[1][i+3]);
 		  found = 1;
 		}
 	      else

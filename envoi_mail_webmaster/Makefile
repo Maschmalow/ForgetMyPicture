@@ -16,8 +16,13 @@ test_parseur: Who_is Parseur
 	@./parseur adr_mail.txt
 	@echo
 	@sleep 1
-	@echo For the address: fr.atos.net:
-	@./who_is fr.atos.net > adr_mail.txt
+	@echo For the URL: https://www.atositchallenge.net/ideas/selected-teams:
+	@./who_is https://www.atositchallenge.net/ideas/selected-teams > adr_mail.txt
+	@./parseur adr_mail.txt
+	@echo
+	@sleep 1
+	@echo For the URL: https://fr.wikipedia.org/wiki/Wikip%C3%A9dia:Accueil_principal:
+	@./who_is https://fr.wikipedia.org/wiki/Wikip%C3%A9dia:Accueil_principal > adr_mail.txt
 	@./parseur adr_mail.txt
 	@echo
 	@sleep 1
@@ -34,13 +39,13 @@ test_mail: Who_is Send_mail
 	@./send_mail adr_mail.txt
 
 Parseur:
-	gcc -g -O0 -o parseur parseur.c
+	gcc -o parseur parseur.c
 
 Send_mail:
 	gcc -o send_mail send_mail.c
 
 Who_is:
-	gcc -g -O0 -o  who_is who_is.c
+	gcc -o  who_is who_is.c
 
 cleanall:
 	rm -rf who_is parseur send_mail adr_mail.txt *~
