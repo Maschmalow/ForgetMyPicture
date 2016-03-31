@@ -21,6 +21,11 @@ test_parseur: Who_is Parseur
 	@./parseur adr_mail.txt
 	@echo
 	@sleep 1
+	@echo For the URL: https://www.legifrance.gouv.fr/Droit-francais:
+	@./who_is https://www.legifrance.gouv.fr/Droit-francais > adr_mail.txt
+	@./parseur adr_mail.txt
+	@echo
+	@sleep 1
 	@echo For the URL: https://www.atositchallenge.net/ideas/selected-teams:
 	@./who_is https://www.atositchallenge.net/ideas/selected-teams > adr_mail.txt
 	@./parseur adr_mail.txt
