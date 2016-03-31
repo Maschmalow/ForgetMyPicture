@@ -89,7 +89,7 @@ void process(char * ims, char * imd, char * transformation, int nb_cols, int nb_
  * \brief do_transformation program start.
  *
  * \param argc Number of arguments
- * \param *argv[] Array of arguments
+ * \param *argv[] Array of arguments: argv[1] Path of the source image | argv[2] Path of the destination image | argv[3] Name of the transformation | argv[4] It is only used to crop or resize. Number of columns of the destination image. | argv[5] It is only used to crop or resize. Number of rows of the destination image. | argv[6] It is only used to crop. Column of the source image which is the first column of the destination image. | argv[7] It is only used to crop. Row of the source image which is the first row of the destination image.
  *
  * \return EXIT_SUCCESS - Normal do_transformation program end
  */

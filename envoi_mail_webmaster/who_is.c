@@ -13,7 +13,7 @@
  * \brief who_is program start.
  *
  * \param argc Number of arguments
- * \param **argv Array of arguments
+ * \param **argv Array of arguments : argv[1] Web address/URL
  *
  * \return EXIT_SUCCESS - Normal who_is program end
  */

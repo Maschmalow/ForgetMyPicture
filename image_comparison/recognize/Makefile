@@ -35,6 +35,10 @@ error_test: recognize
 	@echo Now the content of the error file is\:
 	@cat error.txt
 	@echo
+	@./recognize ../data/lena-color.ppm ../data/lena-color.ppm error.txt # This case is the normal case.
+	@echo Now the content of the error file is\:
+	@cat error.txt
+	@echo
 	@./recognize ../data/lena-color.ppm ../data/lena-color.ppm # This case is accepted, there is not just the path of the error file.
 	@echo Now the content of the error file is\:
 	@cat error.txt

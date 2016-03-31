@@ -341,7 +341,7 @@ void use(char * s, char * path, int argc)
 {
 
   FILE *file = fopen(path, "a");
-  fprintf(file, "There are %d arguments, but this program needs to have %d arguments.\nUse: %s <first image> <second image> <path of the error file>\n", argc - 1, PARAM, s);
+  fprintf(file, "There are %d arguments, but this program needs to have %d arguments.\nUse: %s <path of the first image> <path of the second image> <path of the error file>\n", argc - 1, PARAM, s);
   fclose(file);
   exit(EXIT_SUCCESS); //exit(EXIT_FAILURE);
 }
@@ -352,7 +352,7 @@ void use(char * s, char * path, int argc)
  * \brief recognize program start.
  *
  * \param argc Number of arguments
- * \param *argv[] Array of arguments
+ * \param *argv[] Array of arguments: argv[1] Path of the first image | argv[2] Path of the second image | argv[3] Path of the file to write the possible errors
  *
  * \return EXIT_SUCCESS - Normal recognize program end
  */

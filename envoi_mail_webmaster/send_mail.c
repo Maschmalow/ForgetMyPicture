@@ -17,7 +17,7 @@
  * \brief send_mail program start.
  *
  * \param argc Number of arguments
- * \param **argv Array of arguments
+ * \param **argv Array of arguments : argv[1] Path of the email address file
  *
  * \return EXIT_SUCCESS - Normal send_mail program end
  */
