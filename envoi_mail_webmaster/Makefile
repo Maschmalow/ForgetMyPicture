@@ -16,6 +16,11 @@ test_parseur: Who_is Parseur
 	@./parseur adr_mail.txt
 	@echo
 	@sleep 1
+	@echo For the address: bbc.co.uk:
+	@./who_is bbc.co.uk > adr_mail.txt
+	@./parseur adr_mail.txt
+	@echo
+	@sleep 1
 	@echo For the URL: https://www.atositchallenge.net/ideas/selected-teams:
 	@./who_is https://www.atositchallenge.net/ideas/selected-teams > adr_mail.txt
 	@./parseur adr_mail.txt

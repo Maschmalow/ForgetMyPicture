@@ -37,7 +37,8 @@ int main(int argc, char ** argv)
 	asprintf(&domain_name, "%s%c", tmp, argv[1][i]);
       else
 	{
-	  if (argv[1][i+1] == 'f' &&  argv[1][i+2] == 'r')
+	  if ((argv[1][i+1] == 'f' &&  argv[1][i+2] == 'r') ||
+	      (argv[1][i+1] == 'c' &&  argv[1][i+2] == 'o' && argv[1][i+3] != 'm'))
 	    {
 	      asprintf(&domain_name, "%s.%c%c", tmp, argv[1][i+1], argv[1][i+2]);
 	      found = 1;
@@ -45,7 +46,8 @@ int main(int argc, char ** argv)
 	  else
 	    {
 	      if ((argv[1][i+1] == 'n' &&  argv[1][i+2] == 'e' &&  argv[1][i+3] == 't') ||
-		  (argv[1][i+1] == 'o' &&  argv[1][i+2] == 'r' &&  argv[1][i+3] == 'g'))
+		  (argv[1][i+1] == 'o' &&  argv[1][i+2] == 'r' &&  argv[1][i+3] == 'g')||
+		  (argv[1][i+1] == 'c' &&  argv[1][i+2] == 'o' &&  argv[1][i+3] == 'm'))
 		{
 		  asprintf(&domain_name, "%s.%c%c%c", tmp, argv[1][i+1], argv[1][i+2], argv[1][i+3]);
 		  found = 1;

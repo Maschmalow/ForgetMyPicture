@@ -41,6 +41,7 @@ int main(int argc, char ** argv)
 	{
 	  sscanf(line, "e-mail:\t%[^\n]\n", adr[i]);
 	  sscanf(line, "Admin Email: %[^\n]\n", adr[i]);
+	  sscanf(line, "Administrative Contact Email:\t%[^\n]\n", adr[i]);
 	  fgets(line, SIZE_ADR*sizeof(char), file);
 	}
       else
