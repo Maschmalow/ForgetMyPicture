@@ -9,9 +9,11 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import net.tenwame.forgetmypicture.ForgetMyPictureApp;
 import net.tenwame.forgetmypicture.PictureAccess;
 import net.tenwame.forgetmypicture.UserData;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -25,6 +27,14 @@ import java.util.UUID;
 @DatabaseTable(tableName = "request")
 public class Request {
     private static final String REQUEST_PREFIX = "request_";
+    private static int cur_id;
+    static {
+        try {
+            cur_id = (int) ForgetMyPictureApp.getHelper().getRequestDao().countOf();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public enum Kind {QUICK, EXHAUSTIVE}
 
@@ -36,11 +46,8 @@ public class Request {
 
     Request() {}
 
-    public Request(List<String> keywords) {
-        this(keywords, null);
-    }
-
     public Request(List<String> keywords, Bitmap originalPic) {
+        id = cur_id++; //assumes that every newly created request will be stored
         this.keywords = new ArrayList<>(keywords);
         setStatus(Status.FETCHING);
         user = UserData.getUser();
@@ -50,7 +57,7 @@ public class Request {
             setKind(Kind.EXHAUSTIVE);
         } else {
             setKind(Kind.QUICK);
-            originalPicPath = REQUEST_PREFIX + id + "_original_" + UUID.randomUUID().toString();
+            originalPicPath = REQUEST_PREFIX + id + "_original_pic_" + UUID.randomUUID().toString();
             getOriginalPic().set(originalPic);
         }
     }
@@ -79,7 +86,7 @@ public class Request {
     @DatabaseField(dataType = DataType.SERIALIZABLE)
     private ArrayList<String> keywords;
 
-    @ForeignCollectionField
+    @ForeignCollectionField(eager = true)
     private ForeignCollection<Result> results;
 
     public Integer getId() {
@@ -139,6 +146,7 @@ public class Request {
         for(Result result : results)
             if(this.results.add(result))
                 newResults.add(result);
+
 
         return newResults;
     }

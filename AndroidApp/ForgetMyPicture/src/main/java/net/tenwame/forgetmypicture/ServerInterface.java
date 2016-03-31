@@ -3,8 +3,6 @@ package net.tenwame.forgetmypicture;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.j256.ormlite.android.apptools.OpenHelperManager;
-
 import net.tenwame.forgetmypicture.database.Request;
 import net.tenwame.forgetmypicture.database.Result;
 import net.tenwame.forgetmypicture.database.Selfie;
@@ -93,8 +91,8 @@ public class ServerInterface {
     }
 
     private static void getRequestInfoASync() throws Exception{
+        DatabaseHelper helper = ForgetMyPictureApp.getHelper();
 
-        DatabaseHelper helper = OpenHelperManager.getHelper(ForgetMyPictureApp.getContext(), DatabaseHelper.class);
         String resp = Jsoup.connect(BASE_URL + GET_INFO_URL)
                 .ignoreContentType(true)
                 .method(Connection.Method.GET)
@@ -126,7 +124,7 @@ public class ServerInterface {
                 try {
                     registerASync();
                 } catch (IOException e) {
-                    throw new RuntimeException("Error in register()", e);
+                    Log.e(TAG, "Could not register", e);
                 }
                 return null;
             }
@@ -141,7 +139,7 @@ public class ServerInterface {
                 try {
                     newRequestASync(request);
                 } catch (IOException e) {
-                    throw new RuntimeException("Error in feedNewResults()", e);
+                    Log.e(TAG, "Could not send new request", e);
                 }
                 return null;
             }
@@ -156,7 +154,7 @@ public class ServerInterface {
                 try {
                     feedNewResultsASync(results, request);
                 } catch (IOException e) {
-                    throw new RuntimeException("Error in feedNewResults()", e);
+                    Log.e(TAG, "Could not feed new results", e);
                 }
                 return null;
             }
@@ -172,7 +170,7 @@ public class ServerInterface {
                 try {
                     getRequestInfoASync();
                 } catch (Exception e) {
-                    throw new RuntimeException("Error in getRequestInfo()", e);
+                    Log.e(TAG, "Could not get request info", e);
                 }
                 return null;
             }

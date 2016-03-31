@@ -21,7 +21,7 @@ public class Selfie {
     public Selfie(Bitmap selfie) {
         path = SELFIE_PREFIX + UUID.randomUUID().toString();
         getPic().set(selfie);
-        this.user = UserData.getInstance().getCachedUser();
+        this.user = UserData.getUser();
     }
 
     @DatabaseField(id = true)

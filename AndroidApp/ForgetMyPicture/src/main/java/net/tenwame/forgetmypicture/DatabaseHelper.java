@@ -21,7 +21,7 @@ import java.sql.SQLException;
  */
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "ForgetMyPicture.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
 
     private Dao<Result, String> resultDao;
@@ -32,6 +32,16 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+
+        try {
+            resultDao = getDao(Result.class);
+            requestDao = getDao(Request.class);
+            userDao = getDao(User.class);
+            selfieDao = getDao(Selfie.class);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     @Override
@@ -41,11 +51,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, Request.class);
             TableUtils.createTableIfNotExists(connectionSource, User.class);
             TableUtils.createTableIfNotExists(connectionSource, Selfie.class);
-
-            resultDao = getDao(Result.class);
-            requestDao = getDao(Request.class);
-            userDao = getDao(User.class);
-            selfieDao = getDao(Selfie.class);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

@@ -8,8 +8,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
-import com.j256.ormlite.android.apptools.OpenHelperManager;
-
 import net.tenwame.forgetmypicture.database.Request;
 
 import java.sql.SQLException;
@@ -74,10 +72,9 @@ public class Manager extends BroadcastReceiver{
 
 
     public Request startNewRequest(List<String> keywords, Bitmap originalPic) {
-        DatabaseHelper helper = OpenHelperManager.getHelper(curContext, DatabaseHelper.class);
         Request request = new Request(keywords, originalPic);
         try {
-            helper.getRequestDao().create(request);
+            ForgetMyPictureApp.getHelper().getRequestDao().create(request);
         } catch (SQLException e) {
             Log.e(TAG, "Could not create new request", e);
             return null;
@@ -85,7 +82,6 @@ public class Manager extends BroadcastReceiver{
         ServerInterface.newRequest(request);
         startService();
 
-        OpenHelperManager.releaseHelper();
         return request;
     }
 

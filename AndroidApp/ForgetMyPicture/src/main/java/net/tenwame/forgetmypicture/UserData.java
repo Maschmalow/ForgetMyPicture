@@ -2,8 +2,6 @@ package net.tenwame.forgetmypicture;
 
 import android.provider.Settings.Secure;
 
-import com.j256.ormlite.android.apptools.OpenHelperManager;
-
 import net.tenwame.forgetmypicture.database.User;
 
 import java.sql.SQLException;
@@ -27,17 +25,17 @@ public class UserData {
     }
 
     private static User setUser() {
-        DatabaseHelper helper = OpenHelperManager.getHelper(ForgetMyPictureApp.getContext(), DatabaseHelper.class);
+        DatabaseHelper helper = ForgetMyPictureApp.getHelper();
         try {
             user = helper.getUserDao().queryForId(deviceId);
             if(user == null) {
                 user = new User(deviceId);
                 helper.getUserDao().create(user);
             }
+            helper.getUserDao().refresh(user); //this is tricky. We refresh the user so ORMLite setup the ForeignCollections
         } catch (SQLException e) {
             throw new RuntimeException("Could not fetch or create user", e);
         }
-        OpenHelperManager.releaseHelper();
 
         return user;
     }

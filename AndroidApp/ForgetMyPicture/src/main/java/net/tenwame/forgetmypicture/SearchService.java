@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.net.UrlQuerySanitizer;
 import android.util.Log;
 
-import com.j256.ormlite.android.apptools.OpenHelperManager;
-
 import net.tenwame.forgetmypicture.database.Request;
 import net.tenwame.forgetmypicture.database.Result;
 
@@ -51,7 +49,7 @@ public class SearchService extends IntentService{
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        helper = OpenHelperManager.getHelper(ForgetMyPictureApp.getContext(), DatabaseHelper.class);
+        helper = ForgetMyPictureApp.getHelper();
 
         try {
             curRequest = helper.getRequestDao().queryForId(0);
@@ -70,7 +68,6 @@ public class SearchService extends IntentService{
             doSearch();
         }
 
-        OpenHelperManager.releaseHelper();
     }
 
 
@@ -118,7 +115,7 @@ public class SearchService extends IntentService{
         return results;
     }
 
-    private void setCurUserAgent() { //TODO: fetch a credible user-agent from user default browser
+    private void setCurUserAgent() { //TODO: fetch an adequate user-agent from user default browser
         userAgent = "Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76B) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/43.0.2357.65 Mobile Safari/535.19";
     }
 

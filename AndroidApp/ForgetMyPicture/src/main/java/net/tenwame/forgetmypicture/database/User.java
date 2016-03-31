@@ -44,10 +44,10 @@ public class User {
     @DatabaseField()
     private String idCardPath;
 
-    @ForeignCollectionField
+    @ForeignCollectionField(eager = true)
     private ForeignCollection<Request> requests;
 
-    @ForeignCollectionField()
+    @ForeignCollectionField(eager = true)
     private ForeignCollection<Selfie> selfies;
 
     public void setup(String email, String name, String forename, Bitmap idCard, Collection<Bitmap> selfies) {
@@ -61,6 +61,7 @@ public class User {
     }
 
     public boolean isValid() {
+        if(selfies.isEmpty()) return false;
         for(Selfie selfie : selfies)
             if(selfie.getPic().get() == null)
                 return false;
