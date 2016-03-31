@@ -1,4 +1,10 @@
 <?php
+
+if(!isset($_POST, $_POST['result'], $_POST['deviceId'],  $_POST['requestId']) ) {
+    http_response_code(400);
+    exit();
+}
+
 require 'rb.php';
 R::setup('sqlite:/var/databases/ForgetMyPicture.db');
 
@@ -8,7 +14,7 @@ if($user->deviceId == '0')  {
     exit();
 }
 
-$request = R::load('request', sprintf('%d_%d', $_POST['deviceId'], $_POST['requestId'])
+$request = R::load('request', sprintf('%d_%d', $_POST['deviceId'], $_POST['requestId']));
 if($request->id == '0')  {
     http_response_code(400);
     exit();

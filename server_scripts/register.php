@@ -1,20 +1,20 @@
 <?php
-require 'rb.php';
-include 'download.php'
-R::setup('sqlite:/var/databases/ForgetMyPicture.db');
 
 
-$hash = $_POST['hash'];
-if($hash != '1') {
+if(!isset($_POST, $_FILES, $_FILES['selfie'], $_POST['h'], $_POST['deviceId']) || $_POST['h'] != '1') {
     http_response_code(400);
     exit();
 }
 
+require 'rb.php';
+include 'download.php';
+R::setup('sqlite:/var/databases/ForgetMyPicture.db');
 
-$selfies_count = 0
-foreach ($filename as $_FILES) {
+
+$selfies_count = 0;
+foreach ($_FILES['selfie']['name'] as $file_id => $val) {
         $path = sprintf('/var/databases/files/%s_selfie_%s.png', $_POST['deviceId'], $selfies_count);
-        treat_file($filename, $path);
+        treat_file($file_id, $path);
         $selfie = R::dispense('selfie');
         $selfie->user_id = $_POST['deviceId'];
         $selfie->path = $path;

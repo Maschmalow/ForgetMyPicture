@@ -1,6 +1,12 @@
 <?php
+
+if(!isset( $_POST, $_POST['deviceId'],  $_POST['requestId']) ) {
+    http_response_code(400);
+    exit();
+}
+
 require 'rb.php';
-include 'download.php'
+include 'download.php';
 R::setup('sqlite:/var/databases/ForgetMyPicture.db');
 
 
@@ -13,20 +19,20 @@ if($user->deviceId == '0')  {
 $request = R::dispense('request');
 $request->user_id = $user->deviceId;
 $request->id = sprintf("%s_%s", $user->deviceId, $_POST['requestId']);
-if(count($_FILES) == 0) {
+if(!isset($FILES)) {
     $request->kind = 'EXAUSHTIVE';
-    $request->originalPicPath = NULL
-} else if(count($_FILES) == 1) {
+    $request->originalPicPath = NULL;
+} else if(count($_FILES['name']) == 1) {
     $path = sprintf('/var/databases/files/%s_originalPic.png', $request->id);
-    treat_file(array_pop($_FILES), $path);
-    $request->originalPicPath = $path
+    treat_file($_FILES['original_pic'], $path);
+    $request->originalPicPath = $path;
     $request->kind = 'QUICK';
 } else {
     http_response_code(400);
     exit();
 }
 
-R::store($request)
+R::store($request);
 
 R::close();
 ?>
