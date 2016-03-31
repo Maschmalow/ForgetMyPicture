@@ -22,6 +22,8 @@ int main(int argc, char ** argv)
   char * chaine;
   asprintf(&chaine, "whois %s | grep e-mail", argv[1]);
   system(chaine);
+  asprintf(&chaine, "whois %s | grep Admin | grep Email", argv[1]);
+  system(chaine);
   free(chaine);
   printf("@!@!@!FIN@!@!@!\n");
   return EXIT_SUCCESS; 

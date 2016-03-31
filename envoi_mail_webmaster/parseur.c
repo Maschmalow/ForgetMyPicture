@@ -32,14 +32,15 @@ int main(int argc, char ** argv)
   fgets(line, SIZE_ADR*sizeof(char), file);
 
   for (i = 0;
-       line[0] != '@' && line[1] != '!' && line[2] != '@' && line[3] != '!' && line[4] != '@' && line[5] != '!'
-	 && line[6] != 'F' && line[7] != 'I' && line[8] != 'N'
-	 && line[9] != '@' && line[10] != '!' && line[11] != '@' && line[12] != '!' && line[13] != '@' && line[14] != '!';
+       line[0] != '@' || line[1] != '!' || line[2] != '@' || line[3] != '!' || line[4] != '@' || line[5] != '!'
+	 || line[6] != 'F' || line[7] != 'I' || line[8] != 'N'
+	 || line[9] != '@' || line[10] != '!' || line[11] != '@' || line[12] != '!' || line[13] != '@' || line[14] != '!';
        i++)
     {
       if (i < NB_ADR)
 	{
 	  sscanf(line, "e-mail:\t%[^\n]\n", adr[i]);
+	  sscanf(line, "Admin Email: %[^\n]\n", adr[i]);
 	  fgets(line, SIZE_ADR*sizeof(char), file);
 	}
       else
@@ -49,7 +50,8 @@ int main(int argc, char ** argv)
   fclose(file);
   
   for (j = 0; j < i && j < NB_ADR; j++)
-    printf("%s\n", adr[j]);
+    if (strcmp(adr[j], ""))
+      printf("%s\n", adr[j]);
  
   return EXIT_SUCCESS; 
 }

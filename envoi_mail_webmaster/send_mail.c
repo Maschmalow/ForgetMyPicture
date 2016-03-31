@@ -32,14 +32,15 @@ int main(int argc, char ** argv)
   fgets(line, SIZE_ADR*sizeof(char), file);
 
   for (i = 0;
-       line[0] != '@' && line[1] != '!' && line[2] != '@' && line[3] != '!' && line[4] != '@' && line[5] != '!'
-	 && line[6] != 'F' && line[7] != 'I' && line[8] != 'N'
-	 && line[9] != '@' && line[10] != '!' && line[11] != '@' && line[12] != '!' && line[13] != '@' && line[14] != '!';
+       line[0] != '@' || line[1] != '!' || line[2] != '@' || line[3] != '!' || line[4] != '@' || line[5] != '!'
+	 || line[6] != 'F' || line[7] != 'I' || line[8] != 'N'
+	 || line[9] != '@' || line[10] != '!' || line[11] != '@' || line[12] != '!' || line[13] != '@' || line[14] != '!';
        i++)
     {
       if (i < NB_ADR)
 	{
 	  sscanf(line, "e-mail:\t%[^\n]\n", adr[i]);
+	  sscanf(line, "Admin Email: %[^\n]\n", adr[i]);
 	  fgets(line, SIZE_ADR*sizeof(char), file);
 	}
       else
@@ -52,16 +53,17 @@ int main(int argc, char ** argv)
   system("HELO enseirb.fr");
 
   for (j = 0; j < i && j < NB_ADR; j++)
-    {
-      system("MAIL FROM:FMP@enseirb-matmeca.fr");
-      char * chaine;
-      asprintf(&chaine, "RCPT TO:%s", adr[j]);
-      system(chaine);
-      free(chaine);
-      system("DATA");
-      system("Dear ..."); //ici on mettra le contenu/texte du mail
-      system(".");   
-    }
+    if (strcmp(adr[j], ""))
+      {
+	system("MAIL FROM:FMP@enseirb-matmeca.fr");
+	char * chaine;
+	asprintf(&chaine, "RCPT TO:%s", adr[j]);
+	system(chaine);
+	free(chaine);
+	system("DATA");
+	system("Dear ..."); //ici on mettra le contenu/texte du mail
+	system(".");   
+      }
 
   system("QUIT"); 
  
