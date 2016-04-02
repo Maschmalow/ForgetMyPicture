@@ -58,7 +58,12 @@ int main(int argc, char ** argv)
     {
       for (j = 0; j < i && j < NB_ADR; j++)
 	if (strcmp(adr[j], ""))
-	  ;//void send_mail(char * admin_email_adr, char * client_email_adr/*, char * first_name, char * name*/)
+	  {
+	    char * chaine = "";
+	    asprintf(&chaine, "php send_mail.php %s %s", adr[j], argv[2], argv[3], argv[4], argv[5]);
+	    system(chaine);
+	    free(chaine);
+	  }
     }
   else
     {
