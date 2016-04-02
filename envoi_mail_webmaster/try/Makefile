@@ -40,23 +40,23 @@ test_who_is: Who_is
 	@echo For the URL: http://enseirb-matmeca.fr/:
 	@./who_is http://enseirb-matmeca.fr/
 
-test_mail: Who_is Send_mail # a changer
+test_mail: Who_is Have_adr # a changer
 	@echo
 	@echo For the address: enseirb-matmeca.fr:
 	@./who_is enseirb-matmeca.fr > adr_mail.txt
-	@./send_mail adr_mail.txt
+	@./have_adr adr_mail.txt
 
 Parseur:
-	gcc -DTEST_OR_SEND=0 -o parseur send_mail.c
+	gcc -DTEST_OR_SEND=0 -o parseur have_adr.c
 
-Send_mail:
-	gcc -DTEST_OR_SEND=1 -o send_mail send_mail.c
+Have_adr:
+	gcc -DTEST_OR_SEND=1 -o have_adr have_adr.c
 
 Who_is:
 	gcc -o  who_is who_is.c
 
 cleanall:
-	rm -rf who_is parseur send_mail adr_mail.txt *~
+	rm -rf who_is parseur have_adr adr_mail.txt *~
 
 .PHONY :
 	clean all
