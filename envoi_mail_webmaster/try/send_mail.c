@@ -11,6 +11,10 @@
 #define SIZE_ADR 256 // Maximum size of an e-mail address
 #define NB_ADR 20 // Maximum number of addresses
 
+#ifndef TEST_OR_SEND
+#define TEST_OR_SEND 0
+#endif
+
 void send_mail(char * admin_email_adr, char * client_email_adr/*, char * first_name, char * name*/)
 {
   char * chaine, * chaine_bis;
@@ -63,7 +67,7 @@ void send_mail(char * admin_email_adr, char * client_email_adr/*, char * first_n
  */
 int main(int argc, char ** argv)
 {
-  char *path = argv[1]; // The first argument (argv[1]) is the path of the file
+  char *path = argv[1];
 
   FILE *file = fopen(path, "r");
   char line[SIZE_ADR + 20];
@@ -81,6 +85,7 @@ int main(int argc, char ** argv)
 	{
 	  sscanf(line, "e-mail:\t%[^\n]\n", adr[i]);
 	  sscanf(line, "Admin Email: %[^\n]\n", adr[i]);
+	  sscanf(line, "Administrative Contact Email:\t%[^\n]\n", adr[i]);
 	  fgets(line, SIZE_ADR*sizeof(char), file);
 	}
       else
@@ -89,14 +94,23 @@ int main(int argc, char ** argv)
 
   fclose(file);
   
-  system("telnet smtp.enseirb-matmeca.fr 25");
-  system("HELO enseirb.fr");
+  if (TEST_OR_SEND)
+    {
+      system("telnet smtp.enseirb-matmeca.fr 25");
+      system("HELO enseirb.fr");
 
-  for (j = 0; j < i && j < NB_ADR; j++)
-    if (strcmp(adr[j], ""))
-      send_mail(adr[j], argv[2]);
+      for (j = 0; j < i && j < NB_ADR; j++)
+	if (strcmp(adr[j], ""))
+	  //send_mail(adr[j], argv[2]);
 
-  system("QUIT"); 
+      system("QUIT");
+    }
+  else
+    {
+      for (j = 0; j < i && j < NB_ADR; j++)
+	if (strcmp(adr[j], ""))
+	  printf("%s\n", adr[j]);
+    }
  
   return EXIT_SUCCESS; 
 }

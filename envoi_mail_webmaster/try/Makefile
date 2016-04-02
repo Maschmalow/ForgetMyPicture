@@ -1,5 +1,4 @@
 test_parseur: Who_is Parseur
-# Need to wait a little between two tests
 	@echo
 	@echo For the URL: http://enseirb-matmeca.fr/:
 	@./who_is http://enseirb-matmeca.fr/ > adr_mail.txt
@@ -48,10 +47,10 @@ test_mail: Who_is Send_mail # a changer
 	@./send_mail adr_mail.txt
 
 Parseur:
-	gcc -o parseur parseur.c
+	gcc -DTEST_OR_SEND=0 -o parseur send_mail.c
 
 Send_mail:
-	gcc -o send_mail send_mail.c
+	gcc -DTEST_OR_SEND=1 -o send_mail send_mail.c
 
 Who_is:
 	gcc -o  who_is who_is.c
