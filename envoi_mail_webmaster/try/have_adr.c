@@ -32,20 +32,21 @@ int main(int argc, char ** argv)
   FILE *file = fopen(path, "r");
   char line[SIZE_ADR + 20];
   char adr[NB_ADR][SIZE_ADR];
-  int i, j;
+  int i = 0, j, k;
   fgets(line, SIZE_ADR*sizeof(char), file);
 
-  for (i = 0;
-       line[0] != '@' || line[1] != '!' || line[2] != '@' || line[3] != '!' || line[4] != '@' || line[5] != '!'
+  while (line[0] != '@' || line[1] != '!' || line[2] != '@' || line[3] != '!' || line[4] != '@' || line[5] != '!'
 	 || line[6] != 'F' || line[7] != 'I' || line[8] != 'N'
-	 || line[9] != '@' || line[10] != '!' || line[11] != '@' || line[12] != '!' || line[13] != '@' || line[14] != '!';
-       i++)
+	 || line[9] != '@' || line[10] != '!' || line[11] != '@' || line[12] != '!' || line[13] != '@' || line[14] != '!')
     {
       if (i < NB_ADR)
 	{
-	  sscanf(line, "e-mail:\t%[^\n]\n", adr[i]);
-	  sscanf(line, "Admin Email: %[^\n]\n", adr[i]);
-	  sscanf(line, "Administrative Contact Email:\t%[^\n]\n", adr[i]);
+	  if (sscanf(line, "e-mail:\t%[^\n]\n", adr[i]))
+	    i++;
+	  if (sscanf(line, "Admin Email: %[^\n]\n", adr[i]))
+	    i++;
+	  if (sscanf(line, "Administrative Contact Email:\t%[^\n]\n", adr[i]))
+	    i++;
 	  fgets(line, SIZE_ADR*sizeof(char), file);
 	}
       else
@@ -53,23 +54,42 @@ int main(int argc, char ** argv)
     }
 
   fclose(file);
-  
-  if (TEST_OR_SEND)
+
+  if (i)
     {
-      for (j = 0; j < i && j < NB_ADR; j++)
-	if (strcmp(adr[j], ""))
-	  {
-	    char * chaine = "";
-	    asprintf(&chaine, "php send_mail.php %s %s", adr[j], argv[2], argv[3], argv[4], argv[5]);
-	    system(chaine);
-	    free(chaine);
-	  }
-    }
-  else
-    {
-      for (j = 0; j < i && j < NB_ADR; j++)
-	if (strcmp(adr[j], ""))
-	  printf("%s\n", adr[j]);
+      char single_time_adr[i][SIZE_ADR];
+
+      for (j = 0; j < i; j++)
+	{
+	  int single_time = 1;
+	  for  (k = 0; k < j; k++)
+	    if (!strcmp(adr[j], single_time_adr[k]))
+	      single_time = 0;
+
+	  if (single_time)
+	    strcpy(single_time_adr[j], adr[j]);
+	  else
+	    strcpy(single_time_adr[j], "");
+	}
+
+      if (TEST_OR_SEND)
+	{
+	  for (j = 0; j < i; j++)
+	    if (strcmp(single_time_adr[j], ""))
+	      {
+		char * chaine = "";
+		asprintf(&chaine, "php send_mail.php %s %s %s %s %s", single_time_adr[j], argv[2], argv[3], argv[4], argv[5]);
+		system(chaine);
+		free(chaine);
+	      }
+	}
+      else
+	{
+	  for (j = 0; j < i; j++)
+	    if (strcmp(single_time_adr[j], ""))
+	      printf("%s\n", single_time_adr[j]);
+	}
+
     }
  
   return EXIT_SUCCESS; 
