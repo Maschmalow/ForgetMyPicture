@@ -12,10 +12,12 @@ $mail->Username = 'adurand??????@enseirb-matmeca.fr';                 // SMTP us
 $mail->Password = '????';                           // SMTP password
 $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
 $mail->Port = 25;                                    // TCP port to connect to
+$mail->Helo = 'enseirb.fr';                        // Set the SMTP HELO of the message (Default is $Hostname)
 
 $mail->setFrom('adurand??????@enseirb-matmeca.fr', 'ForgetMyPicture');    
 $mail->addAddress($argv[1]);               // Add a recipient, name is optional
-$mail->addCC($argv[2]);
+$mail->addReplyTo($argv[2]);           // Add a "Reply-to" address
+$mail->addCC($argv[2]);          // Add a "Cc" address. Note: this function works with the SMTP mailer on win32, not with the "mail" mailer
 
 $mail->isHTML(true);                                  // Set email format to HTML
 
