@@ -67,7 +67,7 @@ public class UserSetup extends Activity {
             Toast.makeText(this, R.string.user_setup_save_failed_toast, Toast.LENGTH_LONG).show();
             finish();
         }
-        ServerInterface.register();
+        ServerInterface.execute(ServerInterface.ACTION_REGISTER);
         Toast.makeText(this, R.string.user_setup_save_toast, Toast.LENGTH_SHORT).show();
         finish();
     }

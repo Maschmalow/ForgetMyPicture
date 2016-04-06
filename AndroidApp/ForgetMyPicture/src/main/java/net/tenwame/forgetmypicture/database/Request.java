@@ -63,7 +63,7 @@ public class Request {
     }
 
     @DatabaseField(id = true)
-    private int id;
+    private int id; //TODO: migrate to String (in server too!) and use a user-defined name
 
     @DatabaseField(canBeNull = false)
     private String status;
@@ -127,7 +127,7 @@ public class Request {
 
     public int getMaxProgress() {
         return  1 << keywords.size();
-    }
+    } //number of keywords set in powerset
 
     public List<String> getKeywords() {
         return keywords;
@@ -147,22 +147,20 @@ public class Request {
             if(this.results.add(result))
                 newResults.add(result);
 
-
         return newResults;
     }
 
-    public Status updateStatus() {
+    public void updateStatus() {
         if(getStatus() == Status.FETCHING && progress == getMaxProgress())
             setStatus(Status.PROCESSING);
-        if(getStatus() != Status.PROCESSING)
-            return getStatus();
 
-        for(Result result : results) {
+        if(getStatus() != Status.PROCESSING)
+            return;
+        for(Result result : results)
             if(!result.isProcessed())
-                return getStatus();
-        }
+                return;
+
         setStatus(Status.PENDING);
-        return Status.PENDING;
     }
 
     public User getUser() {

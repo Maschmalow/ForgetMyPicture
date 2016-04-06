@@ -6,14 +6,11 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
 
-
-    <uses-feature
-        android:name="android.hardware.camera2"
-        android:required="false"/>
+    <uses-feature android:name="android.hardware.camera2"
+                  android:required="false"/>
 
     <application
         android:name=".ForgetMyPictureApp"
-        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_full_name"
         android:supportsRtl="true"
@@ -31,17 +28,39 @@
             android:label="@string/homepage_activity_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
-        <service
-            android:name=".SearchService"
-            android:exported="false"/>
-
-        <activity android:name=".activities.RequestsPanel">
+        <activity
+            android:name=".activities.RequestsPanel"
+            android:label="@string/request_panel_activity_name">
         </activity>
+
+        <service android:name=".SearchService"
+                 android:exported="false"/>
+
+        <service android:name=".ServerInterface"
+                 android:exported="false"/>
+
+        <receiver
+            android:name=".Manager">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".Manager$AlarmReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="net.tenwame.forgetmypicture.alarm.search"/>
+                <action android:name="net.tenwame.forgetmypicture.alarm.update"/>
+            </intent-filter>
+        </receiver>
+
+
+
     </application>
 
 </manifest>

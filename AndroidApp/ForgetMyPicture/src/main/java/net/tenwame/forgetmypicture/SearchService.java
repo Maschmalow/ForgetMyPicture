@@ -3,6 +3,7 @@ package net.tenwame.forgetmypicture;
 import android.app.IntentService;
 import android.content.Intent;
 import android.net.UrlQuerySanitizer;
+import android.os.Bundle;
 import android.util.Log;
 
 import net.tenwame.forgetmypicture.database.Request;
@@ -14,6 +15,7 @@ import org.jsoup.nodes.Element;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,24 +24,22 @@ import java.util.Set;
 
 /**
  * Created by Antoine on 16/02/2016.
- * service that do Google searches on behalf of the user
+ * class that do Google searches on behalf of the user
  * and update requests accordingly
  */
 public class SearchService extends IntentService{
     private static final String TAG = SearchService.class.getSimpleName();
 
     private static final String URL = "https://www.google.fr/search";
-    private static final long DELAY = 100*60; //time in ms between each search
+    public static final long SEARCH_DELAY = 100*60; //time in ms between each search
 
-    private static long lastRequest;
-
-    private DatabaseHelper helper;
+    private DatabaseHelper helper = ForgetMyPictureApp.getHelper();;
     private String userAgent;
     private Map<String, String> queryData;
     private Request curRequest;
 
     public SearchService() {
-        super(TAG + "Service");
+        super(TAG);
         queryData = new HashMap<>();
         queryData.put("tbm", "isch");
         queryData.put("safe", "off");
@@ -47,63 +47,69 @@ public class SearchService extends IntentService{
     }
 
 
+    public static void execute() {
+        ForgetMyPictureApp.getContext().startService(new Intent(ForgetMyPictureApp.getContext(), SearchService.class).setPackage(ForgetMyPictureApp.getName()));
+    }
+
+
     @Override
     protected void onHandleIntent(Intent intent) {
-        helper = ForgetMyPictureApp.getHelper();
 
         try {
             curRequest = helper.getRequestDao().queryForId(0);
         } catch (SQLException e) {
-            throw new RuntimeException("Could not start service", e);
+            Manager.getInstance().notify(Manager.Event.SEARCHER_EXCEPTION);
+            Log.e(TAG, "Could not fetch requests", e);
+            return;
         }
-        if( curRequest == null) return;
+        if(curRequest == null)
+            return; //no request to process
 
-        while(curRequest.getStatus() == Request.Status.FETCHING) {
+        for( Request request : helper.getRequestDao() )
+            if( request.getStatus() == Request.Status.FETCHING )
+                if( request.getProgress() < curRequest.getProgress() )
+                    curRequest = request;
+        if(curRequest.getStatus() != Request.Status.FETCHING)
+            return; //no request to process
 
-            for( Request request : helper.getRequestDao() )
-                if( request.getStatus() == Request.Status.FETCHING )
-                    if( request.getProgress() < curRequest.getProgress() )
-                        curRequest = request;
-
-            doSearch();
-        }
-
+        doSearch();
     }
-
 
 
     private void doSearch() {
         int progress = curRequest.getProgress();
         setCurKeywords(Util.powerSet(curRequest.getKeywords()).get(progress));
         setCurUserAgent();
-        Set<Result> newResults = curRequest.addResults(scrapeData());
-        ServerInterface.feedNewResults(newResults, curRequest);
-        curRequest.setProgress(++progress);
+        Set<Result> results = scrapeData();
+        if(results.isEmpty()) {
+            Log.w(TAG, "No results");
+            return;
+        }
+        feedServer(curRequest.addResults(results));
+        curRequest.setProgress(progress + 1);
         curRequest.updateStatus();
 
         try {
             helper.getRequestDao().update(curRequest);
-            delay();
-            helper.getRequestDao().refresh(curRequest);
-        } catch (SQLException e) { //restart service
-            throw new RuntimeException("Could not save or update request", e);
+        } catch (SQLException e) {
+            Manager.getInstance().notify(Manager.Event.SEARCHER_EXCEPTION);
+            Log.e(TAG, "Could not save or update request", e);
         }
     }
 
 
-
     private Set<Result> scrapeData() {
-        lastRequest = System.currentTimeMillis();
         Set<Result> results = new HashSet<>(); //convert this to a list to support server prioritisation
         final Document doc;
 
         try {
             doc = Jsoup.connect(URL).data(queryData).userAgent(userAgent).get();
         } catch (IOException e) {
-            Log.e(TAG, "Could not start search.", e);
+            Manager.getInstance().notify(Manager.Event.SEARCHER_EXCEPTION);
+            Log.e(TAG, "Could not start search", e);
             return results;
         }
-        Log.d(TAG, "Request:\n" + doc.baseUri());
+        Log.d(TAG, "Request: " + doc.baseUri());
 
 
         for( Element elem : doc.select("div.rg_di.rg_el.ivg-i > a")) {
@@ -111,11 +117,21 @@ public class SearchService extends IntentService{
             results.add(new Result(query.getValue("imgurl"), query.getValue("imgrefurl"), curRequest));
         }
 
-        Log.d(TAG, "\nParsed: " + results.size() + "results.");
+        Log.d(TAG, "Parsed: " + results.size() + " results.");
         return results;
     }
 
-    private void setCurUserAgent() { //TODO: fetch an adequate user-agent from user default browser
+    private void feedServer(Set<Result> newResults) {
+        ArrayList<String> idList = new ArrayList<>(newResults.size());
+        for(Result result : newResults)
+            idList.add(result.getPicURL());
+        Bundle params = new Bundle();
+        params.putInt(ServerInterface.EXTRA_REQUEST_ID_KEY, curRequest.getId());
+        params.putStringArrayList(ServerInterface.EXTRA_RESULTS_KEY, idList);
+        ServerInterface.execute(ServerInterface.ACTION_FEED, params);
+    }
+
+    private void setCurUserAgent() { //TODO: check what is really needed here
         userAgent = "Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76B) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/43.0.2357.65 Mobile Safari/535.19";
     }
 
@@ -126,18 +142,6 @@ public class SearchService extends IntentService{
             joined += keyword + " ";
         }
         queryData.put("q", joined);
-    }
-
-    private void delay() {
-        long elapsedTime = System.currentTimeMillis() - lastRequest;
-        while( elapsedTime < DELAY) {
-            try {
-                Thread.sleep(DELAY - elapsedTime);
-            } catch (InterruptedException e) {
-                elapsedTime = System.currentTimeMillis() - lastRequest;
-            }
-        }
-
     }
 
 

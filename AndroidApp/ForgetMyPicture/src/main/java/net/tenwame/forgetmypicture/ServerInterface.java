@@ -1,6 +1,8 @@
 package net.tenwame.forgetmypicture;
 
-import android.os.AsyncTask;
+import android.app.IntentService;
+import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 
 import net.tenwame.forgetmypicture.database.Request;
@@ -11,9 +13,9 @@ import net.tenwame.forgetmypicture.database.User;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Stack;
 
@@ -22,21 +24,76 @@ import javax.json.JsonObject;
 
 /**
  * Created by Antoine on 24/02/2016.
- * class to use when communicating with the back-end server
+ * service to call when communicating with the back-end server
+ * updates are directly made to the database
  */
-public class ServerInterface {
+public class ServerInterface extends IntentService {
     private static final String TAG = ServerInterface.class.getSimpleName();
+
+    public static final String EXTRA_REQUEST_ID_KEY = ForgetMyPictureApp.getName() + ".requestId";
+    public static final String EXTRA_RESULTS_KEY = ForgetMyPictureApp.getName() + ".results";
+
+    public static final String ACTION_REGISTER = ForgetMyPictureApp.getName() + ".register";
+    public static final String ACTION_NEW_REQUEST = ForgetMyPictureApp.getName() + ".new_request";
+    public static final String ACTION_FEED = ForgetMyPictureApp.getName() + ".feed";
+    public static final String ACTION_GET_INFO = ForgetMyPictureApp.getName() + ".get_info";
+    public static final String ACTION_SEND_MAIL = ForgetMyPictureApp.getName() + ".send_mail";
 
     private static final String BASE_URL = "http://adurand00005.rtrinity.enseirb.fr";
     private static final String REGISTER_URL = "/register.php";
     private static final String NEW_REQUEST_URL = "/new_request.php";
     private static final String FEED_URL = "/feed.php";
     private static final String GET_INFO_URL = "/get_info.php";
+    private static final String SEND_MAIL_URL = "/send_mail.php";
 
 
+    private DatabaseHelper helper = ForgetMyPictureApp.getHelper();
+    private Intent curIntent;
 
-    private static void registerASync() throws IOException{
+    public ServerInterface() {
+        super(TAG);
+    }
 
+    public static void execute(String action) {
+        execute(action, null);
+    }
+
+    public static void execute(String action, Bundle extras) {
+        Intent intent = new Intent(ForgetMyPictureApp.getContext(), ServerInterface.class);
+        intent.setPackage(ForgetMyPictureApp.getName());
+        intent.setAction(action);
+        if(extras != null)
+            intent.putExtras(extras);
+        ForgetMyPictureApp.getContext().startService(intent);
+    }
+
+    @Override
+    protected void onHandleIntent(Intent intent) {
+        Log.d(TAG, "Request for action: " + intent.getAction());
+        curIntent = intent;
+
+        try {
+            if( ACTION_FEED.equals(intent.getAction()) )
+                feedNewResults();
+            if( ACTION_GET_INFO.equals(intent.getAction()) )
+                getRequestInfo();
+            if( ACTION_NEW_REQUEST.equals(intent.getAction()) )
+                newRequest();
+            if( ACTION_REGISTER.equals(intent.getAction()) )
+                register();
+            if( ACTION_SEND_MAIL.equals(intent.getAction()))
+                sendMail();
+
+        }catch (Exception e) {
+            Manager.getInstance().notify(getFailEvent(intent.getAction()));
+            Log.e(TAG, "Server interface exception", e);
+        }
+
+        curIntent = null;
+    }
+
+
+    private void register() throws Exception{
         User user = UserData.getUser();
 
         Integer hash = 1; //TODO
@@ -60,7 +117,8 @@ public class ServerInterface {
         Log.d(TAG, "Device " + UserData.getDeviceId() + " successfully registered.");
     }
 
-    private static void newRequestASync(Request request) throws IOException{
+    private void newRequest() throws Exception{
+        Request request = getRequestFromIntent();
 
         Connection connection = Jsoup.connect(BASE_URL + NEW_REQUEST_URL)
                 .data("deviceId", UserData.getDeviceId())
@@ -78,7 +136,12 @@ public class ServerInterface {
         Log.d(TAG, "new request registered: " + request.getId());
     }
 
-    private static void feedNewResultsASync(Collection<Result> results, Request request) throws IOException{
+    private void feedNewResults() throws Exception{
+        Request request = getRequestFromIntent();
+        Collection<Result> results = new ArrayList<>();
+        for(String resultId : curIntent.getStringArrayListExtra(EXTRA_RESULTS_KEY))
+            results.add(helper.getResultDao().queryForId(resultId)); //TODO: check for null values
+
 
         Connection connection = Jsoup.connect(BASE_URL + FEED_URL)
                 .data("deviceId", UserData.getDeviceId())
@@ -90,8 +153,7 @@ public class ServerInterface {
         Log.d(TAG, "Sent " + results.size() + " results for request " + request.getId());
     }
 
-    private static void getRequestInfoASync() throws Exception{
-        DatabaseHelper helper = ForgetMyPictureApp.getHelper();
+    private void getRequestInfo() throws Exception{
 
         String resp = Jsoup.connect(BASE_URL + GET_INFO_URL)
                 .ignoreContentType(true)
@@ -115,68 +177,36 @@ public class ServerInterface {
         Log.d(TAG, "Updated " + update.size() + " requests.");
     }
 
+    private void sendMail() throws Exception {
+        Request request = getRequestFromIntent();
 
-    public static void register() {
-        Log.d(TAG, "register");
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                try {
-                    registerASync();
-                } catch (IOException e) {
-                    Log.e(TAG, "Could not register", e);
-                }
-                return null;
-            }
-        }.execute((Void) null);
+        Jsoup.connect(BASE_URL + SEND_MAIL_URL)
+                .data("deviceId", UserData.getDeviceId())
+                .data("requestId", request.getId().toString())
+                .get();
     }
 
-    public static void newRequest(final Request request) {
-        Log.d(TAG, "registering new request " + request.getId());
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                try {
-                    newRequestASync(request);
-                } catch (IOException e) {
-                    Log.e(TAG, "Could not send new request", e);
-                }
-                return null;
-            }
-        }.execute((Void) null);
+    private Request getRequestFromIntent() throws Exception{
+        int requestId = curIntent.getIntExtra(EXTRA_REQUEST_ID_KEY, -1);
+        Request request = helper.getRequestDao().queryForId(requestId);
+        if(request == null)
+            throw new RuntimeException("No request found for request Id: " + requestId);
+        return request;
     }
 
-    public static void feedNewResults(final Collection<Result> results, final Request request) {
-        Log.d(TAG, "feeding " + results.size() + " results for request " + request.getId());
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                try {
-                    feedNewResultsASync(results, request);
-                } catch (IOException e) {
-                    Log.e(TAG, "Could not feed new results", e);
-                }
-                return null;
-            }
-        }.execute((Void) null);
+
+    public Manager.Event getFailEvent(String action) {
+        if(ACTION_REGISTER.equals(action))
+            return Manager.Event.REGISTER_FAILED;
+        if(ACTION_NEW_REQUEST.equals(action))
+            return Manager.Event.NEW_REQUEST_FAILED;
+        if(ACTION_GET_INFO.equals(action))
+            return Manager.Event.GET_INFO_FAILED;
+        if(ACTION_FEED.equals(action))
+            return Manager.Event.FEED_FAILED;
+        if(ACTION_SEND_MAIL.equals(action))
+            return Manager.Event.SEND_MAIL_FAILED;
+
+        return null;
     }
-
-    public static void getRequestInfo() {
-        Log.d(TAG, "info update");
-
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                try {
-                    getRequestInfoASync();
-                } catch (Exception e) {
-                    Log.e(TAG, "Could not get request info", e);
-                }
-                return null;
-            }
-        }.execute((Void) null);
-    }
-
-    
-
 }
