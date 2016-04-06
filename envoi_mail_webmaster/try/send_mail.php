@@ -3,18 +3,18 @@ require 'PHPMailer-master/PHPMailerAutoload.php';
 
 $mail = new PHPMailer;
 
-//$mail->SMTPDebug = 3;                               // Enable verbose debug output
+$mail->SMTPDebug = 2;                               // Enable verbose debug output
 
 $mail->isSMTP();                                      // Set mailer to use SMTP
-$mail->Host = 'smtp.enseirb-matmeca.fr';  // Specify main and backup SMTP servers
+$mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
 $mail->SMTPAuth = true;                               // Enable SMTP authentication
-$mail->Username = 'adurand??????@enseirb-matmeca.fr';                 // SMTP username
-$mail->Password = '????';                           // SMTP password
+$mail->Username = 'ForgetMyPicture@gmail.com';                 // SMTP username
+$mail->Password = '******';                           // SMTP password
 $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
-$mail->Port = 25;                                    // TCP port to connect to
-$mail->Helo = 'enseirb.fr';                        // Set the SMTP HELO of the message (Default is $Hostname)
+$mail->Port = 465;  //465 gmail, 25 enseirb            // TCP port to connect to
+//$mail->Helo = 'enseirb.fr';                        // Set the SMTP HELO of the message (Default is $Hostname)
 
-$mail->setFrom('adurand??????@enseirb-matmeca.fr', 'ForgetMyPicture');    
+$mail->setFrom('ForgetMyPicture@gmail.com', 'ForgetMyPicture');
 $mail->addAddress($argv[1]);               // Add a recipient, name is optional
 $mail->addReplyTo($argv[2]);           // Add a "Reply-to" address
 $mail->addCC($argv[2]);          // Add a "Cc" address. Note: this function works with the SMTP mailer on win32, not with the "mail" mailer
