@@ -1,11 +1,13 @@
 package net.tenwame.forgetmypicture;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.os.Bundle;
 import android.util.Log;
 
 import net.tenwame.forgetmypicture.database.Request;
@@ -34,41 +36,34 @@ public class Manager extends BroadcastReceiver{
         return instance;
     }
 
+    public enum Event {
+        SEARCHER_EXCEPTION,
+        REGISTER_FAILED,
+        FEED_FAILED,
+        GET_INFO_FAILED,
+        NEW_REQUEST_FAILED,
+        FILL_FORM_FAILED,
+        SEND_MAIL_FAILED
+    }
 
-    private static final long TRACKING_DELAY = 100*60*5; //time between each update, ms
-    private final Thread trackingThread = new Thread(new Runnable() {
-        @Override
-        public void run() {
-            while( true ) {
-                ServerInterface.getRequestInfo();
-                startService();
-                try {
-                    Thread.sleep(TRACKING_DELAY);
-                } catch (InterruptedException e) {
-                    return;
-                }
-            }
-        }
-    });
+
+    private static final long UPDATE_DELAY = 100*60*5; //time between each update, ms
 
     private Context curContext = ForgetMyPictureApp.getContext();
-    private boolean isServiceLaunched = false;
+    private AlarmManager alarm = (AlarmManager) curContext.getSystemService(Context.ALARM_SERVICE);
+    private boolean areAlarmsScheduled = false;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         curContext = context;
         if( ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) {
-            if(isNetworkConnected()) {
-                startService();
-                startTracking();
-            } else {
-                stopService();
-                stopTracking();
-            }
+            if(ForgetMyPictureApp.isNetworkConnected())
+                scheduleAlarms();
+            else
+                cancelAlarms();
         }
         curContext = ForgetMyPictureApp.getContext();
     }
-
 
 
     public Request startNewRequest(List<String> keywords, Bitmap originalPic) {
@@ -79,41 +74,67 @@ public class Manager extends BroadcastReceiver{
             Log.e(TAG, "Could not create new request", e);
             return null;
         }
-        ServerInterface.newRequest(request);
-        startService();
+        Bundle params = new Bundle();
+        params.putInt(ServerInterface.EXTRA_REQUEST_ID_KEY, request.getId());
+        ServerInterface.execute(ServerInterface.ACTION_NEW_REQUEST, params);
 
         return request;
     }
 
+    public void notify(Event event) {
+        if(event == Event.SEARCHER_EXCEPTION) {
 
-    private boolean isNetworkConnected() {
-        ConnectivityManager cm = (ConnectivityManager) curContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
-    }
-
-    private boolean startTracking() {
-        if(trackingThread.isAlive() || !isNetworkConnected()) return false;
-        trackingThread.start();
-        return true;
+        } //TODO: handle other events
     }
 
-    private boolean stopTracking() {
-        if(!trackingThread.isAlive()) return false;
-        trackingThread.interrupt();
-        return true;
-    }
-    private boolean startService() {
-        if(isServiceLaunched || !isNetworkConnected()) return false;
-        curContext.startService(new Intent(curContext, SearchService.class));
-        isServiceLaunched = true;
-        return true;
+
+    private void scheduleAlarms() {
+        if(areAlarmsScheduled) return;
+        scheduleAction(AlarmReceiver.ACTION_DO_UPDATE, UPDATE_DELAY);
+        scheduleAction(AlarmReceiver.ACTION_DO_SEARCH, SearchService.SEARCH_DELAY);
+        areAlarmsScheduled = true;
     }
 
-    private boolean stopService() {
-        if(!isServiceLaunched) return false;
-        curContext.stopService(new Intent(curContext, SearchService.class));
-        isServiceLaunched = false;
-        return true;
+    private void cancelAlarms() {
+        if(!areAlarmsScheduled) return;
+        cancelAction(AlarmReceiver.ACTION_DO_UPDATE);
+        cancelAction(AlarmReceiver.ACTION_DO_SEARCH);
+        areAlarmsScheduled = false;
     }
+
+    private void cancelAction(String action) {
+        alarm.cancel(getPendingIntent(action));
+    }
+
+    private void scheduleAction(String action, long interval) {
+        alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+                System.currentTimeMillis(),
+                interval,
+                getPendingIntent(action));
+    }
+
+    private PendingIntent getPendingIntent(String action) {
+        Intent intent = new Intent(curContext, AlarmReceiver.class);
+        intent.setAction(action);
+        return PendingIntent.getBroadcast(curContext, AlarmReceiver.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    public static class AlarmReceiver extends  BroadcastReceiver{
+        public static final int REQUEST_CODE = 0; //not used
+        public static final String ACTION_DO_SEARCH = ForgetMyPictureApp.getName() + ".alarm.search";
+        public static final String ACTION_DO_UPDATE = ForgetMyPictureApp.getName() + ".alarm.update";
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(!ForgetMyPictureApp.isNetworkConnected())
+                return;
+
+            if(ACTION_DO_SEARCH.equals(intent.getAction()))
+                SearchService.execute();
+
+            if(ACTION_DO_UPDATE.equals(intent.getAction()))
+                ServerInterface.execute(ServerInterface.ACTION_GET_INFO);
+        }
+    }
+
 }

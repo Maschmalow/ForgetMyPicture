@@ -51,7 +51,7 @@ public class User {
     private ForeignCollection<Selfie> selfies;
 
     public void setup(String email, String name, String forename, Bitmap idCard, Collection<Bitmap> selfies) {
-        this.email = email;
+        this.email = email.replace(" ", "");
         this.name = name;
         this.forename = forename;
         getIdCard().set(idCard);
