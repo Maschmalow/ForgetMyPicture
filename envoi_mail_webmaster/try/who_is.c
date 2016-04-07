@@ -1,6 +1,6 @@
 /**
  * \file who_is.c
- * \brief Print website host administrator e-mail addresses thanks to the function whois
+ * \brief Print e-mail addresses from an URL thanks to the function whois
  * \author Pierre PLUMIER
  */
 
@@ -11,7 +11,13 @@
 
 #define SIZE_MAX 256 // Maximum size of a web site domain
 
-
+/**
+ * \fn void do_whois(char * domain_name, int need_free)
+ * \brief Do the function whois for an web site domain address, print addresses from the whois result and free the string if it was allocated.
+ *
+ * \param *domain_name Path of the first image
+ * \param need_free Boolean to know if domain_name should be freed : domain_name is freed if and only if need_free is equal to 1
+ */
 void do_whois(char * domain_name, int need_free)
 {
   char * chaine;

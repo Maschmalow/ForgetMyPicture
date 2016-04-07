@@ -21,7 +21,7 @@
  * \brief send_mail program start.
  *
  * \param argc Number of arguments
- * \param **argv Array of arguments : argv[1] Path of the email address file
+ * \param **argv Array of arguments: argv[1] Path of the email address file | argv[2] User's e-mail address | argv[3] User's First name | argv[4] User's LAST NAME | argv[5] Photo URL | argv[6] Citizenship
  *
  * \return EXIT_SUCCESS - Normal send_mail program end
  */
@@ -78,7 +78,7 @@ int main(int argc, char ** argv)
 	    if (strcmp(single_time_adr[j], ""))
 	      {
 		char * chaine = "";
-		asprintf(&chaine, "php send_mail.php %s %s %s %s %s", single_time_adr[j], argv[2], argv[3], argv[4], argv[5]);
+		asprintf(&chaine, "php send_mail.php %s %s %s %s %s %s", single_time_adr[j], argv[2], argv[3], argv[4], argv[5], argv[6]);
 		system(chaine);
 		free(chaine);
 	      }

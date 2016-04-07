@@ -1,3 +1,15 @@
+/**
+ * \file send_mail.php
+ * \brief Send mail to a website host administrator
+ * \author Pierre PLUMIER
+ *
+ * \param $argv[1] Administrator e-mail address
+ * \param $argv[2] User's e-mail address
+ * \param $argv[3] User's First name
+ * \param $argv[4] User's LAST NAME
+ * \param $argv[5] Photo URL
+ * \param $argv[6] Citizenship
+ */
 <?php
 require 'PHPMailer-master/PHPMailerAutoload.php';
 
@@ -23,7 +35,7 @@ $mail->isHTML(true);                                  // Set email format to HTM
 
 $mail->Subject = 'Detrimental photo problem';
 
-$which_text = 1; // $argv[7] == 'uk' or no $argv[7]
+$which_text = 1; // $argv[7] == 'uk' or no $argv[7] (Default)
 
 if ($argc == 7)
   {
