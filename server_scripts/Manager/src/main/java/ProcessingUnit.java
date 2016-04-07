@@ -29,9 +29,9 @@ import database.User;
  */
 class ProcessingUnit implements Runnable {
     private static final Logger logger = Logger.getLogger(ProcessingUnit.class.getName());
-    private static final String FR_PATH = "/home/adurand00005/FR/Recognize";
-    private static final String IC_PATH = "/home/adurand00005/IC/recognize";
-    private static final String BASE_FILES_PATH = "/var/databases/files/";
+    private static final String FR_PATH = System.getenv("MANAGER_PATH") + "FR/Recognize";
+    private static final String IC_PATH = System.getenv("MANAGER_PATH") + "IC/recognize";
+    private static final String BASE_FILES_PATH = System.getenv("BASE_FILES_PATH");
 
     private final Result result;
 

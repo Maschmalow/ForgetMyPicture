@@ -21,7 +21,7 @@ import database.User;
 
 class Main {
     private static final Logger logger = Logger.getLogger(Main.class.getName());
-    private static final String DB_PATH = "jdbc:sqlite:/var/databases/ForgetMyPicture.db";
+    private static final String DB_PATH = "jdbc:sqlite:" + System.getenv("DB_PATH");
     private static final int NB_WORKERS = 16;
     private static final int REFRESH_RATE = 500; //ms
 
