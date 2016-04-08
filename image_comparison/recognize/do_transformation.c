@@ -11,6 +11,8 @@
 #include <bcl.h>
 #include "transformation.h"
 
+#define ERROR_FILE "error.txt" // Path of the file to write the possible errors
+
 
 /**
  * \fn void use (char * s, char * transformation)
@@ -21,14 +23,17 @@
  */
 void use(char * s, char * transformation)
 {
+  FILE *file = fopen(ERROR_FILE, "a");
+
   if (!strcmp(transformation, "resize"))
-    fprintf(stderr, "Use: %s <source> <destination> <transformation> <nb_cols> <nb_rows>\n", s);
+    fprintf(file, "Use: %s <source> <destination> <transformation> <nb_cols> <nb_rows>\n", s);
   else
     if (!strcmp(transformation, "crop"))
-      fprintf(stderr, "Use: %s <source> <destination> <transformation> <nb_cols> <nb_rows> <first_col> <first_row>\n", s);
+      fprintf(file, "Use: %s <source> <destination> <transformation> <nb_cols> <nb_rows> <first_col> <first_row>\n", s);
     else
-      fprintf(stderr, "Use: %s <source> <destination> <transformation>\n", s);
+      fprintf(file, "Use: %s <source> <destination> <transformation>\n", s);
 
+  fclose(file);
   exit(EXIT_FAILURE);
 }
 
@@ -70,7 +75,9 @@ void process(char * ims, char * imd, char * transformation, int nb_cols, int nb_
 	  crop(&originImage, &finalImage, first_row, first_col, nb_rows, nb_cols);
       else
 	{
-	  fprintf(stderr, "transformation not defined\n");
+	  FILE *file = fopen(ERROR_FILE, "a");
+	  fprintf(file, "transformation not defined\n");
+	  fclose(file);
 	  pnm_free(finalImage);
 	  pnm_free(originImage);
 	  use(s, transformation);

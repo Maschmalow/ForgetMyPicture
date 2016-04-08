@@ -327,7 +327,7 @@ void process(char *ims, char *imt)
 
 
 #define PARAM 3
-#define ERROR_FILE "error.txt"
+#define ERROR_FILE "error.txt" // Default path of the file to write the possible errors
 
 /**
  * \fn void use (char * s, char * path)
