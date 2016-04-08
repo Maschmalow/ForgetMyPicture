@@ -1,4 +1,5 @@
 test_parseur: Who_is Parseur
+	@rm -rf error.txt
 	@echo
 	@echo For the URL: http://enseirb-matmeca.fr/:
 	@./who_is http://enseirb-matmeca.fr/ > adr_mail.txt

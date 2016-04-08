@@ -10,6 +10,7 @@
 
 #define SIZE_ADR 256 // Maximum size of an e-mail address
 #define NB_ADR 20 // Maximum number of addresses
+#define ERROR_FILE "error.txt" // Path of the file to write the possible errors
 
 #ifndef TEST_OR_SEND
 #define TEST_OR_SEND 0
@@ -47,10 +48,15 @@ int main(int argc, char ** argv)
 	    i++;
 	  if (sscanf(line, "Administrative Contact Email:\t%[^\n]\n", adr[i]))
 	    i++;
-	  fgets(line, SIZE_ADR*sizeof(char), file);
 	}
       else
-	fprintf(stderr, "address array too small\n");
+	{
+	  FILE *file = fopen(ERROR_FILE, "a");
+	  fprintf(file, "address array too small\n");
+	  fclose(file);
+	}
+
+      fgets(line, SIZE_ADR*sizeof(char), file);
     }
 
   fclose(file);
