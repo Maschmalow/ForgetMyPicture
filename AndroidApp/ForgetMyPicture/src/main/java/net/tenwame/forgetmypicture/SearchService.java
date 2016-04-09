@@ -43,6 +43,7 @@ public class SearchService extends IntentService{
         queryData = new HashMap<>();
         queryData.put("tbm", "isch");
         queryData.put("safe", "off");
+        queryData.put("num", "100");
         queryData.put("qws_rd", "ssl"); //try to see if it works without this
     }
 
@@ -56,7 +57,7 @@ public class SearchService extends IntentService{
     protected void onHandleIntent(Intent intent) {
 
         try {
-            curRequest = helper.getRequestDao().queryForId(0);
+            curRequest = helper.getRequestDao().queryForId(1);
         } catch (SQLException e) {
             Manager.getInstance().notify(Manager.Event.SEARCHER_EXCEPTION);
             Log.e(TAG, "Could not fetch requests", e);
@@ -112,9 +113,10 @@ public class SearchService extends IntentService{
         Log.d(TAG, "Request: " + doc.baseUri());
 
 
-        for( Element elem : doc.select("div.rg_di.rg_el.ivg-i > a")) {
+        for( Element elem : doc.select("div.rg_di.rg_el.ivg-i > a[href]")) {
             UrlQuerySanitizer query = new UrlQuerySanitizer(elem.attr("href"));
-            results.add(new Result(query.getValue("imgurl"), query.getValue("imgrefurl"), curRequest));
+            if(query.hasParameter("imgurl") && query.hasParameter("imgrefurl"))
+                results.add(new Result(query.getValue("imgurl"), query.getValue("imgrefurl"), curRequest));
         }
 
         Log.d(TAG, "Parsed: " + results.size() + " results.");
@@ -132,7 +134,7 @@ public class SearchService extends IntentService{
     }
 
     private void setCurUserAgent() { //TODO: check what is really needed here
-        userAgent = "Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76B) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/43.0.2357.65 Mobile Safari/535.19";
+        userAgent = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36";
     }
 
 

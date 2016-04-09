@@ -2,10 +2,10 @@ package net.tenwame.forgetmypicture;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.crittercism.app.Crittercism;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 /**
@@ -18,8 +18,10 @@ public class ForgetMyPictureApp extends Application {
 
     public void onCreate() {
         super.onCreate();
+        Crittercism.initialize(getApplicationContext(), "f540f2393bac4199bd54307a928e1a0a00444503");
         context = getApplicationContext();
         helper = OpenHelperManager.getHelper(context, DatabaseHelper.class);
+        Manager.getInstance(); //initialize manager
     }
 
     public static Context getContext() {
@@ -28,10 +30,6 @@ public class ForgetMyPictureApp extends Application {
 
     public static DatabaseHelper getHelper() {
         return helper;
-    }
-
-    public static void startService(Class<?> serviceClass) {
-        context.startService(new Intent(context, serviceClass));
     }
 
 

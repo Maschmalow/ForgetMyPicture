@@ -9,7 +9,6 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
-import net.tenwame.forgetmypicture.ForgetMyPictureApp;
 import net.tenwame.forgetmypicture.PictureAccess;
 import net.tenwame.forgetmypicture.UserData;
 
@@ -27,14 +26,6 @@ import java.util.UUID;
 @DatabaseTable(tableName = "request")
 public class Request {
     private static final String REQUEST_PREFIX = "request_";
-    private static int cur_id;
-    static {
-        try {
-            cur_id = (int) ForgetMyPictureApp.getHelper().getRequestDao().countOf();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public enum Kind {QUICK, EXHAUSTIVE}
 
@@ -47,7 +38,6 @@ public class Request {
     Request() {}
 
     public Request(List<String> keywords, Bitmap originalPic) {
-        id = cur_id++; //assumes that every newly created request will be stored
         this.keywords = new ArrayList<>(keywords);
         setStatus(Status.FETCHING);
         user = UserData.getUser();
@@ -62,7 +52,7 @@ public class Request {
         }
     }
 
-    @DatabaseField(id = true)
+    @DatabaseField(generatedId = true)
     private int id; //TODO: migrate to String (in server too!) and use a user-defined name
 
     @DatabaseField(canBeNull = false)
@@ -142,10 +132,17 @@ public class Request {
     }
 
     public Set<Result> addResults(Set<Result> results) {
+        try {
+            this.results.refreshCollection();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         Set<Result> newResults = new HashSet<>();
         for(Result result : results)
-            if(this.results.add(result))
+            if(!this.results.contains(result)) { //this is retarded,
+                this.results.add(result);        //but ORMLite's add crashes instead of returning false
                 newResults.add(result);
+            }
 
         return newResults;
     }

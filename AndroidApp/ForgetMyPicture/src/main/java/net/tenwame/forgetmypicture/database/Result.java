@@ -29,7 +29,7 @@ public class Result {
     @DatabaseField(canBeNull = false)
     private int match;
 
-    @DatabaseField(foreign = true)
+    @DatabaseField(foreign = true, foreignAutoRefresh = true)
     private Request request;
 
     public boolean isProcessed() {
@@ -54,5 +54,21 @@ public class Result {
 
     public Request getRequest() {
         return request;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if( this == o ) return true;
+        if( o == null || getClass() != o.getClass() ) return false;
+
+        if( !picURL.equals(((Result) o).picURL) ) return false;
+        return picRefURL.equals(((Result) o).picRefURL);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = picURL.hashCode();
+        result = 31 * result + picRefURL.hashCode();
+        return result;
     }
 }

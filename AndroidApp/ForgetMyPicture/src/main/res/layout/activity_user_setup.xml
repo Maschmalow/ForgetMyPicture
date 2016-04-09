@@ -116,7 +116,7 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/selfie_thumb"
                         android:maxHeight="150dp"
-                        android:contentDescription="Selfie thumbnail"/>
+                        android:contentDescription="@string/user_setup_selfie_desc"/>
                 </LinearLayout>
 
             </LinearLayout>
@@ -150,7 +150,7 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/idcard_thumb"
                         android:maxHeight="150dp"
-                        android:contentDescription="ID card picture thumbnail" />
+                        android:contentDescription="@string/user_setup_idcard_desc" />
                 </LinearLayout>
 
             </LinearLayout>

@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "net.tenwame.forgetmypicture"
-        minSdkVersion 19
+        minSdkVersion 11
         targetSdkVersion 23
         versionCode 1
         versionName "0.1"
@@ -24,5 +24,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'org.jsoup:jsoup:1.8.3'
     compile 'org.glassfish:javax.json:1.0.4'
-    compile 'com.j256.ormlite:ormlite-android:4.48'
+    compile 'com.crittercism:crittercism-android-agent:5.5.5'
 }

@@ -1,6 +1,9 @@
 <resources>
     <string name="app_full_name">ForgetMyPicture</string>
+    <string name="open_helper_classname">DatabaseHelper</string>
 
+
+    <!-- search activity -->
     <string name="search_activity_name">Start a new request</string>
     <string name="search_title">Please enter keywords:</string>
     <string name="search_keywords_send_btn">Send</string>
@@ -11,6 +14,7 @@
     <string name="search_select_original_pic">Select picture</string>
     <string name="search_no_picture_selected">No Picture selected</string>
 
+    <!-- user_setup activity -->
     <string name="user_setup_activity_name">Setup your data</string>
     <string name="user_setup_title">Please fill in this form:</string>
     <string name="user_setup_name">Name:</string>
@@ -23,19 +27,29 @@
     <string name="user_setup_save_failed_toast">Failed to save data. Please retry later.</string>
     <string name="user_setup_invalid_toast">Invalid data entered.</string>
     <string name="user_setup_take_pic">Go</string>
+    <string name="user_setup_selfie_desc">Selfie thumbnail</string>
+    <string name="user_setup_idcard_desc">ID card picture thumbnail</string>
 
+    <!-- homepage activity -->
     <string name="homepage_activity_name">ForgetMyPicture</string>
     <string name="homepage_new_request">Start a new request</string>
     <string name="homepage_setup_data_toast">Please set up your data before starting a new Search</string>
     <string name="homepage_requests_panel">My requests</string>
     <string name="homepage_user_setup">Setup my data</string>
 
+    <!-- request_panel activity -->
     <string name="request_panel_activity_name">Requests Panel</string>
-    <string name="request_panel_processed">%d%% processed</string>
-    <string name="request_panel_fetched">%d%% fetched</string>
-    <string name="request_panel_results">- %d results</string>
-    <string name="request_panel_id">ID: %d</string>
-    <string name="request_panel_error_requests">Error while loading requests</string>
+    <!-- requests_list fragment -->
+    <string name="requests_list_no_requests">No requests</string>
+    <string name="request_item_processed">%d%% processed</string>
+    <string name="request_item_fetched">%d%% fetched</string>
+    <string name="request_item_results">- %d results</string>
+    <string name="request_item_id">ID: %d</string>
+    <!-- request_infos fragment -->
+    <string name="request_infos_title">%1$s search %2$d</string>
+    <string name="request_infos_status">STATUS : %s</string>
+    <string name="request_infos_no_results">No results</string>
+    <string name="result_item_pic_url">Picture URL: %s</string>
+    <string name="result_item_pic_ref_url">Page: %s</string>
 
-    <string name="open_helper_classname">DatabaseHelper</string>
 </resources>

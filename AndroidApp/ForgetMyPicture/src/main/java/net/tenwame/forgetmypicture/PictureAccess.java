@@ -26,8 +26,14 @@ public class PictureAccess {
     }
     
     public Bitmap get() {
-        try(InputStream stream = ForgetMyPictureApp.getContext().openFileInput(path)) {
-            return BitmapFactory.decodeStream(stream);
+        try {
+            InputStream stream = ForgetMyPictureApp.getContext().openFileInput(path);
+            try {
+                return BitmapFactory.decodeStream(stream);
+            } finally {
+                if(stream != null)
+                    stream.close();
+            }
         } catch (FileNotFoundException e) {
             return null;
         } catch(IOException e) {
@@ -41,8 +47,14 @@ public class PictureAccess {
             return;
         }
 
-        try(OutputStream stream = ForgetMyPictureApp.getContext().openFileOutput(path, Context.MODE_PRIVATE)) {
-            pic.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        try {
+            OutputStream stream = ForgetMyPictureApp.getContext().openFileOutput(path, Context.MODE_PRIVATE);
+            try {
+                pic.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            } finally {
+                if(stream != null)
+                    stream.close();
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

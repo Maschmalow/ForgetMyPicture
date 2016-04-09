@@ -22,7 +22,7 @@ import java.util.List;
  * - start/stop service when needed
  * - periodically get updates from server
  */
-public class Manager extends BroadcastReceiver{
+public class Manager {
     private static final String TAG = Manager.class.getSimpleName();
 
     private static Manager instance = null;
@@ -49,20 +49,13 @@ public class Manager extends BroadcastReceiver{
 
     private static final long UPDATE_DELAY = 100*60*5; //time between each update, ms
 
-    private Context curContext = ForgetMyPictureApp.getContext();
-    private AlarmManager alarm = (AlarmManager) curContext.getSystemService(Context.ALARM_SERVICE);
+    private Context context = ForgetMyPictureApp.getContext();
+    private AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
     private boolean areAlarmsScheduled = false;
 
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        curContext = context;
-        if( ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) {
-            if(ForgetMyPictureApp.isNetworkConnected())
-                scheduleAlarms();
-            else
-                cancelAlarms();
-        }
-        curContext = ForgetMyPictureApp.getContext();
+    private Manager() {
+        if(ForgetMyPictureApp.isNetworkConnected())
+            scheduleAlarms();
     }
 
 
@@ -114,12 +107,25 @@ public class Manager extends BroadcastReceiver{
     }
 
     private PendingIntent getPendingIntent(String action) {
-        Intent intent = new Intent(curContext, AlarmReceiver.class);
+        Intent intent = new Intent(context, AlarmReceiver.class);
         intent.setAction(action);
-        return PendingIntent.getBroadcast(curContext, AlarmReceiver.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return PendingIntent.getBroadcast(context, AlarmReceiver.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
-    public static class AlarmReceiver extends  BroadcastReceiver{
+    public static class NetworkReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if( ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) {
+                if(ForgetMyPictureApp.isNetworkConnected())
+                    getInstance().scheduleAlarms();
+                else
+                    getInstance().cancelAlarms();
+            }
+        }
+
+    }
+
+    public static class AlarmReceiver extends  BroadcastReceiver {
         public static final int REQUEST_CODE = 0; //not used
         public static final String ACTION_DO_SEARCH = ForgetMyPictureApp.getName() + ".alarm.search";
         public static final String ACTION_DO_UPDATE = ForgetMyPictureApp.getName() + ".alarm.update";
