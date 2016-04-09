@@ -8,6 +8,7 @@ if(!isset($_POST, $_POST['result'], $_POST['deviceId'],  $_POST['requestId']) ) 
 require 'rb.php';
 R::setup('sqlite:/var/databases/ForgetMyPicture.db');
 
+
 $user = R::load('user', $_POST['deviceId']);
 if($user->deviceId == '0')  {
     http_response_code(400);

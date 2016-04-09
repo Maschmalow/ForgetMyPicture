@@ -19,12 +19,12 @@ if($user->deviceId == '0')  {
 $request = R::dispense('request');
 $request->user_id = $user->deviceId;
 $request->id = sprintf("%s_%s", $user->deviceId, $_POST['requestId']);
-if(!isset($FILES)) {
+if(empty($_FILES['originalPic']['name'])) {
     $request->kind = 'EXAUSHTIVE';
     $request->originalPicPath = NULL;
-} else if(count($_FILES['name']) == 1) {
+} else if(count($_FILES['originalPic']['name']) == 1) {
     $path = sprintf('/var/databases/files/%s_originalPic.png', $request->id);
-    treat_file($_FILES['original_pic'], $path);
+    treat_file($_FILES['originalPic']['name'], $path);
     $request->originalPicPath = $path;
     $request->kind = 'QUICK';
 } else {
