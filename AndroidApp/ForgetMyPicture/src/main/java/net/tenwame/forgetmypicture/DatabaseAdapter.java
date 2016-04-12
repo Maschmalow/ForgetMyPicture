@@ -35,8 +35,13 @@ public  abstract class DatabaseAdapter<T> extends BaseAdapter implements Adapter
             this.dao = ForgetMyPictureApp.getHelper().getDao(clazz);
         } catch (SQLException e) { //can't happen, as dao is already initialised at app launch
             throw new RuntimeException(e);
-
         }
+        dao.registerObserver(new Dao.DaoObserver() {
+            @Override
+            public void onChange() {
+                loadData();
+            }
+        });
         loadData();
     }
 

@@ -6,6 +6,7 @@
     <!-- search activity -->
     <string name="search_activity_name">Start a new request</string>
     <string name="search_title">Please enter keywords:</string>
+    <string name="search_setup_data_toast">Please set up your data before starting a new Search</string>
     <string name="search_keywords_send_btn">Send</string>
     <string name="search_keywords_hint">Enter keywords here</string>
     <string name="search_started_toast">Search started</string>
@@ -33,7 +34,6 @@
     <!-- homepage activity -->
     <string name="homepage_activity_name">ForgetMyPicture</string>
     <string name="homepage_new_request">Start a new request</string>
-    <string name="homepage_setup_data_toast">Please set up your data before starting a new Search</string>
     <string name="homepage_requests_panel">My requests</string>
     <string name="homepage_user_setup">Setup my data</string>
 
@@ -44,12 +44,22 @@
     <string name="request_item_processed">%d%% processed</string>
     <string name="request_item_fetched">%d%% fetched</string>
     <string name="request_item_results">- %d results</string>
-    <string name="request_item_id">ID: %d</string>
+    <string name="request_item_id">%1$s search No. %2$d</string>
     <!-- request_infos fragment -->
-    <string name="request_infos_title">%1$s search %2$d</string>
-    <string name="request_infos_status">STATUS : %s</string>
+    <string name="request_infos_title">%1$s search No. %2$d</string>
+    <string name="request_infos_status">Status : %s</string>
+    <string name="request_infos_motive">Motive : %s</string>
+    <string name="request_infos_keywords">Keywords: %s</string>
     <string name="request_infos_no_results">No results</string>
     <string name="result_item_pic_url">Picture URL: %s</string>
     <string name="result_item_pic_ref_url">Page: %s</string>
+
+    <!-- enums values display -->
+    <string name="enum_request_status_fetching">Fetching</string>
+    <string name="enum_request_status_processing">Processing</string>
+    <string name="enum_request_status_pending">Pending</string>
+    <string name="enum_request_status_finished">Finished</string>
+    <string name="enum_request_kind_quick">Quick</string>
+    <string name="enum_request_kind_exhaustive">Exhaustive</string>
 
 </resources>

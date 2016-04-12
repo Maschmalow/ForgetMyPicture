@@ -14,6 +14,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,7 +35,7 @@ public class SearchService extends IntentService{
     private static final String URL = "https://www.google.fr/search";
     public static final long SEARCH_DELAY = 100*60; //time in ms between each search
 
-    private DatabaseHelper helper = ForgetMyPictureApp.getHelper();;
+    private DatabaseHelper helper = ForgetMyPictureApp.getHelper();
     private String userAgent;
     private Map<String, String> queryData;
     private Request curRequest;
@@ -55,16 +57,18 @@ public class SearchService extends IntentService{
 
     @Override
     protected void onHandleIntent(Intent intent) {
-
-        try {
+        Log.i(TAG, "Searcher started");
+        try { // TODO: 10/04/2016 get initial request without explicit id
             curRequest = helper.getRequestDao().queryForId(1);
         } catch (SQLException e) {
             Manager.getInstance().notify(Manager.Event.SEARCHER_EXCEPTION);
             Log.e(TAG, "Could not fetch requests", e);
             return;
         }
-        if(curRequest == null)
-            return; //no request to process
+        if(curRequest == null) {
+            Log.i(TAG, "No request to process");
+            return;
+        }
 
         for( Request request : helper.getRequestDao() )
             if( request.getStatus() == Request.Status.FETCHING )
@@ -94,7 +98,7 @@ public class SearchService extends IntentService{
             helper.getRequestDao().update(curRequest);
         } catch (SQLException e) {
             Manager.getInstance().notify(Manager.Event.SEARCHER_EXCEPTION);
-            Log.e(TAG, "Could not save or update request", e);
+            Log.e(TAG, "Could not save or update request " + curRequest.getId(), e);
         }
     }
 
@@ -115,8 +119,16 @@ public class SearchService extends IntentService{
 
         for( Element elem : doc.select("div.rg_di.rg_el.ivg-i > a[href]")) {
             UrlQuerySanitizer query = new UrlQuerySanitizer(elem.attr("href"));
-            if(query.hasParameter("imgurl") && query.hasParameter("imgrefurl"))
+            if(query.hasParameter("imgurl") && query.hasParameter("imgrefurl")) {
+                try {
+                    new URL(query.getValue("imgurl"));
+                    new URL(query.getValue("imgrefurl"));
+                } catch (MalformedURLException e) {
+                    Log.e(TAG, "scrapeData: Invalid result: " + query, e);
+                    continue; //ignore this result
+                }
                 results.add(new Result(query.getValue("imgurl"), query.getValue("imgrefurl"), curRequest));
+            }
         }
 
         Log.d(TAG, "Parsed: " + results.size() + " results.");
@@ -124,17 +136,17 @@ public class SearchService extends IntentService{
     }
 
     private void feedServer(Set<Result> newResults) {
-        ArrayList<String> idList = new ArrayList<>(newResults.size());
+        ArrayList<String> idSet = new ArrayList<>(newResults.size()); //used to map id's
         for(Result result : newResults)
-            idList.add(result.getPicURL());
+            idSet.add(result.getPicURL());
         Bundle params = new Bundle();
         params.putInt(ServerInterface.EXTRA_REQUEST_ID_KEY, curRequest.getId());
-        params.putStringArrayList(ServerInterface.EXTRA_RESULTS_KEY, idList);
+        params.putStringArrayList(ServerInterface.EXTRA_RESULTS_KEY, idSet);
         ServerInterface.execute(ServerInterface.ACTION_FEED, params);
     }
 
     private void setCurUserAgent() { //TODO: check what is really needed here
-        userAgent = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36";
+        userAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1";
     }
 
 

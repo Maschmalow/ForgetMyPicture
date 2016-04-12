@@ -91,4 +91,8 @@ public class User {
     public ForeignCollection<Selfie> getSelfies() {
         return selfies;
     }
+
+    public ForeignCollection<Request> getRequests() {
+        return requests;
+    }
 }

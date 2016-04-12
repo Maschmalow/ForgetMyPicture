@@ -16,6 +16,18 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:textAppearanceMedium"/>
 
+    <TextView
+        android:id="@+id/keywords"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:textAppearanceMedium"/>
+
+    <TextView
+        android:id="@+id/motive"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:textAppearanceMedium"/>
+
     <ListView
         android:id="@+id/results_list"
         android:layout_width="match_parent"

@@ -20,12 +20,14 @@
             android:id="@+id/pic_url"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
             android:textAppearance="?android:textAppearanceSmall"/>
 
         <TextView
             android:id="@+id/pic_ref_url"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
             android:textAppearance="?android:textAppearanceSmall"/>
 
     </LinearLayout>

@@ -66,23 +66,17 @@ public class RequestsList extends ConventionFragment {
             Resources res = getResources();
 
             TextView status = (TextView) view.findViewById(R.id.status);
-            status.setText(item.getStatus().toString());
+            status.setText(item.getStatus().getString(res));
             if(item.getStatus() == Request.Status.FETCHING) //TODO:
-                status.setTextColor(res.getColor(android.R.color.holo_red_light));
+                status.setTextColor(res.getColor(R.color.red_light));
             if(item.getStatus() == Request.Status.PROCESSING)
-                status.setTextColor(res.getColor(android.R.color.holo_orange_light));
+                status.setTextColor(res.getColor(R.color.orange_light));
             if(item.getStatus() == Request.Status.PENDING)
-                status.setTextColor(res.getColor(android.R.color.holo_green_light));
+                status.setTextColor(res.getColor(R.color.green_light));
             if(item.getStatus() == Request.Status.FINISHED)
-                status.setTextColor(res.getColor(android.R.color.darker_gray));
-            ((TextView) view.findViewById(R.id.kind)).setText(item.getKind().toString());
-            ((TextView) view.findViewById(R.id.id)).setText(res.getString(R.string.request_item_id, item.getId()));
+                status.setTextColor(res.getColor(R.color.gray_dark));
+            ((TextView) view.findViewById(R.id.id)).setText(res.getString(R.string.request_item_id, item.getKind().getString(res), item.getId()));
             ((TextView) view.findViewById(R.id.results)).setText(res.getString(R.string.request_item_results, item.getResults().size()));
-            ((TextView) view.findViewById(R.id.fetched)).setText(res.getString(R.string.request_item_fetched, 100*item.getProgress()/item.getMaxProgress()));
-            if(!item.getResults().isEmpty())
-                ((TextView) view.findViewById(R.id.processed)).setText(res.getString(R.string.request_item_processed, 100*processed/item.getResults().size()));
-            else
-                view.findViewById(R.id.processed).setVisibility(View.GONE);
         }
 
         @Override

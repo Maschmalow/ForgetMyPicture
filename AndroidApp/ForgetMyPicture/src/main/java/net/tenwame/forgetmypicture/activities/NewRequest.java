@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import net.tenwame.forgetmypicture.Manager;
 import net.tenwame.forgetmypicture.R;
+import net.tenwame.forgetmypicture.UserData;
 
 import java.util.Arrays;
 
@@ -36,6 +37,13 @@ public class NewRequest extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(!UserData.getUser().isValid()) {
+            Toast.makeText(this, R.string.search_setup_data_toast, Toast.LENGTH_LONG).show();
+            startActivity(new Intent(this, UserSetup.class));
+            finish();
+        }
+
         setContentView(R.layout.activity_new_request);
 
         originalPicPath = (TextView) findViewById(R.id.original_pic_path);

@@ -14,22 +14,18 @@ public class Result {
     Result() {}
 
     public Result(String picURL, String picRefURL, Request request) {
-        this.picRefURL = picRefURL;
-        this.picURL = picURL;
+        this.picURLs = picURL + " " + picRefURL;
         this.request = request;
         match = -1;
     }
 
-    @DatabaseField(id = true)
-    private String picURL;
-
-    @DatabaseField(canBeNull = false)
-    private String picRefURL;
+    @DatabaseField(id = true) //same thing here, we have to merge picURL and picRefURL
+    private String picURLs;  //because ORMLite doesn't support multiple primary keys
 
     @DatabaseField(canBeNull = false)
     private int match;
 
-    @DatabaseField(foreign = true, foreignAutoRefresh = true)
+    @DatabaseField(foreign = true)
     private Request request;
 
     public boolean isProcessed() {
@@ -45,11 +41,11 @@ public class Result {
     }
 
     public String getPicURL() {
-        return picURL;
+        return picURLs.substring(0, picURLs.indexOf(' '));
     }
 
     public String getPicRefURL() {
-        return picRefURL;
+        return picURLs.substring(picURLs.indexOf(' '), picURLs.length());
     }
 
     public Request getRequest() {
@@ -61,14 +57,11 @@ public class Result {
         if( this == o ) return true;
         if( o == null || getClass() != o.getClass() ) return false;
 
-        if( !picURL.equals(((Result) o).picURL) ) return false;
-        return picRefURL.equals(((Result) o).picRefURL);
+        return picURLs.equals(((Result) o).picURLs);
     }
 
     @Override
     public int hashCode() {
-        int result = picURL.hashCode();
-        result = 31 * result + picRefURL.hashCode();
-        return result;
+        return picURLs.hashCode();
     }
 }

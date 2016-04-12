@@ -14,6 +14,8 @@ import java.lang.reflect.Field;
 /**
  * Created by Antoine on 27/09/2015.
  * utility Fragment that rely on naming conventions to initialize its elements
+ * MyFragment has layout id fragment_my_fragment
+ * if he has a View field name myView, its resId is my_view
  */
 public class ConventionFragment extends Fragment {
     private static final String TAG = ConventionFragment.class.getSimpleName();
@@ -83,7 +85,7 @@ public class ConventionFragment extends Fragment {
         }
     }
 
-    private String getResIdName(String fieldName) { //transforms "myView" to "my_view"
+    private String getResIdName(String fieldName) { //lowerCamelCase -> snake_case
         char[] array = fieldName.toCharArray();
         String ret = "";
         for(char c : array) {
@@ -108,7 +110,6 @@ public class ConventionFragment extends Fragment {
     /**
      * Method to override that does the context-dependent initiation of Views
      * called when the Fragment is shown to the user (and between onStart() and onResume() )
-     * generalize identify() and load() methods
      */
     public void load() {
     }
@@ -116,6 +117,7 @@ public class ConventionFragment extends Fragment {
     /**
      * Method to override that does a light cleaning of the Fragment
      * called when the Fragment is left (and between onStop() and onDestroyView() )
+     * typically called when the fragment visibility is affecting other UI components as well
      */
     public void unload() {
     }

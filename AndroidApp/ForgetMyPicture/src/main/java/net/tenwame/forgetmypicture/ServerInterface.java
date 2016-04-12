@@ -15,8 +15,6 @@ import org.jsoup.Jsoup;
 
 import java.io.InputStream;
 import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Stack;
 
 import javax.json.Json;
@@ -138,19 +136,15 @@ public class ServerInterface extends IntentService {
 
     private void feedNewResults() throws Exception{
         Request request = getRequestFromIntent();
-        Collection<Result> results = new ArrayList<>();
-        for(String resultId : curIntent.getStringArrayListExtra(EXTRA_RESULTS_KEY))
-            results.add(helper.getResultDao().queryForId(resultId)); //TODO: check for null values
-
 
         Connection connection = Jsoup.connect(BASE_URL + FEED_URL)
                 .data("deviceId", UserData.getDeviceId())
                 .data("requestId", request.getId().toString());
-        for(Result result : results)
-            connection.data("result[]", result.getPicURL());
+        for(String resultURL : curIntent.getStringArrayListExtra(EXTRA_RESULTS_KEY))
+            connection.data("result[]", resultURL);
         connection.post();
 
-        Log.d(TAG, "Sent " + results.size() + " results for request " + request.getId());
+        Log.d(TAG, "Sent results for request " + request.getId());
     }
 
     private void getRequestInfo() throws Exception{

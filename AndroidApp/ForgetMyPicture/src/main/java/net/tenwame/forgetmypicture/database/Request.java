@@ -1,6 +1,7 @@
 package net.tenwame.forgetmypicture.database;
 
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 
 import com.j256.ormlite.dao.ForeignCollection;
@@ -10,6 +11,7 @@ import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import net.tenwame.forgetmypicture.PictureAccess;
+import net.tenwame.forgetmypicture.R;
 import net.tenwame.forgetmypicture.UserData;
 
 import java.sql.SQLException;
@@ -27,13 +29,33 @@ import java.util.UUID;
 public class Request {
     private static final String REQUEST_PREFIX = "request_";
 
-    public enum Kind {QUICK, EXHAUSTIVE}
+    public enum Kind {QUICK, EXHAUSTIVE;
+
+        public String getString(Resources res) {
+            if( this == QUICK)
+                return res.getString(R.string.enum_request_kind_quick);
+            else  //EXHAUSTIVE
+                return res.getString(R.string.enum_request_kind_exhaustive);
+        }
+    }
 
     public enum Status {
         FETCHING, //still searching for new pictures
         PROCESSING, //some pictures are being processed
         PENDING, //waiting for user to take action
-        FINISHED } //done
+        FINISHED; //done
+
+        public String getString(Resources res) {
+            if(this == FETCHING)
+                return res.getString(R.string.enum_request_status_fetching);
+            else if(this == PROCESSING)
+                return res.getString(R.string.enum_request_status_processing);
+            else if(this == PENDING)
+                return res.getString(R.string.enum_request_status_pending);
+            else  //FINISHED
+                return res.getString(R.string.enum_request_status_finished);
+        }
+    }
 
     Request() {}
 
@@ -76,7 +98,7 @@ public class Request {
     @DatabaseField(dataType = DataType.SERIALIZABLE)
     private ArrayList<String> keywords;
 
-    @ForeignCollectionField(eager = true)
+    @ForeignCollectionField
     private ForeignCollection<Result> results;
 
     public Integer getId() {

@@ -14,6 +14,8 @@ import net.tenwame.forgetmypicture.R;
 import net.tenwame.forgetmypicture.database.Request;
 import net.tenwame.forgetmypicture.database.Result;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Map;
@@ -34,6 +36,8 @@ public class RequestInfos extends ConventionFragment {
     //auto-retrieved views
     private TextView title;
     private TextView status;
+    private TextView keywords;
+    private TextView motive;
     private ListView resultsList;
     private TextView empty;
 
@@ -71,7 +75,10 @@ public class RequestInfos extends ConventionFragment {
 
         Resources res = getResources();
         title.setText(res.getString(R.string.request_infos_title, request.getKind().toString().toLowerCase(), request.getId()));
-        status.setText(res.getString(R.string.request_infos_status, request.getStatus().toString()));
+        status.setText(res.getString(R.string.request_infos_status, request.getStatus().getString(res)));
+        keywords.setText(res.getString(R.string.request_infos_keywords, request.getKeywords().toString())); //TODO
+        motive.setText(res.getString(R.string.request_infos_motive, request.getMotive()));
+
     }
 
     @Override
@@ -117,9 +124,13 @@ public class RequestInfos extends ConventionFragment {
                 view.findViewById(R.id.ok_icon).setVisibility(View.VISIBLE);
             else
                 view.findViewById(R.id.ok_icon).setVisibility(View.GONE);
+            try {
+                URL picURL = new URL(item.getPicURL());
+                URL picRefURL = new URL(item.getPicURL());
 
-            ((TextView) view.findViewById(R.id.pic_url)).setText(res.getString(R.string.result_item_pic_url, item.getPicURL()));
-            ((TextView) view.findViewById(R.id.pic_ref_url)).setText(res.getString(R.string.result_item_pic_ref_url, item.getPicRefURL()));
+                ((TextView) view.findViewById(R.id.pic_url)).setText(res.getString(R.string.result_item_pic_url, picURL.getHost() + "[...]" + picURL.getFile()));
+                ((TextView) view.findViewById(R.id.pic_ref_url)).setText(res.getString(R.string.result_item_pic_ref_url, picRefURL.getHost() + "[...]" + picRefURL.getFile()));
+            } catch (MalformedURLException ignored) { } //already checked in SearchService
 
         }
 
