@@ -41,7 +41,6 @@ public class NewRequest extends Activity {
         if(!UserData.getUser().isValid()) {
             Toast.makeText(this, R.string.search_setup_data_toast, Toast.LENGTH_LONG).show();
             startActivity(new Intent(this, UserSetup.class));
-            finish();
         }
 
         setContentView(R.layout.activity_new_request);

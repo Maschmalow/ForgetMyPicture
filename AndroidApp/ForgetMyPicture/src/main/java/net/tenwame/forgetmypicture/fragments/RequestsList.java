@@ -10,17 +10,17 @@ import net.tenwame.forgetmypicture.DatabaseAdapter;
 import net.tenwame.forgetmypicture.R;
 import net.tenwame.forgetmypicture.activities.RequestsPanel;
 import net.tenwame.forgetmypicture.database.Request;
-import net.tenwame.forgetmypicture.database.Result;
 
 import java.util.HashMap;
 
 /**
  * Created by Antoine on 07/04/2016.
+ * Fragment displaying user's requests
  */
 public class RequestsList extends ConventionFragment {
     private static final String TAG = RequestsList.class.getName();
 
-    private RequestsAdapter adapter;
+    private RequestsAdapter adapter = new RequestsAdapter();
 
     //auto-retrieved views
     private ListView requestsList;
@@ -28,7 +28,6 @@ public class RequestsList extends ConventionFragment {
 
     @Override
     public void setupViews() {
-        adapter = new RequestsAdapter();
         adapter.registerDataSetObserver(new DataSetObserver() {
             @Override
             public void onChanged() {
@@ -43,6 +42,15 @@ public class RequestsList extends ConventionFragment {
         });
         requestsList.setAdapter(adapter);
         requestsList.setOnItemClickListener(adapter);
+        adapter.trackDatabase(true);
+        adapter.notifyDataSetChanged(); // trigger loading and observers
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        adapter.trackDatabase(false);
     }
 
     public void setFilterFromUI(/* filter */) {//will be from UI
@@ -58,11 +66,6 @@ public class RequestsList extends ConventionFragment {
 
         @Override
         public void setView(View view, Request item) {
-            int processed = 0;
-            for( Result r : item.getResults()) {
-                if(r.isProcessed())
-                    processed++;
-            }
             Resources res = getResources();
 
             TextView status = (TextView) view.findViewById(R.id.status);

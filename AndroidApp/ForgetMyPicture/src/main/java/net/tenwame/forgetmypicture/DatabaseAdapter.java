@@ -1,5 +1,7 @@
 package net.tenwame.forgetmypicture;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +26,7 @@ public  abstract class DatabaseAdapter<T> extends BaseAdapter implements Adapter
 
 
     private final Dao<T, ?> dao;
-    private List<T> data;
+    private List<T> data = new ArrayList<>();
     private Map<String, Object> queryArgs = new HashMap<>();
     private int layoutItemId;
 
@@ -36,23 +38,18 @@ public  abstract class DatabaseAdapter<T> extends BaseAdapter implements Adapter
         } catch (SQLException e) { //can't happen, as dao is already initialised at app launch
             throw new RuntimeException(e);
         }
-        dao.registerObserver(new Dao.DaoObserver() {
-            @Override
-            public void onChange() {
-                loadData();
-            }
-        });
-        loadData();
+        //data isn't initialised, because we want the app to notify when loading from db is needed
     }
 
     private void loadData() {
+        data.clear();
         try {
             if(queryArgs.isEmpty())
-                data = dao.queryForAll();
+                data.addAll(dao.queryForAll());
             else
-                data = dao.queryForFieldValuesArgs(queryArgs);
+                data.addAll(dao.queryForFieldValuesArgs(queryArgs));
         } catch (SQLException e) {
-            data = new ArrayList<>(); //getView won't be called
+            //data is empty so getView won't be called
             Log.e(TAG, "loadData: query failed", e);
         }
     }
@@ -67,6 +64,25 @@ public  abstract class DatabaseAdapter<T> extends BaseAdapter implements Adapter
     public void setFilter(Map<String, Object> filter) {
         queryArgs.clear();
         addFilter(filter);
+    }
+
+    private Dao.DaoObserver obs = new Dao.DaoObserver() {
+        @Override
+        public void onChange() {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    notifyDataSetChanged();
+                }
+            });
+        }
+    };
+
+    public void trackDatabase(boolean track) {
+        if(track)
+            dao.registerObserver(obs);
+        else
+            dao.unregisterObserver(obs);
     }
 
     @Override

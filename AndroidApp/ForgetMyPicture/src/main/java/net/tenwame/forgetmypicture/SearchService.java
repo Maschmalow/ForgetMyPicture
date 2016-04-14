@@ -57,7 +57,7 @@ public class SearchService extends IntentService{
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Log.i(TAG, "Searcher started");
+        Log.i(TAG, "started");
         try { // TODO: 10/04/2016 get initial request without explicit id
             curRequest = helper.getRequestDao().queryForId(1);
         } catch (SQLException e) {
@@ -87,7 +87,7 @@ public class SearchService extends IntentService{
         setCurUserAgent();
         Set<Result> results = scrapeData();
         if(results.isEmpty()) {
-            Log.w(TAG, "No results");
+            Log.w(TAG, "doSearch: No results");
             return;
         }
         feedServer(curRequest.addResults(results));
@@ -98,7 +98,7 @@ public class SearchService extends IntentService{
             helper.getRequestDao().update(curRequest);
         } catch (SQLException e) {
             Manager.getInstance().notify(Manager.Event.SEARCHER_EXCEPTION);
-            Log.e(TAG, "Could not save or update request " + curRequest.getId(), e);
+            Log.e(TAG, "doSearch: Could not save or update request " + curRequest.getId(), e);
         }
     }
 
@@ -111,7 +111,7 @@ public class SearchService extends IntentService{
             doc = Jsoup.connect(URL).data(queryData).userAgent(userAgent).get();
         } catch (IOException e) {
             Manager.getInstance().notify(Manager.Event.SEARCHER_EXCEPTION);
-            Log.e(TAG, "Could not start search", e);
+            Log.e(TAG, "scrapeData: Could not start search", e);
             return results;
         }
         Log.d(TAG, "Request: " + doc.baseUri());

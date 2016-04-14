@@ -85,6 +85,7 @@ public class Manager {
         if(areAlarmsScheduled) return;
         scheduleAction(AlarmReceiver.ACTION_DO_UPDATE, UPDATE_DELAY);
         scheduleAction(AlarmReceiver.ACTION_DO_SEARCH, SearchService.SEARCH_DELAY);
+        Log.i(TAG, "Alarms scheduled");
         areAlarmsScheduled = true;
     }
 
@@ -92,6 +93,7 @@ public class Manager {
         if(!areAlarmsScheduled) return;
         cancelAction(AlarmReceiver.ACTION_DO_UPDATE);
         cancelAction(AlarmReceiver.ACTION_DO_SEARCH);
+        Log.i(TAG, "Alarms removed");
         areAlarmsScheduled = false;
     }
 

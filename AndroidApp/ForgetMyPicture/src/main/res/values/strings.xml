@@ -32,7 +32,7 @@
     <string name="user_setup_idcard_desc">ID card picture thumbnail</string>
 
     <!-- homepage activity -->
-    <string name="homepage_activity_name">ForgetMyPicture</string>
+    <string name="homepage_activity_name">Forget My Picture</string>
     <string name="homepage_new_request">Start a new request</string>
     <string name="homepage_requests_panel">My requests</string>
     <string name="homepage_user_setup">Setup my data</string>
@@ -40,6 +40,7 @@
     <!-- request_panel activity -->
     <string name="request_panel_activity_name">Requests Panel</string>
     <!-- requests_list fragment -->
+    <string name="requests_list_title">Your requests:</string>
     <string name="requests_list_no_requests">No requests</string>
     <string name="request_item_processed">%d%% processed</string>
     <string name="request_item_fetched">%d%% fetched</string>

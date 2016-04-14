@@ -64,6 +64,8 @@ public class RequestInfos extends ConventionFragment {
                 }
             }
         });
+        adapter.trackDatabase(true);
+        adapter.notifyDataSetChanged(); // trigger loading and observers
         resultsList.setAdapter(adapter);
         //resultsList.setOnItemClickListener(adapter);
     }
@@ -136,7 +138,7 @@ public class RequestInfos extends ConventionFragment {
 
         @Override
         public void onItemClick(Result item) {
-            //do we have something to do here?
+
         }
 
         @Override
