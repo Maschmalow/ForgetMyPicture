@@ -2,6 +2,7 @@ package net.tenwame.forgetmypicture.fragments;
 
 import android.content.res.Resources;
 import android.database.DataSetObserver;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -36,6 +37,7 @@ public class RequestInfos extends ConventionFragment {
     //auto-retrieved views
     private TextView title;
     private TextView status;
+    private TextView stats;
     private TextView keywords;
     private TextView motive;
     private ListView resultsList;
@@ -55,13 +57,7 @@ public class RequestInfos extends ConventionFragment {
         adapter.registerDataSetObserver(new DataSetObserver() {
             @Override
             public void onChanged() {
-                if(adapter.getCount() == 0) {
-                    resultsList.setVisibility(View.GONE);
-                    empty.setVisibility(View.VISIBLE);
-                } else {
-                    resultsList.setVisibility(View.VISIBLE);
-                    empty.setVisibility(View.GONE);
-                }
+                load();
             }
         });
         adapter.trackDatabase(true);
@@ -75,12 +71,38 @@ public class RequestInfos extends ConventionFragment {
     public void load() {
         if(request == null) return;
 
+        if(adapter.getCount() == 0) {
+            resultsList.setVisibility(View.GONE);
+            empty.setVisibility(View.VISIBLE);
+        } else {
+            resultsList.setVisibility(View.VISIBLE);
+            empty.setVisibility(View.GONE);
+        }
+
+        int processed = 0;
+        for( Result r : request.getResults())
+            if(r.isProcessed())
+                processed++;
+        int progress = request.getProgress();
+        int nbResults = request.getResults().size();
+
         Resources res = getResources();
         title.setText(res.getString(R.string.request_infos_title, request.getKind().toString().toLowerCase(), request.getId()));
         status.setText(res.getString(R.string.request_infos_status, request.getStatus().getString(res)));
+        stats.setText(res.getString(R.string.request_infos_stats, nbResults/(progress+1)* 100*progress/request.getMaxProgress(), processed, nbResults));
         keywords.setText(res.getString(R.string.request_infos_keywords, request.getKeywords().toString())); //TODO
-        motive.setText(res.getString(R.string.request_infos_motive, request.getMotive()));
 
+        if(request.getStatus() == Request.Status.FINISHED && request.getMotive() != null) {
+            motive.setVisibility(View.VISIBLE);
+            motive.setText(res.getString(R.string.request_infos_motive, request.getMotive()));
+        } else {
+            motive.setVisibility(View.GONE);
+        }
+
+    }
+
+    public boolean isInEditMode() {
+        return request != null && request.getStatus() == Request.Status.PENDING;
     }
 
     @Override
@@ -128,7 +150,7 @@ public class RequestInfos extends ConventionFragment {
                 view.findViewById(R.id.ok_icon).setVisibility(View.GONE);
             try {
                 URL picURL = new URL(item.getPicURL());
-                URL picRefURL = new URL(item.getPicURL());
+                URL picRefURL = new URL(item.getPicRefURL());
 
                 ((TextView) view.findViewById(R.id.pic_url)).setText(res.getString(R.string.result_item_pic_url, picURL.getHost() + "[...]" + picURL.getFile()));
                 ((TextView) view.findViewById(R.id.pic_ref_url)).setText(res.getString(R.string.result_item_pic_ref_url, picRefURL.getHost() + "[...]" + picRefURL.getFile()));
@@ -146,6 +168,14 @@ public class RequestInfos extends ConventionFragment {
             super.setFilter(filter);
             if(request != null)
                 addFilter(Collections.singletonMap("request_id", (Object) request.getId()));
+        }
+    }
+
+    private static class PictureDownloader extends AsyncTask<Result, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Result... params) {
+            return null;
         }
     }
 }

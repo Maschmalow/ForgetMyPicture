@@ -8,6 +8,8 @@ import android.net.NetworkInfo;
 import com.crittercism.app.Crittercism;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
+import net.tenwame.forgetmypicture.activities.Settings;
+
 /**
  * Created by Antoine on 19/02/2016.
  * Application, for context
@@ -18,8 +20,8 @@ public class ForgetMyPictureApp extends Application {
 
     public void onCreate() {
         super.onCreate();
-        Crittercism.initialize(getApplicationContext(), "f540f2393bac4199bd54307a928e1a0a00444503");
         context = getApplicationContext();
+        Crittercism.initialize(context, "f540f2393bac4199bd54307a928e1a0a00444503");
         helper = OpenHelperManager.getHelper(context, DatabaseHelper.class);
         Manager.getInstance(); //initialize manager
     }
@@ -33,10 +35,14 @@ public class ForgetMyPictureApp extends Application {
     }
 
 
-    public static boolean isNetworkConnected() {
+    public static boolean isNetworkAvailable() {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+        NetworkInfo network = cm.getActiveNetworkInfo();
+        if(network == null || !network.isConnectedOrConnecting())
+            return false;
+
+        return !Settings.dataOnWifi() || network.getType() == ConnectivityManager.TYPE_WIFI;
+
     }
 
     public static String getName() {

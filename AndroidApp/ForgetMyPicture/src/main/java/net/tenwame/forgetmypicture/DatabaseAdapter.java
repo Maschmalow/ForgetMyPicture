@@ -21,7 +21,7 @@ import java.util.Map;
  * Created by Antoine on 07/04/2016.
  * generic ListView adapter for database items
  */
-public  abstract class DatabaseAdapter<T> extends BaseAdapter implements AdapterView.OnItemClickListener{
+public abstract class DatabaseAdapter<T> extends BaseAdapter implements AdapterView.OnItemClickListener{
     private final static String TAG = DatabaseAdapter.class.getName();
 
 

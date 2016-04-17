@@ -4,6 +4,8 @@ package net.tenwame.forgetmypicture.database;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.util.UUID;
+
 /**
  * Created by Antoine on 18/03/2016.
  * results table
@@ -14,13 +16,19 @@ public class Result {
     Result() {}
 
     public Result(String picURL, String picRefURL, Request request) {
-        this.picURLs = picURL + " " + picRefURL;
+        this.picURL = picURL + " " + UUID.randomUUID().toString();
+        //this is bad, but we need unique results for the whole app
+        //and ORMLite doesn't support multiple primary keys
+        this.picRefURL = picRefURL;
         this.request = request;
         match = -1;
     }
 
-    @DatabaseField(id = true) //same thing here, we have to merge picURL and picRefURL
-    private String picURLs;  //because ORMLite doesn't support multiple primary keys
+    @DatabaseField(id = true)
+    private String picURL;
+
+    @DatabaseField(canBeNull = false)
+    private String picRefURL;
 
     @DatabaseField(canBeNull = false)
     private int match;
@@ -41,27 +49,28 @@ public class Result {
     }
 
     public String getPicURL() {
-        return picURLs.substring(0, picURLs.indexOf(' '));
+        return picURL.substring(0, picURL.indexOf(' '));
     }
 
     public String getPicRefURL() {
-        return picURLs.substring(picURLs.indexOf(' '), picURLs.length());
+        return picRefURL;
     }
 
     public Request getRequest() {
         return request;
     }
 
+    //We want Sets and Maps to behave accordingly to the database
     @Override
     public boolean equals(Object o) {
         if( this == o ) return true;
         if( o == null || getClass() != o.getClass() ) return false;
 
-        return picURLs.equals(((Result) o).picURLs);
+        return picURL.equals(((Result) o).picURL);
     }
 
     @Override
     public int hashCode() {
-        return picURLs.hashCode();
+        return picURL.hashCode();
     }
 }

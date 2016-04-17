@@ -24,11 +24,5 @@
         android:layout_margin="6dp"
         android:text="@string/homepage_requests_panel"/>
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="goToDataFromUI"
-        android:layout_margin="6dp"
-        android:text="@string/homepage_user_setup"/>
 
 </LinearLayout>

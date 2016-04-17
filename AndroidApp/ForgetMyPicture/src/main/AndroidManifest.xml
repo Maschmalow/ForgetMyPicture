@@ -14,6 +14,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_full_name"
         android:supportsRtl="true"
+        android:allowBackup="true"
         android:theme="@style/AppTheme">
         <activity
             android:name=".activities.NewRequest"
@@ -22,6 +23,10 @@
         <activity
             android:name=".activities.UserSetup"
             android:label="@string/user_setup_activity_name">
+        </activity>
+        <activity
+            android:name=".activities.Settings"
+            android:label="@string/settings_activity_name">
         </activity>
         <activity
             android:name=".activities.Homepage"

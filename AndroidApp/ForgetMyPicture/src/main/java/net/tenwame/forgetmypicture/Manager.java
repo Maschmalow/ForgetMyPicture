@@ -54,8 +54,7 @@ public class Manager {
     private boolean areAlarmsScheduled = false;
 
     private Manager() {
-        if(ForgetMyPictureApp.isNetworkConnected())
-            scheduleAlarms();
+        setAlarms();
     }
 
 
@@ -80,6 +79,12 @@ public class Manager {
         } //TODO: handle other events
     }
 
+    public void setAlarms() {
+        if(ForgetMyPictureApp.isNetworkAvailable())
+            scheduleAlarms();
+        else
+            cancelAlarms();
+    }
 
     private void scheduleAlarms() {
         if(areAlarmsScheduled) return;
@@ -117,14 +122,10 @@ public class Manager {
     public static class NetworkReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if( ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) {
-                if(ForgetMyPictureApp.isNetworkConnected())
-                    getInstance().scheduleAlarms();
-                else
-                    getInstance().cancelAlarms();
-            }
-        }
+            if( ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction()))
+                getInstance().setAlarms();
 
+        }
     }
 
     public static class AlarmReceiver extends  BroadcastReceiver {
@@ -134,7 +135,7 @@ public class Manager {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(!ForgetMyPictureApp.isNetworkConnected())
+            if(!ForgetMyPictureApp.isNetworkAvailable())
                 return;
 
             if(ACTION_DO_SEARCH.equals(intent.getAction()))

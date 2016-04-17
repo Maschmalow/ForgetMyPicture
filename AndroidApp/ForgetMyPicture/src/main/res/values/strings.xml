@@ -49,6 +49,7 @@
     <!-- request_infos fragment -->
     <string name="request_infos_title">%1$s search No. %2$d</string>
     <string name="request_infos_status">Status : %s</string>
+    <string name="request_infos_stats">Stats: Aprox. %1$d%% pictures fetched, %2$d results processed out of %3$d</string>
     <string name="request_infos_motive">Motive : %s</string>
     <string name="request_infos_keywords">Keywords: %s</string>
     <string name="request_infos_no_results">No results</string>
@@ -62,5 +63,9 @@
     <string name="enum_request_status_finished">Finished</string>
     <string name="enum_request_kind_quick">Quick</string>
     <string name="enum_request_kind_exhaustive">Exhaustive</string>
+    <string name="homepage_menu_account">My account</string>
+    <string name="homepage_menu_settings">Settings</string>
+    <string name="pref_data_on_wifi">Data on Wi-fi only</string>
+    <string name="settings_activity_name">Settings</string>
 
 </resources>

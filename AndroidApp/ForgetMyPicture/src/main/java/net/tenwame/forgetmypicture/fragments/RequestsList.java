@@ -6,7 +6,10 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.j256.ormlite.dao.Dao;
+
 import net.tenwame.forgetmypicture.DatabaseAdapter;
+import net.tenwame.forgetmypicture.ForgetMyPictureApp;
 import net.tenwame.forgetmypicture.R;
 import net.tenwame.forgetmypicture.activities.RequestsPanel;
 import net.tenwame.forgetmypicture.database.Request;
@@ -21,6 +24,12 @@ public class RequestsList extends ConventionFragment {
     private static final String TAG = RequestsList.class.getName();
 
     private RequestsAdapter adapter = new RequestsAdapter();
+    private Dao.DaoObserver notifier = new Dao.DaoObserver() {
+        @Override
+        public void onChange() {
+            adapter.notifyDataSetChanged();
+        }
+    };
 
     //auto-retrieved views
     private ListView requestsList;
@@ -42,15 +51,14 @@ public class RequestsList extends ConventionFragment {
         });
         requestsList.setAdapter(adapter);
         requestsList.setOnItemClickListener(adapter);
-        adapter.trackDatabase(true);
         adapter.notifyDataSetChanged(); // trigger loading and observers
-
+        ForgetMyPictureApp.getHelper().getResultDao().registerObserver(notifier);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        adapter.trackDatabase(false);
+        ForgetMyPictureApp.getHelper().getResultDao().registerObserver(notifier);
     }
 
     public void setFilterFromUI(/* filter */) {//will be from UI
