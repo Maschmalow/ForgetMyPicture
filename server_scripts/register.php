@@ -8,7 +8,7 @@ if(!isset($_POST, $_FILES, $_FILES['selfie'], $_POST['h'], $_POST['deviceId']) |
 
 require 'rb.php';
 include 'download.php';
-R::setup('sqlite:/var/databases/ForgetMyPicture.db');
+R::setup('mysql:host=localhost;dbname=forgetmypicture', 'apache', 'AtosApache2016');
 
 
 $selfies_count = 0;

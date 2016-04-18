@@ -6,7 +6,7 @@ if(!isset($_GET, $_GET['deviceId']) ) {
 }
 
 require 'rb.php';
-R::setup('sqlite:/var/databases/ForgetMyPicture.db');
+R::setup('mysql:host=localhost;dbname=forgetmypicture', 'apache', 'AtosApache2016');
 
 $user = R::load('user', $_GET['deviceId']);
 if($user->deviceId == '0')  {

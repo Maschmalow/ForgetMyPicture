@@ -6,7 +6,7 @@ if(!isset($_POST, $_POST['result'], $_POST['deviceId'],  $_POST['requestId']) ) 
 }
 
 require 'rb.php';
-R::setup('sqlite:/var/databases/ForgetMyPicture.db');
+R::setup('mysql:host=localhost;dbname=forgetmypicture', 'apache', 'AtosApache2016');
 
 
 $user = R::load('user', $_POST['deviceId']);
@@ -25,7 +25,7 @@ foreach ($resultURL as $_POST['result']) {
     $result = R::dispense('request');
     $result->picURL = $resultURL;
     $result->match = -1;
-    $result>request_id = $request->id;
+    $result->request_id = $request->id;
     R::store($result);
 }
 
