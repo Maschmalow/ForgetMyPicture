@@ -15,7 +15,7 @@ public class Request {
     public Request() {}
 
     @DatabaseField(id = true) //ORMLite doesn't support multiple primary keys
-    private String id;  //as a workaround, we set the id to be "deviceId_requestId"
+    private String requestId;  //as a workaround, it is prefixed by deviceId
 
     @DatabaseField(canBeNull = false)
     private String kind;
@@ -27,7 +27,7 @@ public class Request {
     private User user;
 
     public int getId() {
-        return Integer.parseInt(id.substring(id.indexOf('_')+1));
+        return Integer.parseInt(requestId.substring(requestId.indexOf('_')+1));
     }
 
     public Kind getKind() {
