@@ -54,6 +54,14 @@
     <string name="request_infos_motive">Motive : %s</string>
     <string name="request_infos_keywords">Keywords: %s</string>
     <string name="request_infos_no_results">No results yet</string>
+    <string name="request_infos_send_email_btn">Send e-mail</string>
+    <string name="request_infos_fill_form_btn">Fill form</string>
+    <string name="request_infos_pay_before_check">You have to unlock this request to see pictures origin and to remove them</string>
+    <string name="request_infos_pay_btn">Pay</string>
+    <string name="request_infos_payed_toast">Thank you for your purchase</string>
+    <string name="request_infos_pay_title">Unlock advanced features to continue</string>
+    <string name="request_infos_form_sent">Google Form filled and sent !</string>
+    <string name="request_infos_email_sent">E-mail sent !</string>
     <string name="result_item_match">%d%% match</string>
     <string name="result_item_pic_ref_url">Site: %s</string>
     <string name="result_item_thumb_desc">Matched picture</string>
@@ -64,8 +72,6 @@
     <string name="settings_wipe">Wipe all data</string>
     <string name="settings_wipe_btn">Wipe</string>
     <string name="settings_wipe_warning">WARNING : This will erase all date from your app and from our server.\nProceed with caution.</string>
-    <string name="settings_wipe_title">Continue?</string>
-    <string name="settings_wipe_cancel">Cancel</string>
     <string name="settings_wipe_toast">Data wiped</string>
 
     <!-- enums values display -->
@@ -73,7 +79,14 @@
     <string name="enum_request_status_processing">Processing</string>
     <string name="enum_request_status_pending">Pending</string>
     <string name="enum_request_status_finished">Finished</string>
+    <string name="enum_request_status_payed">Unlocked</string>
     <string name="enum_request_kind_quick">Quick</string>
     <string name="enum_request_kind_exhaustive">Exhaustive</string>
+
+    <!-- misc -->
+    <string name="cancel">Cancel</string>
+    <string name="ask_continue">Continue ?</string>
+
+
 
 </resources>

@@ -13,8 +13,6 @@ import net.tenwame.forgetmypicture.R;
 import net.tenwame.forgetmypicture.activities.RequestsPanel;
 import net.tenwame.forgetmypicture.database.Request;
 
-import java.util.HashMap;
-
 /**
  * Created by Antoine on 07/04/2016.
  * Fragment displaying user's requests
@@ -36,15 +34,15 @@ public class RequestsList extends ConventionFragment {
 
     @Override
     public void setupViews() {
+        requestsList.setAdapter(adapter);
+        requestsList.setOnItemClickListener(adapter);
         adapter.registerDataSetObserver(new DataSetObserver() {
             @Override
             public void onChanged() {
                 load();
             }
         });
-        requestsList.setAdapter(adapter);
-        requestsList.setOnItemClickListener(adapter);
-        adapter.notifyDataSetChanged(); // trigger loading and observers
+        adapter.loadData();
         //ForgetMyPictureApp.getHelper().getResultDao().registerObserver(notifier);
     }
 
@@ -66,7 +64,7 @@ public class RequestsList extends ConventionFragment {
     }
 
     public void setFilterFromUI(/* filter */) {//will be from UI
-        adapter.setFilter(new HashMap<String, Object>());
+        //adapter.setMatchingArgs(new HashMap<String, Object>());
     }
 
 

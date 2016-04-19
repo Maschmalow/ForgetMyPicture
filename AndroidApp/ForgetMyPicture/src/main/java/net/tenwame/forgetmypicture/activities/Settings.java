@@ -58,7 +58,7 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
             if(preference.hasKey() && WIPE_KEY.equals(preference.getKey())) {
                 new AlertDialog.Builder(Settings.this)
                         .setCancelable(true)
-                        .setNegativeButton(R.string.settings_wipe_cancel, null)
+                        .setNegativeButton(R.string.cancel, null)
                         .setPositiveButton(R.string.settings_wipe_btn, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -68,7 +68,7 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
                             }
                         })
                         .setMessage(R.string.settings_wipe_warning)
-                        .setTitle(R.string.settings_wipe_title)
+                        .setTitle(R.string.ask_continue)
                         .create().show();
                 return true;
             }

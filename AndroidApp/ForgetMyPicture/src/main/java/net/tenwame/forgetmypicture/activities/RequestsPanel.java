@@ -2,6 +2,7 @@ package net.tenwame.forgetmypicture.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.View;
 
 import net.tenwame.forgetmypicture.database.Request;
 import net.tenwame.forgetmypicture.fragments.RequestInfos;
@@ -32,6 +33,13 @@ public class RequestsPanel extends FragmentActivity {
                 .commit();
 
         infos.setRequest(request);
+    }
+
+    public void fillFormFromUI(View v) {
+        infos.fillFormFromUI(v);
+    }
+    public void sendEmailFromUI(View v) {
+        infos.sendEmailFromUI(v);
     }
 
 }

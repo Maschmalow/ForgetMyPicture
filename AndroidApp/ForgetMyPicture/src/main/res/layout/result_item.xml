@@ -8,13 +8,14 @@
     <ImageView
         android:id="@+id/thumb"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:maxHeight="10dp"
+        android:layout_height="wrap_content"
+        android:maxHeight="20dp"
+        android:maxWidth="10dp"
         android:contentDescription="@string/result_item_thumb_desc" />
 
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -24,8 +25,8 @@
             android:layout_height="wrap_content"
             android:textColor="@android:color/black"
             android:textAppearance="?android:textAppearanceSmall"/>
-        <TextView
 
+        <TextView
             android:id="@+id/match"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -33,6 +34,11 @@
             android:textAppearance="?android:textAppearanceSmall"/>
 
     </LinearLayout>
+
+    <CheckBox
+        android:id="@+id/selected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 
 </LinearLayout>

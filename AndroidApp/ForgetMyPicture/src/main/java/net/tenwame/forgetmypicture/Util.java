@@ -40,4 +40,11 @@ public class Util {
         }
         return ps;
     }
+
+    public interface Filter<T> {
+        boolean isAllowed(T candidate);
+    }
+
+
+
 }

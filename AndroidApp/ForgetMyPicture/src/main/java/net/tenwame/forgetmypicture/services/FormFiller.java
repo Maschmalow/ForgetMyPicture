@@ -24,6 +24,7 @@ public class FormFiller extends NetworkService{
 
     public static final String ACTION_FILL_FORM = ForgetMyPictureApp.getName() + ".fill_form";
 
+    public static final String FORM_URL = "https://support.google.com/legal/contact/lr_eudpa?product=websearch&hl=en";
     private static final int HTTP_OK = 200;
 
     
@@ -50,7 +51,7 @@ public class FormFiller extends NetworkService{
                 fail();
             }
 
-            Connection method = Jsoup.connect("https://support.google.com/legal/contact/lr_eudpa?product=websearch&hl=en").method(Connection.Method.POST);
+            Connection method = Jsoup.connect("127.0.0.1").method(Connection.Method.POST);
 
             User user = UserData.getUser();
             method.data("selected_country", "France"); // (champs, valeur)

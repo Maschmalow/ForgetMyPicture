@@ -42,7 +42,8 @@ public class Request {
     public enum Status {
         FETCHING, //still searching for new pictures
         PROCESSING, //some pictures are being processed
-        PENDING, //waiting for user to take action
+        PENDING, //waiting for user
+        PAYED, //paying features unlocked
         FINISHED; //done
 
         public String getString(Resources res) {
@@ -52,6 +53,8 @@ public class Request {
                 return res.getString(R.string.enum_request_status_processing);
             else if(this == PENDING)
                 return res.getString(R.string.enum_request_status_pending);
+            else if(this == PAYED)
+                return res.getString(R.string.enum_request_status_payed);
             else  //FINISHED
                 return res.getString(R.string.enum_request_status_finished);
         }

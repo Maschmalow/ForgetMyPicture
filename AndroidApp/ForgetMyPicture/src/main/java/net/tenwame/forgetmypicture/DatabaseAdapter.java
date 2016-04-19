@@ -29,6 +29,8 @@ public abstract class DatabaseAdapter<T> extends BaseAdapter implements AdapterV
     private List<T> data = new ArrayList<>();
     private Map<String, Object> queryArgs = new HashMap<>();
     private int layoutItemId;
+    private Util.Filter<T> filter;
+    private List<T> queriedItems = new ArrayList<>();
 
 
     public DatabaseAdapter(Class<T> clazz, int layoutItemId) {
@@ -41,40 +43,53 @@ public abstract class DatabaseAdapter<T> extends BaseAdapter implements AdapterV
         //data isn't initialised, because we want the app to notify when loading from db is needed
     }
 
-    private void loadData() {
-        data.clear();
+    public void loadData() {
         try {
-            if(queryArgs.isEmpty())
-                data.addAll(dao.queryForAll());
-            else
-                data.addAll(dao.queryForFieldValuesArgs(queryArgs));
+            queriedItems = (queryArgs.isEmpty())?
+                    dao.queryForAll() :
+                    dao.queryForFieldValuesArgs(queryArgs);
         } catch (SQLException e) {
             //data is empty so getView won't be called
             Log.e(TAG, "loadData: query failed", e);
         }
+        filter();
+
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                notifyDataSetChanged();
+            }
+        });
     }
 
-    public void addFilter(Map<String, Object> filter) {
-        if(filter == null) return;
+    public void addMatchingArgs(Map<String, Object> args) {
+        if(args == null) return;
 
-        queryArgs.putAll(filter);
+        queryArgs.putAll(args);
         loadData();
     }
 
-    public void setFilter(Map<String, Object> filter) {
+    public void setMatchingArgs(Map<String, Object> args) {
         queryArgs.clear();
-        addFilter(filter);
+        addMatchingArgs(args);
+    }
+
+    public void setFilter(Util.Filter<T> filter) {
+        this.filter = filter;
+        filter();
+    }
+
+    private void filter() {
+        data.clear();
+        for(T item : queriedItems)
+            if(filter != null && filter.isAllowed(item))
+                data.add(item);
     }
 
     private Dao.DaoObserver obs = new Dao.DaoObserver() {
         @Override
         public void onChange() {
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                @Override
-                public void run() {
-                    notifyDataSetChanged();
-                }
-            });
+            loadData();
         }
     };
 
@@ -103,12 +118,6 @@ public abstract class DatabaseAdapter<T> extends BaseAdapter implements AdapterV
     }
 
     abstract public void onItemClick(T item);
-
-    @Override
-    public void notifyDataSetChanged() { // when database is modified
-        loadData(); //we reload data before, so error is set when observers are called
-        super.notifyDataSetChanged();
-    }
 
     @Override
     public int getCount() {
