@@ -7,7 +7,6 @@ import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -45,6 +44,7 @@ public class RequestInfos extends ConventionFragment {
     private Request request;
     private ResultsAdapter adapter = new ResultsAdapter();
     private Set<Result> selected = new HashSet<>();
+    private AlertDialog payDialog;
 
     //auto-retrieved views
     private TextView title;
@@ -52,8 +52,6 @@ public class RequestInfos extends ConventionFragment {
     private TextView stats;
     private TextView keywords;
     private TextView motive;
-    private Button fillForm;
-    private Button sendEmail;
     private ListView resultsList;
     private TextView empty;
 
@@ -75,6 +73,24 @@ public class RequestInfos extends ConventionFragment {
         });
         adapter.trackDatabase(true);
         //resultsList.setOnItemClickListener(adapter);
+
+        payDialog = new AlertDialog.Builder(getContext())
+                .setMessage(R.string.request_infos_pay_before_check)
+                .setPositiveButton(R.string.request_infos_pay_btn, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        request.setStatus(Request.Status.PAYED);
+                        try {
+                            ForgetMyPictureApp.getHelper().getRequestDao().update(request);
+                        } catch (SQLException e) {
+                            return; // TODO: 19/04/2016
+                        }
+                        Toast.makeText(getContext(), R.string.request_infos_payed_toast, Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNeutralButton(R.string.cancel, null)
+                .setTitle(R.string.request_infos_pay_title)
+                .create();
     }
 
 
@@ -164,23 +180,6 @@ public class RequestInfos extends ConventionFragment {
         //no need to call load, adapter will do
     }
 
-    private final AlertDialog payDialog = new AlertDialog.Builder(getContext())
-            .setMessage(R.string.request_infos_pay_before_check)
-            .setPositiveButton(R.string.request_infos_pay_btn, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    request.setStatus(Request.Status.PAYED);
-                    try {
-                        ForgetMyPictureApp.getHelper().getRequestDao().update(request);
-                    } catch (SQLException e) {
-                        return; // TODO: 19/04/2016
-                    }
-                    Toast.makeText(getContext(), R.string.request_infos_payed_toast, Toast.LENGTH_SHORT).show();
-                }
-            })
-            .setNeutralButton(R.string.cancel, null)
-            .setTitle(R.string.request_infos_pay_title)
-            .create();
 
     private class ResultsAdapter extends DatabaseAdapter<Result> {
 

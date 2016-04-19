@@ -82,7 +82,7 @@ public abstract class DatabaseAdapter<T> extends BaseAdapter implements AdapterV
     private void filter() {
         data.clear();
         for(T item : queriedItems)
-            if(filter != null && filter.isAllowed(item))
+            if(filter == null || filter.isAllowed(item))
                 data.add(item);
     }
 

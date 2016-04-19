@@ -34,7 +34,7 @@ public class Manager {
     private static Manager instance = null;
     public static Manager getInstance() {
         if(instance == null)
-            synchronized (UserData.class) {
+            synchronized (Manager.class) {
                 if(instance == null)
                     instance = new Manager();
             }

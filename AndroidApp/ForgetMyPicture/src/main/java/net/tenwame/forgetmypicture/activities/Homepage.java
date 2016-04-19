@@ -26,12 +26,16 @@ public class Homepage extends Activity {
     }
 
 
-    public void goToSettingsFromUI(MenuItem item) {
-        startActivity(new Intent(this, Settings.class));
-    }
+    @Override
+        public boolean onMenuItemSelected(int featureId, MenuItem item) {
+        if(R.id.settings_btn == item.getItemId())
+            startActivity(new Intent(this, Settings.class));
+        else if(R.id.account_btn == item.getItemId())
+            startActivity(new Intent(this, UserSetup.class));
+        else
+            return super.onMenuItemSelected(featureId, item);
 
-    public void goToAccountFromUI(MenuItem item) {
-        startActivity(new Intent(this, UserSetup.class));
+        return true;
     }
 
     @Override

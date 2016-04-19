@@ -13,13 +13,16 @@ import java.sql.SQLException;
  */
 public class UserData {
     private static final String deviceId = Secure.getString(ForgetMyPictureApp.getContext().getContentResolver(), Secure.ANDROID_ID);
-    private static User user = setUser();
+    private static User user;
 
     private UserData() { }
 
     public static User getUser() {
         if(user == null)
-            setUser();
+            synchronized (UserData.class) {
+                if(user == null)
+                    setUser();
+            }
 
         return user;
     }

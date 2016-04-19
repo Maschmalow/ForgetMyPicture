@@ -80,7 +80,7 @@ public class ConventionFragment extends Fragment {
                         Log.w(TAG, "R.id." + f.getName() + " couldn't be found in Fragment.");
                 } catch (Exception e) {
                     Log.w(TAG, "field " + f.getName() + " is not accessible," +
-                            " or id R.id." + f.getName() + " does not exist.");
+                            " or id R.id." + Util.camelToSnakeCase(f.getName()) + " does not exist.");
                 }
             }
         }

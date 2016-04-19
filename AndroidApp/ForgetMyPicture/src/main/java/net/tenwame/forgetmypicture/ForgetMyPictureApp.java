@@ -25,6 +25,7 @@ public class ForgetMyPictureApp extends Application {
         context = getApplicationContext();
         ImageLoader.getInstance().init(new ImageLoaderConfiguration.Builder(this).build());
         Crittercism.initialize(context, "f540f2393bac4199bd54307a928e1a0a00444503");
+        Crittercism.setUsername(UserData.getDeviceId());
         helper = OpenHelperManager.getHelper(context, DatabaseHelper.class);
         Manager.getInstance(); //initialize manager
     }
