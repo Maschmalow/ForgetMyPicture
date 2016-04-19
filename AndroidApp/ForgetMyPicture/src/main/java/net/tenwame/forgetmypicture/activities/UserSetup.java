@@ -15,8 +15,8 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import net.tenwame.forgetmypicture.DatabaseHelper;
 import net.tenwame.forgetmypicture.R;
-import net.tenwame.forgetmypicture.ServerInterface;
 import net.tenwame.forgetmypicture.UserData;
+import net.tenwame.forgetmypicture.services.ServerInterface;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -69,6 +69,7 @@ public class UserSetup extends Activity {
         }
         ServerInterface.execute(ServerInterface.ACTION_REGISTER);
         Toast.makeText(this, R.string.user_setup_save_toast, Toast.LENGTH_SHORT).show();
+        setResult(RESULT_OK);
         finish();
     }
 

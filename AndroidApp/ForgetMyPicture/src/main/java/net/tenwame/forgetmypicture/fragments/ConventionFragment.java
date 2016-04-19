@@ -1,13 +1,14 @@
 package net.tenwame.forgetmypicture.fragments;
 
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import net.tenwame.forgetmypicture.R;
+import net.tenwame.forgetmypicture.Util;
 
 import java.lang.reflect.Field;
 
@@ -53,9 +54,9 @@ public class ConventionFragment extends Fragment {
     }
 
     private int getLayoutId() {
-        String name = "fragment" + getResIdName(this.getClass().getSimpleName());
+        String name = "fragment" + Util.camelToSnakeCase(this.getClass().getSimpleName());
         try {
-            Field layoutField = R.layout.class.getDeclaredField(getResIdName(name));
+            Field layoutField = R.layout.class.getDeclaredField(Util.camelToSnakeCase(name));
             return layoutField.getInt(layoutField);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -73,7 +74,7 @@ public class ConventionFragment extends Fragment {
 
                 f.setAccessible(true);
                 try {
-                    Field idField = R.id.class.getDeclaredField(getResIdName(f.getName()));
+                    Field idField = R.id.class.getDeclaredField(Util.camelToSnakeCase(f.getName()));
                     f.set(this, root.findViewById(idField.getInt(idField)));
                     if(f.get(this) == null)
                         Log.w(TAG, "R.id." + f.getName() + " couldn't be found in Fragment.");
@@ -85,17 +86,7 @@ public class ConventionFragment extends Fragment {
         }
     }
 
-    private String getResIdName(String fieldName) { //lowerCamelCase -> snake_case
-        char[] array = fieldName.toCharArray();
-        String ret = "";
-        for(char c : array) {
-            if( Character.isUpperCase(c) )
-                ret +=  "_" + Character.toLowerCase(c);
-            else
-                ret += c;
-        }
-        return ret;
-    }
+
 
 
 

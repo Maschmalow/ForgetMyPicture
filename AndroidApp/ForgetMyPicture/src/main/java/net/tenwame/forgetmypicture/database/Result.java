@@ -21,6 +21,7 @@ public class Result {
         //and ORMLite doesn't support multiple primary keys
         this.picRefURL = picRefURL;
         this.request = request;
+        sent = false;
         match = -1;
     }
 
@@ -33,11 +34,22 @@ public class Result {
     @DatabaseField(canBeNull = false)
     private int match;
 
+    @DatabaseField(canBeNull = false)
+    private boolean sent;
+
     @DatabaseField(foreign = true)
     private Request request;
 
     public boolean isProcessed() {
         return match != -1;
+    }
+
+    public void setSent() {
+        sent = true;
+    }
+
+    public boolean isSent() {
+        return sent;
     }
 
     public int getMatch() {
@@ -46,6 +58,10 @@ public class Result {
 
     public void setMatch(int match) {
         this.match = match;
+    }
+
+    public String getId() {
+        return picURL;
     }
 
     public String getPicURL() {
@@ -73,4 +89,5 @@ public class Result {
     public int hashCode() {
         return picURL.hashCode();
     }
+
 }

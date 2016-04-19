@@ -5,26 +5,28 @@
               android:layout_height="match_parent">
 
 
-    <TextView
-        android:id="@+id/ok_icon"
+    <ImageView
+        android:id="@+id/thumb"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="PROC"/>
+        android:layout_height="match_parent"
+        android:maxHeight="10dp"
+        android:contentDescription="@string/result_item_thumb_desc" />
+
 
     <LinearLayout
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/pic_url"
+            android:id="@+id/pic_ref_url"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@android:color/black"
             android:textAppearance="?android:textAppearanceSmall"/>
-
         <TextView
-            android:id="@+id/pic_ref_url"
+
+            android:id="@+id/match"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@android:color/black"

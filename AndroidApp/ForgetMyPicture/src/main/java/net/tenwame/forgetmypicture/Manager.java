@@ -7,13 +7,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
-import android.os.Bundle;
 import android.util.Log;
 
 import net.tenwame.forgetmypicture.database.Request;
+import net.tenwame.forgetmypicture.database.Result;
+import net.tenwame.forgetmypicture.services.Searcher;
+import net.tenwame.forgetmypicture.services.ServerInterface;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Antoine on 10/03/2016.
@@ -36,17 +42,6 @@ public class Manager {
         return instance;
     }
 
-    public enum Event {
-        SEARCHER_EXCEPTION,
-        REGISTER_FAILED,
-        FEED_FAILED,
-        GET_INFO_FAILED,
-        NEW_REQUEST_FAILED,
-        FILL_FORM_FAILED,
-        SEND_MAIL_FAILED
-    }
-
-
     private static final long UPDATE_DELAY = 100*60*5; //time between each update, ms
 
     private Context context = ForgetMyPictureApp.getContext();
@@ -66,17 +61,33 @@ public class Manager {
             Log.e(TAG, "Could not create new request", e);
             return null;
         }
-        Bundle params = new Bundle();
-        params.putInt(ServerInterface.EXTRA_REQUEST_ID_KEY, request.getId());
-        ServerInterface.execute(ServerInterface.ACTION_NEW_REQUEST, params);
+        ServerInterface.execute(ServerInterface.ACTION_NEW_REQUEST, request);
 
         return request;
     }
 
-    public void notify(Event event) {
-        if(event == Event.SEARCHER_EXCEPTION) {
 
-        } //TODO: handle other events
+    public void resendResults() {
+        List<Result> unSent;
+        try {
+            unSent = ForgetMyPictureApp.getHelper().getResultDao().queryForFieldValuesArgs(Collections.singletonMap("sent", (Object)Boolean.FALSE));
+        } catch (SQLException e) {
+            Log.e(TAG, "notify: Unable to recover from feed fail", e);
+            return;
+        }
+        Map<Request, List<Result>> unSentRequests = new HashMap<>();
+        for(Result result : unSent) {
+            List<Result> cur  = unSentRequests.get(result.getRequest());
+            if(cur == null) {
+                cur = new ArrayList<>();
+                unSentRequests.put(result.getRequest(), cur);
+            }
+            cur.add(result);
+        }
+
+        for(Map.Entry<Request,List<Result>> set: unSentRequests.entrySet())
+            ServerInterface.execute(ServerInterface.ACTION_FEED, set.getKey(), set.getValue());
+
     }
 
     public void setAlarms() {
@@ -89,7 +100,7 @@ public class Manager {
     private void scheduleAlarms() {
         if(areAlarmsScheduled) return;
         scheduleAction(AlarmReceiver.ACTION_DO_UPDATE, UPDATE_DELAY);
-        scheduleAction(AlarmReceiver.ACTION_DO_SEARCH, SearchService.SEARCH_DELAY);
+        scheduleAction(AlarmReceiver.ACTION_DO_SEARCH, Searcher.SEARCH_DELAY);
         Log.i(TAG, "Alarms scheduled");
         areAlarmsScheduled = true;
     }
@@ -124,7 +135,6 @@ public class Manager {
         public void onReceive(Context context, Intent intent) {
             if( ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction()))
                 getInstance().setAlarms();
-
         }
     }
 
@@ -139,7 +149,7 @@ public class Manager {
                 return;
 
             if(ACTION_DO_SEARCH.equals(intent.getAction()))
-                SearchService.execute();
+                Searcher.execute();
 
             if(ACTION_DO_UPDATE.equals(intent.getAction()))
                 ServerInterface.execute(ServerInterface.ACTION_GET_INFO);

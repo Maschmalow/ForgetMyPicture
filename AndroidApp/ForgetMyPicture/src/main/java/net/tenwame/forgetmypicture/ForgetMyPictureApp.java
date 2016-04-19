@@ -7,6 +7,8 @@ import android.net.NetworkInfo;
 
 import com.crittercism.app.Crittercism;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import net.tenwame.forgetmypicture.activities.Settings;
 
@@ -21,6 +23,7 @@ public class ForgetMyPictureApp extends Application {
     public void onCreate() {
         super.onCreate();
         context = getApplicationContext();
+        ImageLoader.getInstance().init(new ImageLoaderConfiguration.Builder(this).build());
         Crittercism.initialize(context, "f540f2393bac4199bd54307a928e1a0a00444503");
         helper = OpenHelperManager.getHelper(context, DatabaseHelper.class);
         Manager.getInstance(); //initialize manager

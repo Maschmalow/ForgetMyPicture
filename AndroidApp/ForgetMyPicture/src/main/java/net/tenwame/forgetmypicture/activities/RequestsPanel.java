@@ -1,14 +1,13 @@
 package net.tenwame.forgetmypicture.activities;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 
-import net.tenwame.forgetmypicture.R;
 import net.tenwame.forgetmypicture.database.Request;
 import net.tenwame.forgetmypicture.fragments.RequestInfos;
 import net.tenwame.forgetmypicture.fragments.RequestsList;
 
-public class RequestsPanel extends Activity {
+public class RequestsPanel extends FragmentActivity {
 
     private RequestsList requests;
     private RequestInfos infos;
@@ -16,18 +15,17 @@ public class RequestsPanel extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_requests_panel);
 
-        getFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, requests = new RequestsList())
-                .add(R.id.fragment_container, infos = new RequestInfos())
+        getSupportFragmentManager().beginTransaction()
+                .add(android.R.id.content, requests = new RequestsList())
+                .add(android.R.id.content, infos = new RequestInfos())
                 .hide(infos)
                 .commit();
 
     }
 
     public void goToRequestInfo(Request request) {
-        getFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .hide(requests)
                 .show(infos)
                 .addToBackStack(null)

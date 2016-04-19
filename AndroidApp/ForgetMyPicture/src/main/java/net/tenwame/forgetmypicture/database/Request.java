@@ -161,8 +161,8 @@ public class Request {
         }
         Set<Result> newResults = new HashSet<>();
         for(Result result : results)
-            if(!this.results.contains(result)) { //this is retarded,
-                this.results.add(result);        //but ORMLite's add crashes instead of returning false
+            if(!this.results.contains(result)) { //this is retarded, but ORMLite's add crashes instead of returning false
+                this.results.add(result);        //okay, maybe they don't want to make too much assumptions, but still
                 newResults.add(result);
             }
 

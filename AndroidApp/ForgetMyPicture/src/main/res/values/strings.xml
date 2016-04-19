@@ -35,7 +35,8 @@
     <string name="homepage_activity_name">Forget My Picture</string>
     <string name="homepage_new_request">Start a new request</string>
     <string name="homepage_requests_panel">My requests</string>
-    <string name="homepage_user_setup">Setup my data</string>
+    <string name="homepage_menu_account">My account</string>
+    <string name="homepage_menu_settings">Settings</string>
 
     <!-- request_panel activity -->
     <string name="request_panel_activity_name">Requests Panel</string>
@@ -49,12 +50,23 @@
     <!-- request_infos fragment -->
     <string name="request_infos_title">%1$s search No. %2$d</string>
     <string name="request_infos_status">Status : %s</string>
-    <string name="request_infos_stats">Stats: Aprox. %1$d%% pictures fetched, %2$d results processed out of %3$d</string>
+    <string name="request_infos_stats">Stats: Aprox. %1$d/%2$d pictures fetched, %3$d results processed out of %4$d</string>
     <string name="request_infos_motive">Motive : %s</string>
     <string name="request_infos_keywords">Keywords: %s</string>
-    <string name="request_infos_no_results">No results</string>
-    <string name="result_item_pic_url">Picture URL: %s</string>
-    <string name="result_item_pic_ref_url">Page: %s</string>
+    <string name="request_infos_no_results">No results yet</string>
+    <string name="result_item_match">%d%% match</string>
+    <string name="result_item_pic_ref_url">Site: %s</string>
+    <string name="result_item_thumb_desc">Matched picture</string>
+
+    <!-- settings activity -->
+    <string name="settings_activity_name">Settings</string>
+    <string name="settings_data_on_wifi">Data on Wi-fi only</string>
+    <string name="settings_wipe">Wipe all data</string>
+    <string name="settings_wipe_btn">Wipe</string>
+    <string name="settings_wipe_warning">WARNING : This will erase all date from your app and from our server.\nProceed with caution.</string>
+    <string name="settings_wipe_title">Continue?</string>
+    <string name="settings_wipe_cancel">Cancel</string>
+    <string name="settings_wipe_toast">Data wiped</string>
 
     <!-- enums values display -->
     <string name="enum_request_status_fetching">Fetching</string>
@@ -63,9 +75,5 @@
     <string name="enum_request_status_finished">Finished</string>
     <string name="enum_request_kind_quick">Quick</string>
     <string name="enum_request_kind_exhaustive">Exhaustive</string>
-    <string name="homepage_menu_account">My account</string>
-    <string name="homepage_menu_settings">Settings</string>
-    <string name="pref_data_on_wifi">Data on Wi-fi only</string>
-    <string name="settings_activity_name">Settings</string>
 
 </resources>

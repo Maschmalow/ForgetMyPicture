@@ -27,6 +27,8 @@ public class NewRequest extends Activity {
     private static final String TAG = NewRequest.class.getCanonicalName();
 
     private static int SELECT_PICTURE = 1;
+    private static int REQUEST_USER_SETUP = 1;
+
 
     private LinearLayout selectOriginalPic;
     private TextView originalPicPath;
@@ -40,7 +42,7 @@ public class NewRequest extends Activity {
 
         if(!UserData.getUser().isValid()) {
             Toast.makeText(this, R.string.search_setup_data_toast, Toast.LENGTH_LONG).show();
-            startActivity(new Intent(this, UserSetup.class));
+            startActivityForResult(new Intent(this, UserSetup.class), REQUEST_USER_SETUP);
         }
 
         setContentView(R.layout.activity_new_request);
@@ -93,7 +95,7 @@ public class NewRequest extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == SELECT_PICTURE && resultCode == RESULT_OK && null != data) {
+        if(requestCode == SELECT_PICTURE && resultCode == RESULT_OK && null != data) {
             String[] filePathColumn = { MediaStore.Images.Media.DATA };
 
             Cursor cursor = getContentResolver().query(data.getData(),
@@ -111,5 +113,9 @@ public class NewRequest extends Activity {
             originalPic = BitmapFactory.decodeFile(picturePath);
             originalPicPath.setText(picturePath);
         }
+        if(requestCode == REQUEST_USER_SETUP && resultCode == RESULT_CANCELED) {
+            finish();
+        }
+
     }
 }

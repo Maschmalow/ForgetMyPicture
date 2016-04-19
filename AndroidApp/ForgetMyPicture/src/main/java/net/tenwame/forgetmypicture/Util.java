@@ -10,6 +10,17 @@ import java.util.List;
  */
 public class Util {
 
+    public static String camelToSnakeCase(String fieldName) {
+        char[] array = fieldName.toCharArray();
+        String ret = "";
+        for(char c : array) {
+            if( Character.isUpperCase(c) )
+                ret +=  "_" + Character.toLowerCase(c);
+            else
+                ret += c;
+        }
+        return ret;
+    }
 
     public static <T> List<List<T>> powerSet(Collection<T> list) {
         List<List<T>> ps = new ArrayList<>();

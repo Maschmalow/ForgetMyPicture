@@ -2,6 +2,7 @@ package net.tenwame.forgetmypicture;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
@@ -20,8 +21,9 @@ import java.sql.SQLException;
  * for DAOs and stuff
  */
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
+    private static final String TAG = DatabaseHelper.class.getSimpleName();
     private static final String DATABASE_NAME = "ForgetMyPicture.db";
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
 
 
     private Dao<Result, String> resultDao;
@@ -46,6 +48,29 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase, ConnectionSource connectionSource) {
+        createDatabase();
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, ConnectionSource connectionSource,
+                          int oldVersion, int newVersion) {
+        wipeDatabase();
+    }
+
+    public void wipeDatabase() {
+        try {
+            TableUtils.dropTable(connectionSource, Request.class, false);
+            TableUtils.dropTable(connectionSource, Result.class, false);
+            TableUtils.dropTable(connectionSource, User.class, false);
+            TableUtils.dropTable(connectionSource, Selfie.class, false);
+            createDatabase();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        Log.i(TAG, "Database wiped");
+    }
+
+    private void createDatabase() {
         try {
             TableUtils.createTableIfNotExists(connectionSource, Result.class);
             TableUtils.createTableIfNotExists(connectionSource, Request.class);
@@ -54,20 +79,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, ConnectionSource connectionSource, int oldVersion,
-                          int newVersion) {
-        try {
-            TableUtils.dropTable(connectionSource, Request.class, false);
-            TableUtils.dropTable(connectionSource, Result.class, false);
-            TableUtils.dropTable(connectionSource, User.class, false);
-            TableUtils.dropTable(connectionSource, Selfie.class, false);
-            onCreate(sqLiteDatabase, connectionSource);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        Log.i(TAG, "Database created");
     }
 
     public Dao<Result, String> getResultDao() {

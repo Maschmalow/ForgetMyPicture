@@ -2,6 +2,10 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <CheckBoxPreference
         android:key="pref_data_on_wifi"
-        android:title="@string/pref_data_on_wifi"
+        android:title="@string/settings_data_on_wifi"
         android:defaultValue="false" />
+
+    <Preference
+        android:key="pref_wipe"
+        android:title="@string/settings_wipe"/>
 </PreferenceScreen>

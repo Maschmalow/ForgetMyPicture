@@ -2,12 +2,14 @@ package net.tenwame.forgetmypicture.fragments;
 
 import android.content.res.Resources;
 import android.database.DataSetObserver;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import net.tenwame.forgetmypicture.DatabaseAdapter;
 import net.tenwame.forgetmypicture.ForgetMyPictureApp;
@@ -89,7 +91,8 @@ public class RequestInfos extends ConventionFragment {
         Resources res = getResources();
         title.setText(res.getString(R.string.request_infos_title, request.getKind().toString().toLowerCase(), request.getId()));
         status.setText(res.getString(R.string.request_infos_status, request.getStatus().getString(res)));
-        stats.setText(res.getString(R.string.request_infos_stats, nbResults/(progress+1)* 100*progress/request.getMaxProgress(), processed, nbResults));
+        int estimated = (progress == 0)? request.getMaxProgress()*100 : request.getMaxProgress()/progress *nbResults;
+        stats.setText(res.getString(R.string.request_infos_stats, nbResults, estimated, processed, nbResults));
         keywords.setText(res.getString(R.string.request_infos_keywords, request.getKeywords().toString())); //TODO
 
         if(request.getStatus() == Request.Status.FINISHED && request.getMotive() != null) {
@@ -144,18 +147,13 @@ public class RequestInfos extends ConventionFragment {
         public void setView(View view, Result item) {
         Resources res = getResources();
 
-            if(item.isProcessed())
-                view.findViewById(R.id.ok_icon).setVisibility(View.VISIBLE);
-            else
-                view.findViewById(R.id.ok_icon).setVisibility(View.GONE);
+            ((TextView) view.findViewById(R.id.match)).setText(res.getString(R.string.result_item_match, item.getMatch()));
             try {
-                URL picURL = new URL(item.getPicURL());
-                URL picRefURL = new URL(item.getPicRefURL());
+                ((TextView) view.findViewById(R.id.pic_ref_url)).setText(res.getString(R.string.result_item_pic_ref_url, new URL(item.getPicRefURL()).getHost()));
+            } catch (MalformedURLException ignored) { } //already checked in Searcher
 
-                ((TextView) view.findViewById(R.id.pic_url)).setText(res.getString(R.string.result_item_pic_url, picURL.getHost() + "[...]" + picURL.getFile()));
-                ((TextView) view.findViewById(R.id.pic_ref_url)).setText(res.getString(R.string.result_item_pic_ref_url, picRefURL.getHost() + "[...]" + picRefURL.getFile()));
-            } catch (MalformedURLException ignored) { } //already checked in SearchService
-
+            // TODO: 18/04/2016 Download server-side
+            ImageLoader.getInstance().displayImage(item.getPicURL(), (ImageView) view.findViewById(R.id.thumb) );
         }
 
         @Override
@@ -171,11 +169,4 @@ public class RequestInfos extends ConventionFragment {
         }
     }
 
-    private static class PictureDownloader extends AsyncTask<Result, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Result... params) {
-            return null;
-        }
-    }
 }

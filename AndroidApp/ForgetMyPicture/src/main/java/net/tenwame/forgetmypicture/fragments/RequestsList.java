@@ -9,7 +9,6 @@ import android.widget.TextView;
 import com.j256.ormlite.dao.Dao;
 
 import net.tenwame.forgetmypicture.DatabaseAdapter;
-import net.tenwame.forgetmypicture.ForgetMyPictureApp;
 import net.tenwame.forgetmypicture.R;
 import net.tenwame.forgetmypicture.activities.RequestsPanel;
 import net.tenwame.forgetmypicture.database.Request;
@@ -40,25 +39,30 @@ public class RequestsList extends ConventionFragment {
         adapter.registerDataSetObserver(new DataSetObserver() {
             @Override
             public void onChanged() {
-                if(adapter.getCount() == 0) {
-                    requestsList.setVisibility(View.GONE);
-                    empty.setVisibility(View.VISIBLE);
-                } else {
-                    requestsList.setVisibility(View.VISIBLE);
-                    empty.setVisibility(View.GONE);
-                }
+                load();
             }
         });
         requestsList.setAdapter(adapter);
         requestsList.setOnItemClickListener(adapter);
         adapter.notifyDataSetChanged(); // trigger loading and observers
-        ForgetMyPictureApp.getHelper().getResultDao().registerObserver(notifier);
+        //ForgetMyPictureApp.getHelper().getResultDao().registerObserver(notifier);
+    }
+
+    @Override
+    public void load() {
+        if(adapter.getCount() == 0) {
+            requestsList.setVisibility(View.GONE);
+            empty.setVisibility(View.VISIBLE);
+        } else {
+            requestsList.setVisibility(View.VISIBLE);
+            empty.setVisibility(View.GONE);
+        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        ForgetMyPictureApp.getHelper().getResultDao().registerObserver(notifier);
+        //ForgetMyPictureApp.getHelper().getResultDao().registerObserver(notifier);
     }
 
     public void setFilterFromUI(/* filter */) {//will be from UI
