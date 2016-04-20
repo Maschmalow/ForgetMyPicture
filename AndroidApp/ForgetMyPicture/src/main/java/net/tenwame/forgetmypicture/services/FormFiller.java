@@ -1,7 +1,6 @@
 package net.tenwame.forgetmypicture.services;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import net.tenwame.forgetmypicture.ForgetMyPictureApp;
 import net.tenwame.forgetmypicture.UserData;
@@ -13,7 +12,6 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 
 import java.io.InputStream;
-import java.sql.SQLException;
 import java.text.DateFormat;
 import java.util.Date;
 
@@ -46,64 +44,41 @@ public class FormFiller extends NetworkService{
         public void handle(Bundle params) throws Exception {
             Request request = getRequest(params);
             //pending because the work isn't done unless we did fill the form
-            if(request.getStatus() != Request.Status.PENDING) {
-                Log.e(TAG, "Request is not pending (status=" + request.getStatus() + ")");
-                fail();
-            }
+            if(request.getStatus() != Request.Status.PENDING)
+                throw new RuntimeException("Invalid request status: " + request.getStatus());
 
-            Connection method = Jsoup.connect("127.0.0.1").method(Connection.Method.POST);
+
+            Connection connection = Jsoup.connect("127.0.0.1");
 
             User user = UserData.getUser();
-            method.data("selected_country", "France"); // (champs, valeur)
-            method.data("name_searched", user.getForename() + " " + user.getName());
-            method.data("requestor_name", user.getForename() + " " + user.getName());
-            method.data("contact_email_noprefill", user.getEmail());
+            connection.data("selected_country", "France"); // (champs, valeur)
+            connection.data("name_searched", user.getForename() + " " + user.getName());
+            connection.data("requestor_name", user.getForename() + " " + user.getName());
+            connection.data("contact_email_noprefill", user.getEmail());
 
             for( Result result : request.getResults())
-                method.data("url_box3", result.getPicURL());
+                connection.data("url_box3", result.getPicURL());
 
-            method.data("eudpa_explain", request.getMotive());
-            method.data("eudpa_consent_statement", "agree");
-            method.data("signature", user.getForename() + " " + user.getName());
-            method.data("signature_date", DateFormat.getDateTimeInstance().format(new Date()));
+            connection.data("eudpa_explain", request.getMotive());
+            connection.data("eudpa_consent_statement", "agree");
+            connection.data("signature", user.getForename() + " " + user.getName());
+            connection.data("signature_date", DateFormat.getDateTimeInstance().format(new Date()));
 
-            int code;
-            try {
-                InputStream stream = user.getIdCard().openStream();
-                method.data("legal_idupload", "carte identite", stream);
-                Connection.Response response = method.execute();
-                code = response.statusCode();
-                stream.close();
-            }
-            catch (Exception e) {
-                Log.e(TAG, "Request failed");
-                fail();
-                return; //only to remove warning
-            }
+            InputStream stream = user.getIdCard().openStream();
+            connection.data("legal_idupload", "carte identite", stream);
+            connection.post();
 
-            if(code == HTTP_OK)
-                request.setStatus(Request.Status.FINISHED);
-            else {
-                Log.e(TAG, "Request failed with HTTP code " + code);
-                fail();
-            }
+            stream.close();
         }
 
     };
 
-    private Request getRequest(Bundle params) {
+    private Request getRequest(Bundle params) throws Exception{
         int requestId = params.getInt(EXTRA_REQUEST_ID_KEY, -1);
-        Request request = null;
-        try {
-            request = ForgetMyPictureApp.getHelper().getRequestDao().queryForId(requestId);
-        } catch (SQLException e) {
-            Log.e(TAG, "SQL error", e);
-            fail();
-        }
-        if(request == null) {
-            Log.e(TAG, "No request found for request Id: " + requestId);
-            fail();
-        }
+        Request request = ForgetMyPictureApp.getHelper().getRequestDao().queryForId(requestId);
+        if(request == null)
+            throw new IllegalArgumentException("Missing or invalid request: Id " + requestId);
+
         return request;
     }
 

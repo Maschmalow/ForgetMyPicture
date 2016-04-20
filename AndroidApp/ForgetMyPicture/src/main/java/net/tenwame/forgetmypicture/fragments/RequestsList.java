@@ -6,13 +6,12 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.j256.ormlite.dao.Dao;
-
 import net.tenwame.forgetmypicture.DatabaseAdapter;
 import net.tenwame.forgetmypicture.R;
 import net.tenwame.forgetmypicture.Util;
 import net.tenwame.forgetmypicture.activities.RequestsPanel;
 import net.tenwame.forgetmypicture.database.Request;
+import net.tenwame.forgetmypicture.database.Result;
 
 /**
  * Created by Antoine on 07/04/2016.
@@ -22,12 +21,6 @@ public class RequestsList extends ConventionFragment {
     private static final String TAG = RequestsList.class.getName();
 
     private RequestsAdapter adapter = new RequestsAdapter();
-    private Dao.DaoObserver notifier = new Dao.DaoObserver() {
-        @Override
-        public void onChange() {
-            adapter.notifyDataSetChanged();
-        }
-    };
     private DataSetObserver loader = new DataSetObserver() {
         @Override
         public void onChanged() {
@@ -45,20 +38,20 @@ public class RequestsList extends ConventionFragment {
         requestsList.setOnItemClickListener(adapter);
         adapter.registerDataSetObserver(loader);
         adapter.loadData();
-        //adapter.trackDatabase(Result.class, true);
+        adapter.trackDatabase(Result.class, true);
     }
 
     @Override
     public void load() {
-        Util.setViewVisibleWhen(adapter.getCount() == 0, requestsList);
-        Util.setViewVisibleWhen(adapter.getCount() != 0, empty);
+        Util.setViewVisibleWhen(adapter.getCount() != 0, requestsList);
+        Util.setViewVisibleWhen(adapter.getCount() == 0, empty);
     }
 
     @Override
     public void onStop() {
         super.onStop();
         adapter.unregisterDataSetObserver(loader);
-        //adapter.trackDatabase(Result.class, false);
+        adapter.trackDatabase(Result.class, false);
     }
 
     public void setFilterFromUI(/* filter */) {//will be from UI

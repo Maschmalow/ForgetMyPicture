@@ -11,16 +11,18 @@ import net.tenwame.forgetmypicture.fragments.RequestsList;
 public class RequestsPanel extends FragmentActivity {
 
     private static final String IN_LIST_FRAG_KEY = "IN_LIST_FRAG_KEY";
-    private RequestsList requests;
-    private RequestInfos infos;
+    private RequestsList requests = new RequestsList();
+    private RequestInfos infos  = new RequestInfos();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(savedInstanceState != null)
+            return;
 
         getSupportFragmentManager().beginTransaction()
-                .add(android.R.id.content, requests = new RequestsList())
-                .add(android.R.id.content, infos = new RequestInfos())
+                .add(android.R.id.content, requests)
+                .add(android.R.id.content, infos)
                 .hide(infos)
                 .commit();
 
@@ -57,13 +59,13 @@ public class RequestsPanel extends FragmentActivity {
 
         if(savedInstanceState.getBoolean(IN_LIST_FRAG_KEY, true))
             getSupportFragmentManager().beginTransaction()
-                    .hide(requests)
-                    .show(infos)
+                    .show(requests)
+                    .hide(infos)
                     .commit();
         else
             getSupportFragmentManager().beginTransaction()
-                    .show(requests)
-                    .hide(infos)
+                    .hide(requests)
+                    .show(infos)
                     .commit();
     }
 

@@ -100,8 +100,8 @@ public class RequestInfos extends ConventionFragment {
     public void load() {
         if(request == null) return;
 
-        Util.setViewVisibleWhen(adapter.getCount() == 0, resultsList);
-        Util.setViewVisibleWhen(adapter.getCount() != 0, empty);
+        Util.setViewVisibleWhen(adapter.getCount() != 0, resultsList);
+        Util.setViewVisibleWhen(adapter.getCount() == 0, empty);
 
         int processed = 0;
         for( Result r : request.getResults())

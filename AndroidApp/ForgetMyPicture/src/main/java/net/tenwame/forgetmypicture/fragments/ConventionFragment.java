@@ -56,7 +56,7 @@ public class ConventionFragment extends Fragment {
     private int getLayoutId() {
         String name = "fragment" + Util.camelToSnakeCase(this.getClass().getSimpleName());
         try {
-            Field layoutField = R.layout.class.getDeclaredField(Util.camelToSnakeCase(name));
+            Field layoutField = R.layout.class.getDeclaredField(name);
             return layoutField.getInt(layoutField);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -65,7 +65,7 @@ public class ConventionFragment extends Fragment {
 
 
     //fill all the child's Views, assuming that the View id is the same as it's field name
-    // i.e. private ViewGroup itemMenu = (ViewGroup) findViewById(R.id.itemMenu);
+    // i.e. private ViewGroup itemMenu = (ViewGroup) findViewById(R.id.item_menu);
     private void findFieldsViews() {
         Class childClass = this.getClass();
         for( Field f : childClass.getDeclaredFields()) {

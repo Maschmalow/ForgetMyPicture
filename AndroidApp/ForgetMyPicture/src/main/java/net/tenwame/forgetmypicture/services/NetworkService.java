@@ -62,28 +62,24 @@ public abstract class NetworkService extends IntentService {
         } catch (Exception e) {
             Log.e(TAG, "Action " + curAction + " failed", e);
             Crittercism.logHandledException(e);
-            fail();
+            notifyFailed();
+            return;
         }
 
-        done();
+        notifyFinished();
+        curAction = null;
     }
 
-    final protected void fail() {
+    private void notifyFailed() {
         if(listeners.get(getClass()) != null)
             for(NetworkListener listener : listeners.get(getClass()))
                 listener.onActionFailed(curAction);
-
-        curAction = null;
-        stopSelf();
     }
 
-    final protected void done() {
+    private void notifyFinished() {
         if(listeners.get(getClass()) != null)
             for(NetworkListener listener : listeners.get(getClass()))
                 listener.onActionFinished(curAction);
-
-        curAction = null;
-        stopSelf();
     }
 
     protected interface ActionHandler {
