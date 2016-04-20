@@ -15,6 +15,7 @@ import android.widget.Toast;
 import net.tenwame.forgetmypicture.ForgetMyPictureApp;
 import net.tenwame.forgetmypicture.Manager;
 import net.tenwame.forgetmypicture.R;
+import net.tenwame.forgetmypicture.services.ServerInterface;
 
 /**
  * Created by Antoine on 16/04/2016.
@@ -34,6 +35,7 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
     }
 
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +45,7 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
                     .replace(android.R.id.content, new SettingsFragment())
                     .commit();
         }
-        else { //noinspection deprecation
+        else {
             addPreferencesFromResource(R.xml.preferences);
             findPreference(WIPE_KEY).setOnPreferenceClickListener(wipeListener);
         }
@@ -69,7 +71,7 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 ForgetMyPictureApp.getHelper().wipeDatabase();
-                                // TODO: 18/04/2016 wipe from server
+                                ServerInterface.execute(ServerInterface.ACTION_WIPE_USER);
                                 Toast.makeText(Settings.this, R.string.settings_wipe_toast, Toast.LENGTH_SHORT).show();
                             }
                         })

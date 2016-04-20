@@ -1,7 +1,9 @@
 package net.tenwame.forgetmypicture.activities;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.view.View;
 
 import net.tenwame.forgetmypicture.database.Request;
@@ -11,21 +13,41 @@ import net.tenwame.forgetmypicture.fragments.RequestsList;
 public class RequestsPanel extends FragmentActivity {
 
     private static final String IN_LIST_FRAG_KEY = "IN_LIST_FRAG_KEY";
-    private RequestsList requests = new RequestsList();
-    private RequestInfos infos  = new RequestInfos();
+    private RequestsList requests;
+    private RequestInfos infos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(savedInstanceState != null)
-            return;
+
+        requests = addFragment(RequestsList.class);
+        infos = addFragment(RequestInfos.class);
 
         getSupportFragmentManager().beginTransaction()
-                .add(android.R.id.content, requests)
-                .add(android.R.id.content, infos)
+                .show(requests)
                 .hide(infos)
                 .commit();
+    }
 
+    protected <T extends Fragment> T addFragment( Class<T> clss ) {
+        String tag = clss.getSimpleName();
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment f = fm.findFragmentByTag( tag );
+        if ( f == null ) {
+            f = Fragment.instantiate( this, clss.getName() );
+            fm.beginTransaction()
+                    .add( android.R.id.content, f, tag )
+                    .commit();
+        }
+        return (T) f;
+    }
+
+    public void goToResultList() {
+        getSupportFragmentManager().beginTransaction()
+                .show(requests)
+                .hide(infos)
+                .addToBackStack(null)
+                .commit();
     }
 
     public void goToRequestInfo(Request request) {
@@ -35,7 +57,8 @@ public class RequestsPanel extends FragmentActivity {
                 .addToBackStack(null)
                 .commit();
 
-        infos.setRequest(request);
+        if(request != null)
+            infos.setRequest(request);
     }
 
     public void fillFormFromUI(View v) {
@@ -58,15 +81,9 @@ public class RequestsPanel extends FragmentActivity {
         if(savedInstanceState == null) return;
 
         if(savedInstanceState.getBoolean(IN_LIST_FRAG_KEY, true))
-            getSupportFragmentManager().beginTransaction()
-                    .show(requests)
-                    .hide(infos)
-                    .commit();
+            goToResultList();
         else
-            getSupportFragmentManager().beginTransaction()
-                    .hide(requests)
-                    .show(infos)
-                    .commit();
+            goToRequestInfo(null);
     }
 
 }

@@ -164,16 +164,15 @@ public class RequestInfos extends ConventionFragment {
     @Override
     public void onViewStateRestored(Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
-        if(savedInstanceState == null) return;
+        if(savedInstanceState == null || !savedInstanceState.containsKey(REQUEST_ID_KEY)) return;
 
-        Integer requestId = savedInstanceState.getInt(REQUEST_ID_KEY, -1);
+        Integer requestId = savedInstanceState.getInt(REQUEST_ID_KEY);
         try {
             setRequest(ForgetMyPictureApp.getHelper().getRequestDao().queryForId(requestId));
         } catch (SQLException e) {
             Log.e(TAG, "onViewStateRestored: Could not retrieve request " + requestId, e);
             request = null;
         }
-
     }
 
     public void setRequest(Request request) {
@@ -197,7 +196,7 @@ public class RequestInfos extends ConventionFragment {
             ((TextView) view.findViewById(R.id.match)).setText(res.getString(R.string.result_item_match, item.getMatch()));
             String host = "#######";
             try {
-                if(request.getStatus() == Request.Status.PAYED || request.getStatus() != Request.Status.FINISHED)
+                if(request.getStatus().isAfter(Request.Status.PAYED))
                     host = new URL(item.getPicRefURL()).getHost();
             } catch (MalformedURLException ignored) { } //already checked in Searcher
             ((TextView) view.findViewById(R.id.pic_ref_url)).setText(res.getString(R.string.result_item_pic_ref_url, host));
@@ -231,11 +230,10 @@ public class RequestInfos extends ConventionFragment {
         @Override
         public void onItemClick(Result item) {
             Log.i(TAG, "onItemClick");
-            if(request.getStatus() != Request.Status.PAYED && request.getStatus() != Request.Status.FINISHED) {
+            if(!request.getStatus().isAfter(Request.Status.PAYED)) {
                 payDialog.show();
                 return;
             }
-
 
             //show picture
         }

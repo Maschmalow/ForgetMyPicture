@@ -47,6 +47,11 @@ public class Request {
         PAYED, //paying features unlocked
         FINISHED; //done
 
+        public boolean isAfter(Status status) {
+            return this.compareTo(status) >= 0;
+        }
+
+
         public String getString(Resources res) {
             if(this == FETCHING)
                 return res.getString(R.string.enum_request_status_fetching);

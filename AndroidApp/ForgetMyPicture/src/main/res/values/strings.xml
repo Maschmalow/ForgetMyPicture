@@ -71,7 +71,7 @@
     <string name="settings_data_on_wifi">Data on Wi-fi only</string>
     <string name="settings_wipe">Wipe all data</string>
     <string name="settings_wipe_btn">Wipe</string>
-    <string name="settings_wipe_warning">WARNING : This will erase all date from your app and from our server.\nProceed with caution.</string>
+    <string name="settings_wipe_warning">WARNING : This will erase all your data from the app and our server.\nProceed with caution.</string>
     <string name="settings_wipe_toast">Data wiped</string>
 
     <!-- enums values display -->

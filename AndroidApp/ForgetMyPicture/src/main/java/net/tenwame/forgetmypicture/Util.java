@@ -26,7 +26,7 @@ public class Util {
 
 
     /**
-     * Equivalent to {@Link Util#powerSet}(collection).size()
+     * Equivalent to powerSet(collection).size()
      */
     public static <T> int powerSetSize(Collection<T> collection) {
         return 1 << collection.size();
@@ -53,6 +53,14 @@ public class Util {
 
     public interface Filter<T> {
         boolean isAllowed(T candidate);
+    }
+
+    public static <T> Collection<T> applyFilter(Collection<T> collection, Filter<T>filter) {
+        if(collection == null || filter == null) return collection;
+        for (T item : collection)
+            if (!filter.isAllowed(item))
+                collection.remove(item);
+        return collection;
     }
 
     public static void setViewVisibleWhen(boolean visible, View v) {

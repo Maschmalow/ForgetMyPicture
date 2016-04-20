@@ -1,6 +1,10 @@
 package net.tenwame.forgetmypicture;
 
 import android.provider.Settings.Secure;
+import android.util.Log;
+
+import com.crittercism.app.Crittercism;
+import com.j256.ormlite.dao.Dao;
 
 import net.tenwame.forgetmypicture.database.User;
 
@@ -12,6 +16,7 @@ import java.sql.SQLException;
  * implements singleton pattern for the user table
  */
 public class UserData {
+    private static final String TAG = UserData.class.getSimpleName();
     private static final String deviceId = Secure.getString(ForgetMyPictureApp.getContext().getContentResolver(), Secure.ANDROID_ID);
     private static User user;
 
@@ -28,17 +33,31 @@ public class UserData {
     }
 
     private static User setUser() {
-        DatabaseHelper helper = ForgetMyPictureApp.getHelper();
+        final Dao<User, String> dao = ForgetMyPictureApp.getHelper().getUserDao();
         try {
-            user = helper.getUserDao().queryForId(deviceId);
+            user = dao.queryForId(deviceId);
             if(user == null) {
                 user = new User(deviceId);
-                helper.getUserDao().create(user);
+                dao.create(user);
             }
-            helper.getUserDao().refresh(user); //this is tricky. We refresh the user so ORMLite setup the ForeignCollections
+            dao.refresh(user); //this is tricky. We refresh the user so ORMLite setup the ForeignCollections
         } catch (SQLException e) {
             throw new RuntimeException("Could not fetch or create user", e);
         }
+        dao.registerObserver(new Dao.DaoObserver() {
+            @Override
+            public void onChange() {
+                try {
+                    dao.refresh(user);
+                } catch (SQLException e) {
+                    Log.w(TAG, "Could not refresh user", e);
+                    Crittercism.logHandledException(e);
+                    synchronized (UserData.class) {
+                        user = null;
+                    }
+                }
+            }
+        });
 
         return user;
     }

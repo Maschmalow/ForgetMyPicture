@@ -42,6 +42,7 @@ public class ServerInterface extends NetworkService {
     public static final String ACTION_FEED = ForgetMyPictureApp.getName() + ".feed";
     public static final String ACTION_GET_INFO = ForgetMyPictureApp.getName() + ".get_info";
     public static final String ACTION_SEND_MAIL = ForgetMyPictureApp.getName() + ".send_mail";
+    public static final String ACTION_WIPE_USER = ForgetMyPictureApp.getName() + ".wipe_user";
 
     private static final String BASE_URL = "http://adurand00005.rtrinity.enseirb.fr";
     private static final String REGISTER_URL = "/register.php";
@@ -49,6 +50,7 @@ public class ServerInterface extends NetworkService {
     private static final String FEED_URL = "/feed.php";
     private static final String GET_INFO_URL = "/get_info.php";
     private static final String SEND_MAIL_URL = "/send_mail.php";
+    private static final String WIPE_USER_URL = "/wipe_user.php";
 
 
     private DatabaseHelper helper = ForgetMyPictureApp.getHelper();
@@ -60,6 +62,7 @@ public class ServerInterface extends NetworkService {
         handlers.put(ACTION_NEW_REQUEST, newRequest);
         handlers.put(ACTION_GET_INFO, getInfo);
         handlers.put(ACTION_FEED, feed);
+        handlers.put(ACTION_WIPE_USER, wipeUser);
     }
 
     public static void execute(String action) {
@@ -85,7 +88,7 @@ public class ServerInterface extends NetworkService {
     }
 
 
-    private final NetworkService.ActionHandler register = new NetworkService.ActionHandler() {
+    private final ActionHandler register = new NetworkService.ActionHandler() {
         @Override
         public void handle(Bundle params) throws Exception {
             User user = UserData.getUser();
@@ -112,7 +115,16 @@ public class ServerInterface extends NetworkService {
         }
     };
 
-    private final NetworkService.ActionHandler newRequest = new NetworkService.ActionHandler() {
+    private final ActionHandler wipeUser = new ActionHandler() {
+        @Override
+        public void handle(Bundle params) throws Exception {
+            Jsoup.connect(BASE_URL + WIPE_USER_URL)
+                    .data("deviceId", UserData.getDeviceId())
+                    .post();
+        }
+    };
+
+    private final ActionHandler newRequest = new NetworkService.ActionHandler() {
         @Override
         public void handle(Bundle params) throws Exception {
             Request request = getRequest(params);
@@ -123,7 +135,7 @@ public class ServerInterface extends NetworkService {
 
             if(request.getKind() == Request.Kind.QUICK) {
                 InputStream stream = request.getOriginalPic().openStream();
-                connection.data("originalPic", "originalPic", stream).post();
+                connection.data("originalPic[]", "originalPic", stream).post();
                 stream.close();
             } else {
                 connection.post();
@@ -133,7 +145,7 @@ public class ServerInterface extends NetworkService {
         }
     };
 
-    private final NetworkService.ActionHandler feed = new NetworkService.ActionHandler() {
+    private final ActionHandler feed = new NetworkService.ActionHandler() {
         @SuppressWarnings("ConstantConditions") //will be catch'd and handled later
         @Override
         public void handle(Bundle params) throws Exception {
@@ -159,7 +171,7 @@ public class ServerInterface extends NetworkService {
         }
     };
 
-    private final NetworkService.ActionHandler getInfo = new NetworkService.ActionHandler() {
+    private final ActionHandler getInfo = new NetworkService.ActionHandler() {
         @Override
         public void handle(Bundle params) throws Exception {
             String resp = Jsoup.connect(BASE_URL + GET_INFO_URL)
@@ -193,7 +205,7 @@ public class ServerInterface extends NetworkService {
         }
     };
 
-    private NetworkService.ActionHandler sendMail = new NetworkService.ActionHandler() {
+    private ActionHandler sendMail = new NetworkService.ActionHandler() {
         @Override
         public void handle(Bundle params) throws Exception {
             Request request = getRequest(params);

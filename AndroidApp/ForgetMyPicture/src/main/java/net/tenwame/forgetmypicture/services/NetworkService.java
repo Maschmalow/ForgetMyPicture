@@ -116,7 +116,7 @@ public abstract class NetworkService extends IntentService {
         public void onActionFinished(@NonNull String action) {}
     }
 
-    public static abstract class ActionListener implements  NetworkListener {
+    public static class ActionListener implements  NetworkListener {
         private final String action;
 
         public ActionListener(String action) {
@@ -135,7 +135,8 @@ public abstract class NetworkService extends IntentService {
                 onFailed();
         }
 
-        public abstract void onFinished();
-        public abstract void onFailed();
+        //ActionListener can't be an interface, so there's no use in making it abstract here
+        public void onFinished() {}
+        public void onFailed() {}
     }
 }

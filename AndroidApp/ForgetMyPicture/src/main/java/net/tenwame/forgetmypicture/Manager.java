@@ -57,14 +57,17 @@ public class Manager {
         setAlarms();
         NetworkService.registerListener(ServerInterface.class, new NetworkService.ActionListener(ServerInterface.ACTION_FEED) {
             @Override
-            public void onFinished() {
-                shouldResent = false;
-            }
-            @Override
             public void onFailed() {
                 shouldResent = true;
             }
         });
+        NetworkService.registerListener(ServerInterface.class, new NetworkService.ActionListener(ServerInterface.ACTION_GET_INFO) {
+            @Override
+            public void onFinished() {
+                setAlarms();
+            }
+        });
+
     }
 
 
@@ -93,6 +96,7 @@ public class Manager {
             unSent = ForgetMyPictureApp.getHelper().getResultDao().queryForFieldValuesArgs(Collections.singletonMap("sent", (Object)Boolean.FALSE));
         } catch (SQLException e) {
             Log.e(TAG, "Unable to recover from feed fail", e);
+            shouldResent = false; //we disable resend for now
             Crittercism.logHandledException(e);
             return;
         }
@@ -108,14 +112,21 @@ public class Manager {
 
         for(Map.Entry<Request,List<Result>> set: unSentRequests.entrySet())
             ServerInterface.execute(ServerInterface.ACTION_FEED, set.getKey(), set.getValue());
-
+        shouldResent = false;
     }
 
     public void setAlarms() {
-        if(ForgetMyPictureApp.isNetworkAvailable())
+
+        if(ForgetMyPictureApp.isNetworkAvailable() &&
+                !Util.applyFilter(UserData.getUser().getRequests(), new Util.Filter<Request>() {
+                    @Override
+                    public boolean isAllowed(Request candidate) {
+                        return !candidate.getStatus().isAfter(Request.Status.PAYED);
+                    }}).isEmpty())
             scheduleAlarms();
         else
             cancelAlarms();
+
     }
 
     private void scheduleAlarms() {

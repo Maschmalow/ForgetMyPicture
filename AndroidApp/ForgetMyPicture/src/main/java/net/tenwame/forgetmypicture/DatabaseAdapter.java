@@ -14,9 +14,9 @@ import com.j256.ormlite.dao.Dao;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by Antoine on 07/04/2016.
@@ -28,7 +28,7 @@ public abstract class DatabaseAdapter<T> extends BaseAdapter implements AdapterV
 
     private final Dao<T, ?> dao;
     private List<T> data = new ArrayList<>();
-    private Map<String, Object> queryArgs = new HashMap<>();
+    private Map<String, Object> queryArgs = new ConcurrentHashMap<>();
     private int layoutItemId;
     private Util.Filter<T> filter;
     private List<T> queriedItems = new ArrayList<>();
