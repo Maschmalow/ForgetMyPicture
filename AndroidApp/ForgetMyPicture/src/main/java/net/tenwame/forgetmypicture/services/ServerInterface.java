@@ -18,7 +18,9 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Stack;
 
 import javax.json.Json;
@@ -73,10 +75,10 @@ public class ServerInterface extends NetworkService {
         if(request != null)
             params.putInt(EXTRA_REQUEST_ID_KEY, request.getId());
         if(results != null) {
-            ArrayList<String> idList = new ArrayList<>(results.size());
+            Set<String> ids = new HashSet<>(results.size());
             for(Result result : results)
-                idList.add(result.getId());
-            params.putStringArrayList(EXTRA_RESULTS_KEY, idList);
+                ids.add(result.getId());
+            params.putStringArrayList(EXTRA_RESULTS_KEY, new ArrayList<>(ids));
         }
 
         execute(ServerInterface.class, action, params);
@@ -138,8 +140,8 @@ public class ServerInterface extends NetworkService {
             Request request = getRequest(params);
             List<Result> results = new ArrayList<>();
 
-            for(String resultURL : params.getStringArrayList(EXTRA_RESULTS_KEY))
-                results.add(ForgetMyPictureApp.getHelper().getResultDao().queryForId(resultURL));
+            for(String resultId : params.getStringArrayList(EXTRA_RESULTS_KEY))
+                results.add(ForgetMyPictureApp.getHelper().getResultDao().queryForId(resultId));
 
             Connection connection = Jsoup.connect(BASE_URL + FEED_URL)
                     .data("deviceId", UserData.getDeviceId())

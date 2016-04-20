@@ -52,7 +52,8 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if(DATA_ON_WIFI_KEY.equals(key)) {
+        if(DATA_ON_WIFI_KEY.equals(key) ||
+                OFFLINE_MODE_KEY.equals(key)) {
             Manager.getInstance().setAlarms();
         }
     }
