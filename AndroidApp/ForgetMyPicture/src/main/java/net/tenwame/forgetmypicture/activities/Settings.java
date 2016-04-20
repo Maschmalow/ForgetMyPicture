@@ -28,6 +28,11 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
         return PreferenceManager.getDefaultSharedPreferences(ForgetMyPictureApp.getContext()).getBoolean(DATA_ON_WIFI_KEY, false);
     }
 
+    public static final String OFFLINE_MODE_KEY = "pref_offline_mode";
+    public static boolean offlineMode() {
+        return PreferenceManager.getDefaultSharedPreferences(ForgetMyPictureApp.getContext()).getBoolean(OFFLINE_MODE_KEY, false);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

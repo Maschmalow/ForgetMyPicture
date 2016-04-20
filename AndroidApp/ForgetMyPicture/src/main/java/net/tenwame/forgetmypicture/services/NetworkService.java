@@ -3,7 +3,10 @@ package net.tenwame.forgetmypicture.services;
 import android.app.IntentService;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
+
+import com.crittercism.app.Crittercism;
 
 import net.tenwame.forgetmypicture.ForgetMyPictureApp;
 
@@ -44,6 +47,10 @@ public abstract class NetworkService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         curAction = intent.getAction();
+        if(curAction == null) {
+            Log.w(TAG, "No action, aborted");
+            return;
+        }
         Log.i(TAG, "Request for action " + curAction);
         if(!ForgetMyPictureApp.isNetworkAvailable()) {
             Log.w(TAG, "Offline mode, aborted");
@@ -54,6 +61,7 @@ public abstract class NetworkService extends IntentService {
             handlers.get(curAction).handle(intent.getExtras());
         } catch (Exception e) {
             Log.e(TAG, "Action " + curAction + " failed", e);
+            Crittercism.logHandledException(e);
             fail();
         }
 
@@ -100,15 +108,38 @@ public abstract class NetworkService extends IntentService {
     }
 
     public interface NetworkListener {
-        void onActionFailed(String action);
+        void onActionFailed(@NonNull  String action);
 
-        void onActionFinished(String action);
+        void onActionFinished(@NonNull String action);
     }
 
     public static class EmptyListener implements NetworkListener {
         @Override
-        public void onActionFailed(String action) {}
+        public void onActionFailed(@NonNull String action) {}
         @Override
-        public void onActionFinished(String action) {}
+        public void onActionFinished(@NonNull String action) {}
+    }
+
+    public static abstract class ActionListener implements  NetworkListener {
+        private final String action;
+
+        public ActionListener(String action) {
+            this.action = action;
+        }
+
+        @Override
+        public void onActionFinished(@NonNull String action) {
+            if(action.equals(this.action))
+                onFinished();
+        }
+
+        @Override
+        public void onActionFailed(@NonNull String action) {
+            if(action.equals(this.action))
+                onFailed();
+        }
+
+        public abstract void onFinished();
+        public abstract void onFailed();
     }
 }

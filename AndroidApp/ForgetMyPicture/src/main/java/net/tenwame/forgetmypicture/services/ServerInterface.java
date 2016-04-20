@@ -166,11 +166,19 @@ public class ServerInterface extends NetworkService {
                     .data("deviceId", UserData.getDeviceId()).execute().body();
 
             JsonObject update = Json.createReader(new StringReader(resp)).readObject();
-            for(String strId : update.keySet()) {
-                Request request = helper.getRequestDao().queryForId(Integer.valueOf(strId));
-                JsonObject requestUpdate = update.getJsonObject(strId);
+            for(String requestId : update.keySet()) {
+                Request request = helper.getRequestDao().queryForId(Integer.valueOf(requestId));
+                if(request == null) {
+                    Log.w(TAG, "GetInfo: invalid request: " + requestId + " (ignored)");
+                    continue;
+                }
+                JsonObject requestUpdate = update.getJsonObject(requestId);
                 for(String resultURL : requestUpdate.keySet()) {
-                    Result result = helper.getResultDao().queryForId(resultURL);
+                    Result result = helper.getResultDao().queryForId(Result.makeId(resultURL, request));
+                    if(result == null) {
+                        Log.w(TAG, "GetInfo: invalid result: " + resultURL + " (ignored)");
+                        continue;
+                    }
                     result.setMatch(requestUpdate.getInt(resultURL));
                     helper.getResultDao().update(result);
                 }
@@ -179,7 +187,7 @@ public class ServerInterface extends NetworkService {
                 helper.getRequestDao().update(request);
             }
 
-            Log.d(TAG, "Updated " + update.size() + " requests.");
+            Log.d(TAG, "GetInfo: Updated " + update.size() + " requests.");
         }
     };
 

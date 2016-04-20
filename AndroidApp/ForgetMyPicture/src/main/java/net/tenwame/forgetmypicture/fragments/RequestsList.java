@@ -10,6 +10,7 @@ import com.j256.ormlite.dao.Dao;
 
 import net.tenwame.forgetmypicture.DatabaseAdapter;
 import net.tenwame.forgetmypicture.R;
+import net.tenwame.forgetmypicture.Util;
 import net.tenwame.forgetmypicture.activities.RequestsPanel;
 import net.tenwame.forgetmypicture.database.Request;
 
@@ -27,6 +28,12 @@ public class RequestsList extends ConventionFragment {
             adapter.notifyDataSetChanged();
         }
     };
+    private DataSetObserver loader = new DataSetObserver() {
+        @Override
+        public void onChanged() {
+            load();
+        }
+    };
 
     //auto-retrieved views
     private ListView requestsList;
@@ -36,31 +43,22 @@ public class RequestsList extends ConventionFragment {
     public void setupViews() {
         requestsList.setAdapter(adapter);
         requestsList.setOnItemClickListener(adapter);
-        adapter.registerDataSetObserver(new DataSetObserver() {
-            @Override
-            public void onChanged() {
-                load();
-            }
-        });
+        adapter.registerDataSetObserver(loader);
         adapter.loadData();
-        //ForgetMyPictureApp.getHelper().getResultDao().registerObserver(notifier);
+        //adapter.trackDatabase(Result.class, true);
     }
 
     @Override
     public void load() {
-        if(adapter.getCount() == 0) {
-            requestsList.setVisibility(View.GONE);
-            empty.setVisibility(View.VISIBLE);
-        } else {
-            requestsList.setVisibility(View.VISIBLE);
-            empty.setVisibility(View.GONE);
-        }
+        Util.setViewVisibleWhen(adapter.getCount() == 0, requestsList);
+        Util.setViewVisibleWhen(adapter.getCount() != 0, empty);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        //ForgetMyPictureApp.getHelper().getResultDao().registerObserver(notifier);
+        adapter.unregisterDataSetObserver(loader);
+        //adapter.trackDatabase(Result.class, false);
     }
 
     public void setFilterFromUI(/* filter */) {//will be from UI

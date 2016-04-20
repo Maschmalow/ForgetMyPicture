@@ -13,6 +13,7 @@ import com.j256.ormlite.table.DatabaseTable;
 import net.tenwame.forgetmypicture.PictureAccess;
 import net.tenwame.forgetmypicture.R;
 import net.tenwame.forgetmypicture.UserData;
+import net.tenwame.forgetmypicture.Util;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -141,8 +142,8 @@ public class Request {
     }
 
     public int getMaxProgress() {
-        return  1 << keywords.size();
-    } //number of keywords set in powerset
+        return Util.powerSetSize(keywords);
+    }
 
     public List<String> getKeywords() {
         return keywords;

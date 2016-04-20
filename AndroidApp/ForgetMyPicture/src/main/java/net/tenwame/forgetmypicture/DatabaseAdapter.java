@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 
+import com.crittercism.app.Crittercism;
 import com.j256.ormlite.dao.Dao;
 
 import java.sql.SQLException;
@@ -33,24 +34,22 @@ public abstract class DatabaseAdapter<T> extends BaseAdapter implements AdapterV
     private List<T> queriedItems = new ArrayList<>();
 
 
-    public DatabaseAdapter(Class<T> clazz, int layoutItemId) {
+    public DatabaseAdapter(Class<T> tableClass, int layoutItemId) {
         this.layoutItemId = layoutItemId;
-        try {
-            this.dao = ForgetMyPictureApp.getHelper().getDao(clazz);
-        } catch (SQLException e) { //can't happen, as dao is already initialised at app launch
-            throw new RuntimeException(e);
-        }
+        this.dao = ForgetMyPictureApp.getHelper().getDao(tableClass);
         //data isn't initialised, because we want the app to notify when loading from db is needed
     }
 
     public void loadData() {
+        queriedItems.clear();
         try {
-            queriedItems = (queryArgs.isEmpty())?
-                    dao.queryForAll() :
-                    dao.queryForFieldValuesArgs(queryArgs);
-        } catch (SQLException e) {
-            //data is empty so getView won't be called
+            if(queryArgs.isEmpty())
+                queriedItems.addAll(dao.queryForAll());
+            else
+                queriedItems.addAll(dao.queryForFieldValuesArgs(queryArgs));
+        } catch (SQLException e) { //data is empty so getView won't be called
             Log.e(TAG, "loadData: query failed", e);
+            Crittercism.logHandledException(e);
         }
         filter();
 
@@ -98,6 +97,15 @@ public abstract class DatabaseAdapter<T> extends BaseAdapter implements AdapterV
             dao.registerObserver(obs);
         else
             dao.unregisterObserver(obs);
+    }
+
+    public void trackDatabase(Class<?> tableClass, boolean track) {
+        try {
+            if(track)
+                ForgetMyPictureApp.getHelper().getDao(tableClass).registerObserver(obs);
+            else
+                ForgetMyPictureApp.getHelper().getDao(tableClass).unregisterObserver(obs);
+        } catch (Exception ignored) { } //if class is wrong, we do nothing
     }
 
     @Override

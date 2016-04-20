@@ -94,6 +94,7 @@ public class ConventionFragment extends Fragment {
      * Method to override that does the static initiation of Views, just after inflation
      * i.e. things that could be done in XML, but needs to be done programmatically
      * attach listeners, animators, parameters that needs to be retrieved, etc
+     * Called during onCreateView
      */
     public void setupViews() {
     }

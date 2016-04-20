@@ -10,7 +10,7 @@
     <string name="search_keywords_send_btn">Send</string>
     <string name="search_keywords_hint">Enter keywords here</string>
     <string name="search_started_toast">Search started</string>
-    <string name="search_failed_toast">Failed to create search. Please retry later.</string>
+    <string name="search_failed_toast">Failed to create search</string>
     <string name="search_kind_checkbox">Quick search</string>
     <string name="search_select_original_pic">Select picture</string>
     <string name="search_no_picture_selected">No Picture selected</string>
@@ -50,7 +50,7 @@
     <!-- request_infos fragment -->
     <string name="request_infos_title">%1$s search No. %2$d</string>
     <string name="request_infos_status">Status : %s</string>
-    <string name="request_infos_stats">Stats: Aprox. %1$d/%2$d pictures fetched, %3$d results processed out of %4$d</string>
+    <string name="request_infos_stats">Stats: Aprox. %1$d/%2$d pictures fetched, %3$d results processed</string>
     <string name="request_infos_motive">Motive : %s</string>
     <string name="request_infos_keywords">Keywords: %s</string>
     <string name="request_infos_no_results">No results yet</string>
@@ -86,7 +86,7 @@
     <!-- misc -->
     <string name="cancel">Cancel</string>
     <string name="ask_continue">Continue ?</string>
-
+    <string name="settings_offline_mode">Oflline mode</string>
 
 
 </resources>

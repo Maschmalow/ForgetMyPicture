@@ -36,6 +36,7 @@ public class Searcher extends NetworkService{
 
     private static final String URL = "https://www.google.fr/search";
     public static final long SEARCH_DELAY = 100*60; //time in ms between each search
+    public static final int AVG_RESULTS_NB = 100;  //average number of results per search
 
     private final  DatabaseHelper helper = ForgetMyPictureApp.getHelper();
     private final Map<String, String> queryData;
@@ -84,7 +85,7 @@ public class Searcher extends NetworkService{
 
     private void doSearch() throws Exception {
         int progress = curRequest.getProgress();
-        setCurKeywords(Util.powerSet(curRequest.getKeywords()).get(progress));
+        setCurKeywords(Util.powerSetAtIndex(curRequest.getKeywords(), progress));
         setCurUserAgent();
         Set<Result> newResults = curRequest.addResults(scrapeData());
         ServerInterface.execute(ServerInterface.ACTION_FEED, curRequest, newResults);

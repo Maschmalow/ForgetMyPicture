@@ -1,5 +1,7 @@
 package net.tenwame.forgetmypicture;
 
+import android.view.View;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -22,29 +24,42 @@ public class Util {
         return ret;
     }
 
-    public static <T> List<List<T>> powerSet(Collection<T> list) {
-        List<List<T>> ps = new ArrayList<>();
-        ps.add(new ArrayList<T>());
 
-        for (T item : list) {
-            List<List<T>> newPs = new ArrayList<>();
+    /**
+     * Equivalent to {@Link Util#powerSet}(collection).size()
+     */
+    public static <T> int powerSetSize(Collection<T> collection) {
+        return 1 << collection.size();
+    }
 
-            for (List<T> subset : ps) {
-                newPs.add(subset);
-                List<T> newSubset = new ArrayList<>(subset);
-                newSubset.add(item);
-                newPs.add(newSubset);
-            }
+    /**
+     * Equivalent to powerSet(collection).get(index)
+     * O(collection.size()) complexity
+     */
+    public static <T> List<T> powerSetAtIndex(Collection<T> collection, int index) {
+        if(index > powerSetSize(collection))
+            return null;
 
-            ps = newPs;
+        int curMask = 1;
+        List<T> set = new ArrayList<>();
+        for(T item : collection) {
+            if((index & curMask) != 0)
+                set.add(item);
+            curMask = curMask << 1;
         }
-        return ps;
+
+        return set;
     }
 
     public interface Filter<T> {
         boolean isAllowed(T candidate);
     }
 
-
+    public static void setViewVisibleWhen(boolean visible, View v) {
+        if(visible)
+            v.setVisibility(View.VISIBLE);
+        else
+            v.setVisibility(View.GONE);
+    }
 
 }

@@ -9,8 +9,11 @@ import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.util.Log;
 
+import com.crittercism.app.Crittercism;
+
 import net.tenwame.forgetmypicture.database.Request;
 import net.tenwame.forgetmypicture.database.Result;
+import net.tenwame.forgetmypicture.services.NetworkService;
 import net.tenwame.forgetmypicture.services.Searcher;
 import net.tenwame.forgetmypicture.services.ServerInterface;
 
@@ -30,6 +33,7 @@ import java.util.Map;
  */
 public class Manager {
     private static final String TAG = Manager.class.getSimpleName();
+    private static final int MAX_REQUEST_FETCHING = 100*60*60*24*7; // one week, in ms
 
     private static Manager instance = null;
     public static Manager getInstance() {
@@ -47,18 +51,32 @@ public class Manager {
     private Context context = ForgetMyPictureApp.getContext();
     private AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
     private boolean areAlarmsScheduled = false;
+    private boolean shouldResent = false;
 
     private Manager() {
         setAlarms();
+        NetworkService.registerListener(ServerInterface.class, new NetworkService.ActionListener(ServerInterface.ACTION_FEED) {
+            @Override
+            public void onFinished() {
+                shouldResent = false;
+            }
+            @Override
+            public void onFailed() {
+                shouldResent = true;
+            }
+        });
     }
 
 
     public Request startNewRequest(List<String> keywords, Bitmap originalPic) {
+        if(Util.powerSetSize(keywords) >= MAX_REQUEST_FETCHING/Searcher.SEARCH_DELAY )
+            return null;
         Request request = new Request(keywords, originalPic);
         try {
             ForgetMyPictureApp.getHelper().getRequestDao().create(request);
         } catch (SQLException e) {
             Log.e(TAG, "Could not create new request", e);
+            Crittercism.logHandledException(e);
             return null;
         }
         ServerInterface.execute(ServerInterface.ACTION_NEW_REQUEST, request);
@@ -68,11 +86,14 @@ public class Manager {
 
 
     public void resendResults() {
+        if(!shouldResent) return;
+
         List<Result> unSent;
         try {
             unSent = ForgetMyPictureApp.getHelper().getResultDao().queryForFieldValuesArgs(Collections.singletonMap("sent", (Object)Boolean.FALSE));
         } catch (SQLException e) {
-            Log.e(TAG, "notify: Unable to recover from feed fail", e);
+            Log.e(TAG, "Unable to recover from feed fail", e);
+            Crittercism.logHandledException(e);
             return;
         }
         Map<Request, List<Result>> unSentRequests = new HashMap<>();
@@ -151,8 +172,10 @@ public class Manager {
             if(ACTION_DO_SEARCH.equals(intent.getAction()))
                 Searcher.execute();
 
-            if(ACTION_DO_UPDATE.equals(intent.getAction()))
+            if(ACTION_DO_UPDATE.equals(intent.getAction())) {
                 ServerInterface.execute(ServerInterface.ACTION_GET_INFO);
+                getInstance().resendResults();
+            }
         }
     }
 

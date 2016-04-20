@@ -23,6 +23,7 @@ import net.tenwame.forgetmypicture.Util;
 import net.tenwame.forgetmypicture.database.Request;
 import net.tenwame.forgetmypicture.database.Result;
 import net.tenwame.forgetmypicture.services.FormFiller;
+import net.tenwame.forgetmypicture.services.Searcher;
 import net.tenwame.forgetmypicture.services.ServerInterface;
 
 import java.net.MalformedURLException;
@@ -43,6 +44,12 @@ public class RequestInfos extends ConventionFragment {
 
     private Request request;
     private ResultsAdapter adapter = new ResultsAdapter();
+    private DataSetObserver loader = new DataSetObserver() {
+        @Override
+        public void onChanged() {
+            load();
+        }
+    };
     private Set<Result> selected = new HashSet<>();
     private AlertDialog payDialog;
 
@@ -65,12 +72,7 @@ public class RequestInfos extends ConventionFragment {
                 return candidate.isProcessed();
             }
         });
-        adapter.registerDataSetObserver(new DataSetObserver() {
-            @Override
-            public void onChanged() {
-                load();
-            }
-        });
+        adapter.registerDataSetObserver(loader);
         adapter.trackDatabase(true);
         //resultsList.setOnItemClickListener(adapter);
 
@@ -98,13 +100,8 @@ public class RequestInfos extends ConventionFragment {
     public void load() {
         if(request == null) return;
 
-        if(adapter.getCount() == 0) {
-            resultsList.setVisibility(View.GONE);
-            empty.setVisibility(View.VISIBLE);
-        } else {
-            resultsList.setVisibility(View.VISIBLE);
-            empty.setVisibility(View.GONE);
-        }
+        Util.setViewVisibleWhen(adapter.getCount() == 0, resultsList);
+        Util.setViewVisibleWhen(adapter.getCount() != 0, empty);
 
         int processed = 0;
         for( Result r : request.getResults())
@@ -116,8 +113,8 @@ public class RequestInfos extends ConventionFragment {
         Resources res = getResources();
         title.setText(res.getString(R.string.request_infos_title, request.getKind().toString().toLowerCase(), request.getId()));
         status.setText(res.getString(R.string.request_infos_status, request.getStatus().getString(res)));
-        int estimated = (progress == 0)? request.getMaxProgress()*100 : request.getMaxProgress()/progress *nbResults;
-        stats.setText(res.getString(R.string.request_infos_stats, nbResults, estimated, processed, nbResults));
+        int estimated = (progress == 0)? request.getMaxProgress()* Searcher.AVG_RESULTS_NB : request.getMaxProgress()/progress *nbResults;
+        stats.setText(res.getString(R.string.request_infos_stats, nbResults, estimated, processed));
         keywords.setText(res.getString(R.string.request_infos_keywords, request.getKeywords().toString())); //TODO
 
         if(request.getStatus() == Request.Status.FINISHED && request.getMotive() != null) {
@@ -127,6 +124,12 @@ public class RequestInfos extends ConventionFragment {
             motive.setVisibility(View.GONE);
         }
 
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        adapter.unregisterDataSetObserver(loader);
     }
 
     public void fillFormFromUI(View v) {

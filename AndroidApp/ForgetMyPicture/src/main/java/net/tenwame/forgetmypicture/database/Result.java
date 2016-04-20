@@ -4,8 +4,6 @@ package net.tenwame.forgetmypicture.database;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-import java.util.UUID;
-
 /**
  * Created by Antoine on 18/03/2016.
  * results table
@@ -16,16 +14,22 @@ public class Result {
     Result() {}
 
     public Result(String picURL, String picRefURL, Request request) {
-        this.picURL = picURL + " " + UUID.randomUUID().toString();
-        //this is bad, but we need unique results for the whole app
-        //and ORMLite doesn't support multiple primary keys
+        id = makeId(picURL, request); //simulate mixed primary key
+        this.picURL = picURL;
         this.picRefURL = picRefURL;
         this.request = request;
         sent = false;
         match = -1;
     }
 
+    public static String makeId(String picURL, Request request) {
+        return picURL + " " + request.getId();
+    }
+
     @DatabaseField(id = true)
+    private String id;
+
+    @DatabaseField(canBeNull = false)
     private String picURL;
 
     @DatabaseField(canBeNull = false)
@@ -61,11 +65,11 @@ public class Result {
     }
 
     public String getId() {
-        return picURL;
+        return id;
     }
 
     public String getPicURL() {
-        return picURL.substring(0, picURL.indexOf(' '));
+        return picURL;
     }
 
     public String getPicRefURL() {
@@ -82,12 +86,12 @@ public class Result {
         if( this == o ) return true;
         if( o == null || getClass() != o.getClass() ) return false;
 
-        return picURL.equals(((Result) o).picURL);
+        return id.equals(((Result) o).id);
     }
 
     @Override
     public int hashCode() {
-        return picURL.hashCode();
+        return id.hashCode();
     }
 
 }

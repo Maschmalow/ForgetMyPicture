@@ -40,6 +40,7 @@ public class ForgetMyPictureApp extends Application {
 
 
     public static boolean isNetworkAvailable() {
+        if(Settings.offlineMode()) return false;
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo network = cm.getActiveNetworkInfo();
         if(network == null || !network.isConnectedOrConnecting())

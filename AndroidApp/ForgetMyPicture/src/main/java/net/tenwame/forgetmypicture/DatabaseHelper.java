@@ -23,7 +23,7 @@ import java.sql.SQLException;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final String TAG = DatabaseHelper.class.getSimpleName();
     private static final String DATABASE_NAME = "ForgetMyPicture.db";
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 6;
 
 
     private Dao<Result, String> resultDao;
@@ -36,10 +36,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
 
         try {
-            resultDao = getDao(Result.class);
-            requestDao = getDao(Request.class);
-            userDao = getDao(User.class);
-            selfieDao = getDao(Selfie.class);
+            resultDao = super.getDao(Result.class);
+            requestDao = super.getDao(Request.class);
+            userDao = super.getDao(User.class);
+            selfieDao = super.getDao(Selfie.class);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -80,6 +80,24 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             throw new RuntimeException(e);
         }
         Log.i(TAG, "Database created");
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <D extends Dao<T, ?>, T> D getDao(Class<T> clazz) {
+        if(clazz == null)
+            throw new IllegalArgumentException("Class can't be null");
+
+        if(clazz.getName().equals(Result.class.getName())) //cast is checked here
+            return (D) resultDao;
+        else if(clazz.getName().equals(Selfie.class.getName()))
+            return (D) selfieDao;
+        else if(clazz.getName().equals(User.class.getName()))
+            return (D) userDao;
+        else if(clazz.getName().equals(Request.class.getName()))
+            return (D) requestDao;
+        else
+            throw new IllegalArgumentException("class " + clazz.getName() + " is not a database table");
     }
 
     public Dao<Result, String> getResultDao() {

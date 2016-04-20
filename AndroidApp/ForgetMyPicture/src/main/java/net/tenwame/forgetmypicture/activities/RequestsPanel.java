@@ -10,6 +10,7 @@ import net.tenwame.forgetmypicture.fragments.RequestsList;
 
 public class RequestsPanel extends FragmentActivity {
 
+    private static final String IN_LIST_FRAG_KEY = "IN_LIST_FRAG_KEY";
     private RequestsList requests;
     private RequestInfos infos;
 
@@ -40,6 +41,30 @@ public class RequestsPanel extends FragmentActivity {
     }
     public void sendEmailFromUI(View v) {
         infos.sendEmailFromUI(v);
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(IN_LIST_FRAG_KEY, requests.isVisible());
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if(savedInstanceState == null) return;
+
+        if(savedInstanceState.getBoolean(IN_LIST_FRAG_KEY, true))
+            getSupportFragmentManager().beginTransaction()
+                    .hide(requests)
+                    .show(infos)
+                    .commit();
+        else
+            getSupportFragmentManager().beginTransaction()
+                    .show(requests)
+                    .hide(infos)
+                    .commit();
     }
 
 }
