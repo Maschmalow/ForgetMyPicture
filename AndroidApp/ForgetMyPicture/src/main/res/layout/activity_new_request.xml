@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activities.NewRequest"
+    style="@style/basic_root_layout_white_background_with_padding">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_margin"
+        android:text="@string/search_title"
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="@dimen/activity_margin"
+        android:layout_marginRight="@dimen/activity_margin"
+        android:id="@+id/linearLayout">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/activity_margin"
+            android:text="@string/search_kind_checkbox"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+        <CheckBox
+            android:id="@+id/search_kind"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:onClick="onSearchKindCheckedFromUI"
+            android:checked="false"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:id="@+id/select_original_pic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/search_select_original_pic"
+            android:onClick="takeOriginalPicFromUI"
+            style="@style/turquoise_background_and_white_text"/>
+
+        <TextView
+            android:id="@+id/original_pic_path"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/search_no_picture_selected"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:gravity="center_vertical"/>
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/keywords_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/search_keywords_hint"
+        android:inputType="textMultiLine"
+        android:layout_marginLeft="@dimen/activity_margin"
+        android:layout_marginRight="@dimen/activity_margin"/>
+
+    <Button
+        android:id="@+id/send_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_margin"
+        android:onClick="startSearchFromUI"
+        android:text="@string/search_keywords_send_btn"
+        android:layout_gravity="end"
+        style="@style/turquoise_background_and_white_text"/>
+
+</LinearLayout>

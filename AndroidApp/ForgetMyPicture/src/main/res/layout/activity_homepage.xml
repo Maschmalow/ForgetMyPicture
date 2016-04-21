@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activities.Homepage"
+    style="@style/basic_root_layout_white_background_with_padding">
+
+    <TextView
+        android:layout_weight="40"
+        android:background="@color/white"
+        style="@style/basic_view_with_margin"/>
+
+    <Button
+        android:layout_weight="20"
+        style="@style/button_turquoise_background_and_white_text"
+        android:onClick="startNewSearchFromUI"
+        android:text="@string/homepage_new_request"/>
+
+    <TextView
+        android:layout_weight="10"
+        android:background="@color/white"
+        style="@style/basic_view_with_margin"/>
+
+    <Button
+        android:layout_weight="20"
+        style="@style/button_turquoise_background_and_white_text"
+        android:onClick="goToRequestsFromUI"
+        android:text="@string/homepage_requests_panel"/>
+
+    <TextView
+        android:layout_weight="40"
+        android:background="@color/white"
+        style="@style/basic_view_with_margin"/>
+
+</LinearLayout>

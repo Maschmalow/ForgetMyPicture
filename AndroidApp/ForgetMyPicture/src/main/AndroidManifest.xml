@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="net.tenwame.forgetmypicture">
+
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <uses-feature
+        android:name="android.hardware.camera2"
+        android:required="false" />
+
+    <application
+        android:name=".ForgetMyPictureApp"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_full_name"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".activities.NewRequest"
+            android:label="@string/search_activity_name">
+        </activity>
+        <activity
+            android:name=".activities.UserSetup"
+            android:label="@string/user_setup_activity_name">
+        </activity>
+        <activity
+            android:name=".activities.Settings"
+            android:label="@string/settings_activity_name">
+        </activity>
+        <activity
+            android:name=".activities.Homepage"
+            android:label="@string/homepage_activity_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.RequestsPanel"
+            android:label="@string/request_panel_activity_name">
+        </activity>
+
+        <service
+            android:name=".services.Searcher"
+            android:exported="false" />
+        <service
+            android:name=".services.ServerInterface"
+            android:exported="false" />
+        <service
+            android:name=".services.FormFiller"
+            android:exported="false" />
+
+        <receiver
+            android:name=".Manager$NetworkReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".Manager$AlarmReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="net.tenwame.forgetmypicture.alarm.search" />
+                <action android:name="net.tenwame.forgetmypicture.alarm.update" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+
+</manifest>

@@ -1,0 +1,103 @@
+<resources>
+    <string name="app_full_name">ForgetMyPicture</string>
+    <string name="open_helper_classname">DatabaseHelper</string>
+
+
+    <!-- search activity -->
+    <string name="search_activity_name">Start a new request</string>
+    <string name="search_title">Please enter keywords:</string>
+    <string name="search_setup_data_toast">Please set up your data before starting a new Search</string>
+    <string name="search_keywords_send_btn">Send</string>
+    <string name="search_keywords_hint">Enter keywords here</string>
+    <string name="search_started_toast">Search started</string>
+    <string name="search_failed_toast">Failed to create search</string>
+    <string name="search_kind_checkbox">Quick search</string>
+    <string name="search_select_original_pic">Select picture</string>
+    <string name="search_no_picture_selected">No Picture selected</string>
+
+    <!-- user_setup activity -->
+    <string name="user_setup_activity_name">Setup your data</string>
+    <string name="user_setup_title">Please fill in this form:</string>
+    <string name="user_setup_name">Name:</string>
+    <string name="user_setup_forename">Forename:</string>
+    <string name="user_setup_email">E-mail:</string>
+    <string name="user_setup_selfie">Please take a selfie:</string>
+    <string name="user_setup_idcard">Please take a picture of your ID card:</string>
+    <string name="user_setup_save_btn">Save</string>
+    <string name="user_setup_save_toast">Saved</string>
+    <string name="user_setup_save_failed_toast">Failed to save data. Please retry later.</string>
+    <string name="user_setup_invalid_toast">Invalid data entered.</string>
+    <string name="user_setup_take_pic">Go</string>
+    <string name="user_setup_selfie_desc">Selfie thumbnail</string>
+    <string name="user_setup_idcard_desc">ID card picture thumbnail</string>
+
+    <!-- homepage activity -->
+    <string name="homepage_activity_name">Forget My Picture</string>
+    <string name="homepage_new_request">Start a new request</string>
+    <string name="homepage_requests_panel">My requests</string>
+    <string name="homepage_menu_account">My account</string>
+    <string name="homepage_menu_settings">Settings</string>
+
+    <!-- request_panel activity -->
+    <string name="request_panel_activity_name">Requests Panel</string>
+    <!-- requests_list fragment -->
+    <string name="requests_list_title">Your requests:</string>
+    <string name="requests_list_no_requests">No requests</string>
+    <string name="request_item_processed">%d%% processed</string>
+    <string name="request_item_fetched">%d%% fetched</string>
+    <string name="request_item_results">- %d results</string>
+    <string name="request_item_id">%1$s search No. %2$d</string>
+    <!-- request_infos fragment -->
+    <string name="request_infos_title">%1$s search No. %2$d</string>
+    <string name="request_infos_status">Status : %s</string>
+    <string name="request_infos_stats">Stats: Aprox. %1$d/%2$d pictures fetched, %3$d results processed</string>
+    <string name="request_infos_motive">Motive : %s</string>
+    <string name="request_infos_keywords">Keywords: %s</string>
+    <string name="request_infos_no_results">No results yet</string>
+    <string name="request_infos_send_email_btn">Send e-mail</string>
+    <string name="request_infos_fill_form_btn">Fill form</string>
+    <string name="request_infos_pay_before_check">You have to unlock this request to see pictures origin and to remove them</string>
+    <string name="request_infos_pay_btn">Pay</string>
+    <string name="request_infos_payed_toast">Thank you for your purchase</string>
+    <string name="request_infos_pay_title">Unlock advanced features to continue</string>
+    <string name="request_infos_form_sent">Google Form filled and sent !</string>
+    <string name="request_infos_email_sent">E-mail sent !</string>
+    <string-array name="result_item_match">
+        <item>%d%% match</item>
+        <item>Not processed yet</item>
+    </string-array>
+    <string name="result_item_pic_ref_url">Site: %s</string>
+    <string name="result_item_thumb_desc">Matched picture</string>
+
+    <!-- settings activity -->
+    <string name="settings_activity_name">Settings</string>
+    <string name="settings_data_on_wifi">Data on Wi-fi only</string>
+    <string name="settings_data_on_wifi_sum">Enable networking only when connected to Wi-fi networks</string>
+    <string name="settings_wipe">Wipe all data</string>
+    <string name="settings_wipe_btn">Wipe</string>
+    <string name="settings_wipe_warning">WARNING : This will erase all your data from the app and our server.\nProceed with caution.</string>
+    <string name="settings_wipe_toast">Data wiped</string>
+    <string name="settings_offline_mode">Offline mode</string>
+    <string name="settings_offline_mode_sum">Prevent this app from using network resources</string>
+    <string name="settings_match_threshold">Match threshold</string>
+    <string-array name="settings_match_threshold_sum">
+        <item>We will only show you pictures we are %d%% sure you are on it</item>
+        <item>All pictures will be shown, even if you are not on it</item>
+    </string-array>
+
+    <!-- enums values display -->
+    <string name="enum_request_status_fetching">Fetching</string>
+    <string name="enum_request_status_processing">Processing</string>
+    <string name="enum_request_status_pending">Pending</string>
+    <string name="enum_request_status_finished">Finished</string>
+    <string name="enum_request_status_payed">Unlocked</string>
+    <string name="enum_request_kind_quick">Quick</string>
+    <string name="enum_request_kind_exhaustive">Exhaustive</string>
+
+    <!-- misc -->
+    <string name="cancel">Cancel</string>
+    <string name="ask_continue">Continue ?</string>
+
+
+
+</resources>

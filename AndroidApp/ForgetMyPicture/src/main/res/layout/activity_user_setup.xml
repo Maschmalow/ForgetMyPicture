@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activities.UserSetup"
+    style="@style/basic_root_layout_white_background_with_padding">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/user_setup_title"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="9dp" />
+
+    <ScrollView
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/activity_margin"
+        android:layout_weight="1">
+
+        <LinearLayout
+            style="@style/basic_layout">
+
+            <LinearLayout
+                style="@style/basic_layout"
+                android:layout_margin="@dimen/activity_margin">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/user_setup_name" />
+
+                <EditText
+                    android:id="@+id/name_field"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/basic_layout"
+                android:layout_margin="@dimen/activity_margin">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/user_setup_forename" />
+
+                <EditText
+                    android:id="@+id/forename_field"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/basic_layout"
+                android:layout_margin="@dimen/activity_margin">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/user_setup_email" />
+
+                <EditText
+                    android:id="@+id/email_field"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/basic_layout"
+                android:layout_margin="@dimen/activity_margin" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/user_setup_selfie" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/user_setup_take_pic"
+                        android:id="@+id/take_selfie_btn"
+                        android:onClick="takePictureFromUI"
+                        style="@style/turquoise_background_and_white_text"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/selfie_thumb"
+                        android:maxHeight="150dp"
+                        android:contentDescription="@string/user_setup_selfie_desc"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/basic_layout"
+                android:layout_margin="@dimen/activity_margin" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/user_setup_idcard" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/user_setup_take_pic"
+                        android:id="@+id/take_idcard_btn"
+                        android:onClick="takePictureFromUI"
+                        style="@style/turquoise_background_and_white_text"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/idcard_thumb"
+                        android:maxHeight="150dp"
+                        android:contentDescription="@string/user_setup_idcard_desc" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/user_setup_save_btn"
+        android:onClick="saveDataFromUI"
+        android:layout_gravity="end"
+        style="@style/turquoise_background_and_white_text"/>
+</LinearLayout>
