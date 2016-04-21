@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="button_blue_background_and_white_text">
-        <item name="android:textColor">#FFFFFF</item>
-        <item name="android:textSize">10sp</item>
-        <item name="android:background">#28AAA0</item>
+    <style name="basic_view_with_marging">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">8dp</item>
     </style>
 
-    <style name="basic_view_white_background_with_padding">
+    <style name="button_blue_background_and_white_text" parent="basic_view_with_marging">
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:background">#28AAA0</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="basic_layout_white_background_with_padding">
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
         <item name="android:background">#FFFFFF</item>
-        <item name="android:paddingLeft">10dp</item>
-        <item name="android:paddingTop">10dp</item>
-        <item name="android:paddingRight">10dp</item>
-        <item name="android:paddingBottom">10dp</item>
+        <item name="android:padding">16dp</item>
     </style>
 
 </resources>
