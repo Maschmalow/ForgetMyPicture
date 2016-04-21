@@ -22,8 +22,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dip"
         android:layout_weight="0.2"
-        android:paddingRight="50dp"
-        android:paddingLeft="50dp"
+        android:paddingRight="30dp"
+        android:paddingLeft="30dp"
         android:gravity="center_vertical" >
 
         <LinearLayout
@@ -36,7 +36,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dip"
                 android:layout_weight="0.5"
-                android:background="@drawable/my_button"
+                android:background="@drawable/mybutton"
                 android:adjustViewBounds="true"
                 android:onClick="startNewSearchFromUI"
                 android:text="@string/homepage_new_request"
@@ -47,9 +47,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dip"
                 android:layout_weight="0.5"
-                android:background="@drawable/my_button"
+                android:background="@drawable/mybutton"
                 android:adjustViewBounds="true"
                 android:onClick="goToRequestsFromUI"
+                android:layout_marginTop="10dp"
                 style="@style/textStyle"
                 android:text="@string/homepage_requests_panel" />
         </LinearLayout>
