@@ -2,9 +2,12 @@ package net.tenwame.forgetmypicture.fragments;
 
 import android.content.res.Resources;
 import android.database.DataSetObserver;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.crittercism.app.Crittercism;
 
 import net.tenwame.forgetmypicture.DatabaseAdapter;
 import net.tenwame.forgetmypicture.R;
@@ -21,12 +24,7 @@ public class RequestsList extends ConventionFragment {
     private static final String TAG = RequestsList.class.getName();
 
     private RequestsAdapter adapter = new RequestsAdapter();
-    private DataSetObserver loader = new DataSetObserver() {
-        @Override
-        public void onChanged() {
-            load();
-        }
-    };
+    private DataSetObserver loader;
 
     //auto-retrieved views
     private ListView requestsList;
@@ -36,6 +34,12 @@ public class RequestsList extends ConventionFragment {
     public void setupViews() {
         requestsList.setAdapter(adapter);
         requestsList.setOnItemClickListener(adapter);
+        loader = new DataSetObserver() {
+            @Override
+            public void onChanged() {
+                load();
+            }
+        };
         adapter.registerDataSetObserver(loader);
         adapter.loadData();
         adapter.trackDatabase(Result.class, true);
@@ -50,7 +54,12 @@ public class RequestsList extends ConventionFragment {
     @Override
     public void onStop() {
         super.onStop();
-        adapter.unregisterDataSetObserver(loader);
+        try {
+            adapter.unregisterDataSetObserver(loader);
+        } catch (IllegalStateException e) {
+            Log.e(TAG, "onStop: could not unregister loader", e);
+            Crittercism.logHandledException(e);
+        }
         adapter.trackDatabase(Result.class, false);
     }
 

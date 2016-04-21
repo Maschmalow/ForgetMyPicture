@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crittercism.app.Crittercism;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import net.tenwame.forgetmypicture.DatabaseAdapter;
@@ -45,12 +46,7 @@ public class RequestInfos extends ConventionFragment {
 
     private Request request;
     private ResultsAdapter adapter = new ResultsAdapter();
-    private DataSetObserver loader = new DataSetObserver() {
-        @Override
-        public void onChanged() {
-            load();
-        }
-    };
+    private DataSetObserver loader;
     private Set<Result> selected = new HashSet<>();
     private AlertDialog payDialog;
 
@@ -67,15 +63,22 @@ public class RequestInfos extends ConventionFragment {
     @Override
     public void setupViews() {
         resultsList.setAdapter(adapter);
+        resultsList.setOnItemClickListener(adapter);
         adapter.setFilter(new Util.Filter<Result>() {
             @Override
             public boolean isAllowed(Result candidate) {
                 return candidate.getMatch() >= Settings.matchTreshold();
             }
         });
+        loader = new DataSetObserver() {
+            @Override
+            public void onChanged() {
+                load();
+            }
+        };
         adapter.registerDataSetObserver(loader);
+        adapter.loadData();
         adapter.trackDatabase(true);
-        //resultsList.setOnItemClickListener(adapter);
 
         payDialog = new AlertDialog.Builder(getContext())
                 .setMessage(R.string.request_infos_pay_before_check)
@@ -130,7 +133,13 @@ public class RequestInfos extends ConventionFragment {
     @Override
     public void onStop() {
         super.onStop();
-        adapter.unregisterDataSetObserver(loader);
+        try {
+            adapter.unregisterDataSetObserver(loader);
+        } catch (IllegalStateException e) {
+            Log.e(TAG, "onStop: could not unregister loader", e);
+            Crittercism.logHandledException(e);
+        }
+        adapter.trackDatabase(false);
     }
 
     public void fillFormFromUI(View v) {
@@ -191,23 +200,23 @@ public class RequestInfos extends ConventionFragment {
         }
 
         @Override
-        public void setView(View view, final Result item) {
+        public void setView(final View itemView, final Result item) {
         final Resources res = getResources();
 
             String[] match = res.getStringArray(R.array.result_item_match);
-            ((TextView) view.findViewById(R.id.match)).setText(item.isProcessed()? String.format(match[0], item.getMatch()) : match[1] );
+            ((TextView) itemView.findViewById(R.id.match)).setText(item.isProcessed()? String.format(match[0], item.getMatch()) : match[1] );
 
             String host = "#######";
             try {
                 if(request.getStatus().isAfter(Request.Status.PAYED))
                     host = new URL(item.getPicRefURL()).getHost();
             } catch (MalformedURLException ignored) { } //already checked in Searcher
-            ((TextView) view.findViewById(R.id.pic_ref_url)).setText(res.getString(R.string.result_item_pic_ref_url, host));
+            ((TextView) itemView.findViewById(R.id.pic_ref_url)).setText(res.getString(R.string.result_item_pic_ref_url, host));
 
             if(request.getStatus() == Request.Status.FINISHED)
-                view.findViewById(R.id.selected).setVisibility(View.GONE);
+                itemView.findViewById(R.id.selected).setVisibility(View.GONE);
             else
-                ((CheckBox) view.findViewById(R.id.selected)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                ((CheckBox) itemView.findViewById(R.id.selected)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         if(request.getStatus() != Request.Status.PAYED && isChecked) {
@@ -225,7 +234,8 @@ public class RequestInfos extends ConventionFragment {
                 });
 
             // TODO: 18/04/2016 Download server-side
-            ImageLoader.getInstance().displayImage(item.getPicURL(), (ImageView) view.findViewById(R.id.thumb));
+            ImageLoader.getInstance().displayImage(item.getPicURL(), (ImageView) itemView.findViewById(R.id.thumb));
+
         }
 
         @Override
