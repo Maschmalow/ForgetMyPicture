@@ -4,31 +4,31 @@
     tools:context=".activities.Homepage"
     style="@style/basic_layout_white_background_with_padding">
 
-    <Button
+    <TextView
         android:layout_weight="40"
-        android:background="#FFFFFF"
+        android:background="@color/white"
         style="@style/basic_view_with_marging"/>
 
     <Button
-        android:layout_weight="40"
-        style="@style/button_blue_background_and_white_text"
+        android:layout_weight="20"
+        style="@style/button_turquoise_background_and_white_text"
         android:onClick="startNewSearchFromUI"
         android:text="@string/homepage_new_request"/>
 
-    <Button
-        android:layout_weight="1"
-        android:background="#FFFFFF"
+    <TextView
+        android:layout_weight="10"
+        android:background="@color/white"
         style="@style/basic_view_with_marging"/>
 
     <Button
-        android:layout_weight="40"
-        style="@style/button_blue_background_and_white_text"
+        android:layout_weight="20"
+        style="@style/button_turquoise_background_and_white_text"
         android:onClick="goToRequestsFromUI"
         android:text="@string/homepage_requests_panel"/>
 
-    <Button
+    <TextView
         android:layout_weight="40"
-        android:background="#FFFFFF"
+        android:background="@color/white"
         style="@style/basic_view_with_marging"/>
 
 </LinearLayout>
