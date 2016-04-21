@@ -5,14 +5,14 @@
 
     <!-- search activity -->
     <string name="search_activity_name">Start a new request</string>
-    <string name="search_title">Please enter keywords:</string>
+    <string name="search_title">Enter keywords</string>
     <string name="search_setup_data_toast">Please set up your data before starting a new Search</string>
     <string name="search_keywords_send_btn">Send</string>
     <string name="search_keywords_hint">Enter keywords here</string>
     <string name="search_started_toast">Search started</string>
     <string name="search_failed_toast">Failed to create search</string>
-    <string name="search_kind_checkbox">Quick search</string>
-    <string name="search_select_original_pic">Select picture</string>
+    <string name="search_kind_checkbox">Quick search ?</string>
+    <string name="search_select_original_pic">Select a picture</string>
     <string name="search_no_picture_selected">No Picture selected</string>
 
     <!-- user_setup activity -->
