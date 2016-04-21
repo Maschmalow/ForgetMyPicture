@@ -48,7 +48,7 @@
         <TextView
             android:layout_weight="40"
             android:background="@color/white"
-            style="@style/basic_view_with_marging"/>
+            style="@style/basic_view_with_margin"/>
 
         <Button
             android:layout_width="match_parent"
@@ -61,7 +61,7 @@
         <TextView
             android:layout_weight="20"
             android:background="@color/white"
-            style="@style/basic_view_with_marging"/>
+            style="@style/basic_view_with_margin"/>
 
     </LinearLayout>
 
