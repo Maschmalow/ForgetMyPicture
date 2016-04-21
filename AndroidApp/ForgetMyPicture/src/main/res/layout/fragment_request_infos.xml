@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/basic_layout_white_background_with_padding">
+    style="@style/basic_root_layout_white_background_with_padding">
 
     <TextView
         android:id="@+id/title"
@@ -38,16 +38,30 @@
         android:layout_height="wrap_content">
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="20"
             android:text="@string/request_infos_fill_form_btn"
-            android:onClick="fillFormFromUI"/>
+            android:onClick="fillFormFromUI"
+            style="@style/turquoise_background_and_white_text"/>
+
+        <TextView
+            android:layout_weight="40"
+            android:background="@color/white"
+            style="@style/basic_view_with_marging"/>
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="20"
             android:text="@string/request_infos_send_email_btn"
-            android:onClick="sendEmailFromUI"/>
+            android:onClick="sendEmailFromUI"
+            style="@style/turquoise_background_and_white_text"/>
+
+        <TextView
+            android:layout_weight="20"
+            android:background="@color/white"
+            style="@style/basic_view_with_marging"/>
 
     </LinearLayout>
 

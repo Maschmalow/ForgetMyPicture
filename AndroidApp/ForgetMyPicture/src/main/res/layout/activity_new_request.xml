@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".activities.NewRequest"
-    style="@style/basic_layout_white_background_with_padding">
+    style="@style/basic_root_layout_white_background_with_padding">
 
     <TextView
         android:id="@+id/title"
@@ -49,7 +49,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/search_select_original_pic"
-            android:onClick="takeOriginalPicFromUI"/>
+            android:onClick="takeOriginalPicFromUI"
+            style="@style/turquoise_background_and_white_text"/>
 
         <TextView
             android:id="@+id/original_pic_path"
@@ -76,6 +77,7 @@
         android:layout_margin="@dimen/activity_margin"
         android:onClick="startSearchFromUI"
         android:text="@string/search_keywords_send_btn"
-        android:layout_gravity="end"/>
+        android:layout_gravity="end"
+        style="@style/turquoise_background_and_white_text"/>
 
 </LinearLayout>

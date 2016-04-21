@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/basic_layout_white_background_with_padding">
+    style="@style/basic_root_layout_white_background_with_padding">
 
     <TextView
         android:layout_width="match_parent"

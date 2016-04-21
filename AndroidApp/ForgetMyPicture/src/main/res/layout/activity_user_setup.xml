@@ -3,7 +3,7 @@
     android:orientation="vertical"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".activities.UserSetup"
-    style="@style/basic_layout_white_background_with_padding">
+    style="@style/basic_root_layout_white_background_with_padding">
 
     <TextView
         android:layout_width="match_parent"
@@ -21,14 +21,10 @@
         android:layout_weight="1">
 
         <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:orientation="vertical">
+            style="@style/basic_layout">
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
+                style="@style/basic_layout"
                 android:layout_margin="@dimen/activity_margin">
 
                 <TextView
@@ -45,9 +41,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
+                style="@style/basic_layout"
                 android:layout_margin="@dimen/activity_margin">
 
                 <TextView
@@ -64,9 +58,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
+                style="@style/basic_layout"
                 android:layout_margin="@dimen/activity_margin">
 
                 <TextView
@@ -83,9 +75,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
+                style="@style/basic_layout"
                 android:layout_margin="@dimen/activity_margin" >
 
                 <TextView
@@ -104,7 +94,8 @@
                         android:layout_height="wrap_content"
                         android:text="@string/user_setup_take_pic"
                         android:id="@+id/take_selfie_btn"
-                        android:onClick="takePictureFromUI"/>
+                        android:onClick="takePictureFromUI"
+                        style="@style/turquoise_background_and_white_text"/>
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -117,9 +108,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
+                style="@style/basic_layout"
                 android:layout_margin="@dimen/activity_margin" >
 
                 <TextView
@@ -138,7 +127,8 @@
                         android:layout_height="wrap_content"
                         android:text="@string/user_setup_take_pic"
                         android:id="@+id/take_idcard_btn"
-                        android:onClick="takePictureFromUI"/>
+                        android:onClick="takePictureFromUI"
+                        style="@style/turquoise_background_and_white_text"/>
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -158,5 +148,6 @@
         android:layout_height="wrap_content"
         android:text="@string/user_setup_save_btn"
         android:onClick="saveDataFromUI"
-        android:layout_gravity="end" />
+        android:layout_gravity="end"
+        style="@style/turquoise_background_and_white_text"/>
 </LinearLayout>
