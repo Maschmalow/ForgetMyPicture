@@ -2,21 +2,75 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".activities.NewRequest"
-    style="@style/basic_root_layout_white_background_with_padding">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
 
+    android:background="@color/blue_dark2"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".activities.NewRequest">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/textStyle"
+        android:text="@string/search_select_original_pic"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_margin="@dimen/activity_margin"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:id="@+id/select_original_pic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="30dp">
+        <Button
+            android:layout_width="120dp"
+            android:layout_height="40dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/mybutton"
+            android:text="@string/search_select_original_pic"
+            android:textColor="@color/white"
+            android:onClick="takeOriginalPicFromUI"/>
+
+        <TextView
+            android:id="@+id/original_pic_path"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/search_no_picture_selected"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            style="@style/textStyle3"
+            android:gravity="center_vertical" />
+    </LinearLayout>
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/activity_margin"
+        style="@style/textStyle"
         android:text="@string/search_title"
-        android:textAppearance="?android:attr/textAppearanceLarge"/>
-
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_margin="@dimen/activity_margin"/>
+    <EditText
+        android:id="@+id/keywords_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minLines="5"
+        android:hint="@string/search_keywords_hint"
+        android:inputType="textMultiLine"
+        android:layout_marginLeft="@dimen/activity_margin"
+        android:layout_marginRight="@dimen/activity_margin"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:paddingTop="30dp"
         android:layout_marginLeft="@dimen/activity_margin"
         android:layout_marginRight="@dimen/activity_margin"
         android:id="@+id/linearLayout">
@@ -26,6 +80,8 @@
             android:layout_height="match_parent"
             android:layout_margin="@dimen/activity_margin"
             android:text="@string/search_kind_checkbox"
+            android:paddingTop="5dp"
+            style="@style/textStyle4"
             android:textAppearance="?android:attr/textAppearanceMedium"/>
 
         <CheckBox
@@ -34,50 +90,18 @@
             android:layout_height="match_parent"
             android:onClick="onSearchKindCheckedFromUI"
             android:checked="false"
+
             />
 
     </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:visibility="gone"
-        android:id="@+id/select_original_pic"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/search_select_original_pic"
-            android:onClick="takeOriginalPicFromUI"
-            style="@style/turquoise_background_and_white_text"/>
-
-        <TextView
-            android:id="@+id/original_pic_path"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/search_no_picture_selected"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:gravity="center_vertical"/>
-    </LinearLayout>
-
-    <EditText
-        android:id="@+id/keywords_field"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/search_keywords_hint"
-        android:inputType="textMultiLine"
-        android:layout_marginLeft="@dimen/activity_margin"
-        android:layout_marginRight="@dimen/activity_margin"/>
-
     <Button
         android:id="@+id/send_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="120dp"
+        android:layout_height="60dp"
+        android:background="@drawable/mybutton"
         android:layout_margin="@dimen/activity_margin"
         android:onClick="startSearchFromUI"
         android:text="@string/search_keywords_send_btn"
-        android:layout_gravity="end"
-        style="@style/turquoise_background_and_white_text"/>
+        android:layout_gravity="center_horizontal"/>
 
 </LinearLayout>
