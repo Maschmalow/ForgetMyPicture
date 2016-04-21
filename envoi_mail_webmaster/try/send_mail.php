@@ -8,7 +8,7 @@
  * \param $argv[3] User's First name
  * \param $argv[4] User's LAST NAME
  * \param $argv[5] Photo URL
- * \param $argv[6] Citizenship
+ * \param $argv[6] Citizenship : optional, and for the prototype the value can only be uk for British people or fr for French people 
  */
 <?php
 require 'PHPMailer-master/PHPMailerAutoload.php';
@@ -21,7 +21,7 @@ $mail->isSMTP();                                      // Set mailer to use SMTP
 $mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
 $mail->SMTPAuth = true;                               // Enable SMTP authentication
 $mail->Username = 'ForgetMyPicture@gmail.com';                 // SMTP username
-$mail->Password = '****';                           // SMTP password
+$mail->Password = '2016AtosITChallenge';                           // SMTP password
 $mail->SMTPSecure = 'ssl';                            // Enable TLS encryption, `ssl` also accepted
 $mail->Port = 465;  //465 gmail, 25 enseirb            // TCP port to connect to
 //$mail->Helo = 'enseirb.fr';                        // Set the SMTP HELO of the message (Default is $Hostname)
@@ -52,19 +52,19 @@ switch($which_text)
 
 
 ';
-    $text_1_eng_sentence_2 = 'On your Internet domain, I have found a detrimental photo of me, which breaches my rights and my image. I would like to draw your attention to this situation.
+    $text_1_eng_sentence_2 = 'On your Internet domain, I have found a detrimental photo of myself, which breaches my rights and my image. I would like to draw your attention to this situation.
 
 ';
-    $text_1_eng_sentence_3 = 'Indeed, under Article 16 (ex Article 286 TEC) Title II of the Treaty on European Union and the Treaty on the Functioning of the European Union, and the Data Protection Act, I request to delete the photo ' . $argv[5] . ' of your Internet domain.
+    $text_1_eng_sentence_3 = 'Indeed, under Article 16 (ex Article 286 TEC) Title II of the Treaty on European Union and the Treaty on the Functioning of the European Union, and the Data Protection Act, I request that the photo be deleted ' . $argv[5] . ' of your Internet domain.
 
 ';
-    $text_1_eng_sentence_4 = 'By two months, you have to respond to my request. Please contact me at the following email address ' . $argv[2] . ' .
+    $text_1_eng_sentence_4 = 'Within two months, you have to respond to my request. Please contact me at the following email address ' . $argv[2] . ' .
 
 ';
     $text_1_eng_sentence_5 = 'I should like also to remind you that, under the Data Protection Act, if an individual suffers damage, they are entitled to claim compensation from you.
 
 ';
-    $text_1_eng_sentence_6 = 'In the absence of action from you, I see myself compelled to take legal action by exercising later my right to object.
+    $text_1_eng_sentence_6 = 'In the absence of action from you, I shall be compelled to take legal action by exercising later my right to object.
 
 ';
     $text_1_eng_sentence_7 = 'Thanking you in advance for your diligence,
@@ -92,7 +92,7 @@ switch($which_text)
     $text_2_eng_sentence_2 = 'On your Internet domain, I have found a detrimental photo of me, which breaches my rights and my image. I would like to draw your attention to this situation.
 
 ';
-    $text_2_eng_sentence_3 = 'Indeed, under Article 38 of the law "Informatique et Libertés"  of the French law, I request to delete the photo ' . $argv[5] . ' of your Internet domain.
+    $text_2_eng_sentence_3 = 'Indeed, under Article 38 of the law "Informatique et Libertés" of the French law, I request that the photo be deleted ' . $argv[5] . ' of your Internet domain.
 
 ';
     $text_2_eng_sentence_4 = 'According to Article 94 of the Decree of 20 October 2005 of the French law, you have a maximum of two months of receipt of this letter in response to my request. Please contact me at the following email address ' . $argv[2] . ' .
@@ -100,16 +100,16 @@ switch($which_text)
 ';
     $text_2_eng_sentence_5a = 'I should like also to remind you that:
 ';
-    $text_2_eng_sentence_5b = 'Under Article 226-18-1 of the Criminal Code of the French law is punishable by five years imprisonment and €300,000 fine the fact of conducting a personal data processing relating to an individual despite the person\'s opposition when this processing is for marketing purposes  notably commercial ones, or where the opposition is based on legitimate reasons.
+    $text_2_eng_sentence_5b = 'Under Article 226-18-1 of the Criminal Code of the French law is punishable by five years imprisonment and €300,000 fine the fact of conducting a personal data processing relating to an individual despite the person\'s opposition when this processing is for marketing purposes notably commercial ones, or where the opposition is based on legitimate reasons.
 ';
-    $text_2_eng_sentence_5c = 'Under R625-12 of the Criminal Code of the French law is liable to a fine for contraventions of the fifth class, for a responsible of personal data automated processing, the act of not to proceeding, at no cost to the applicant, with the operations requested by an individual, upon proof of his identity, who requires to be rectified, completed, updated , locked or deleted personal data concerning him or concerning the deceased of whom the individual is an heir, when these data are inaccurate, incomplete, misleading, outdated , or where the collection, use, communication or storage is prohibited.
+    $text_2_eng_sentence_5c = 'Under R625-12 of the Criminal Code of the French law is liable to a fine for contraventions of the fifth class, for a responsible of personal data automated processing, the act of not to proceeding, at no cost to the applicant, with the operations requested by an individual, upon proof of his identity, who requires to be rectified, completed, updated, locked or deleted personal data concerning him or concerning the deceased of whom the individual is an heir, when these data are inaccurate, incomplete, misleading, outdated, or where the collection, use, communication or storage is prohibited.
 ';
     $text_2_eng_sentence_5d = 'Under Article 226-1 of the Criminal Code of the French law is punishable by one year imprisonment and €45,000 fine the fact of violating the privacy of other people\'s privacy fixing, recording or transmitting, without the consent of the latter, the image of a person in a private place.
 ';
     $text_2_eng_sentence_5e = 'Under Article 226-8 of the Criminal Code of the French law is punishable by one year imprisonment and €15,000 fine the fact publish, by any means whatsoever, the montage with the image of a person without their consent, it does not appear clearly that it is a montage or if it is not expressly mentioned.
 
 ';
-    $text_2_eng_sentence_6 = 'In the absence of action from you, I see myself compelled to take legal action by exercising later my right to object.
+    $text_2_eng_sentence_6 = 'In the absence of action from you, I shall be compelled to take legal action by exercising later my right to object.
 
 ';
     $text_2_eng_sentence_7 = 'Thanking you in advance for your diligence,
