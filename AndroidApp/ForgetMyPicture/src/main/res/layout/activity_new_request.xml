@@ -102,6 +102,8 @@
         android:layout_margin="@dimen/activity_margin"
         android:onClick="startSearchFromUI"
         android:text="@string/search_keywords_send_btn"
+        style="@style/textStyle4"
+        android:textSize="30dp"
         android:layout_gravity="center_horizontal"/>
 
 </LinearLayout>
