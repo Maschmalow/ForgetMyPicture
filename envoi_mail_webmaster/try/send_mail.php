@@ -8,7 +8,7 @@
  * \param $argv[3] User's First name
  * \param $argv[4] User's LAST NAME
  * \param $argv[5] Photo URL
- * \param $argv[6] Citizenship : optional, and for the prototype the value can only be uk for British people or fr for French people 
+ * \param $argv[6] Citizenship : for the prototype the value can only be uk for British people or fr for French people
  */
 <?php
 require 'PHPMailer-master/PHPMailerAutoload.php';
