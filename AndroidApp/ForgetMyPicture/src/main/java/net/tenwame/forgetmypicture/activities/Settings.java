@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -24,6 +25,7 @@ import net.tenwame.forgetmypicture.services.ServerInterface;
 public class Settings extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener{
 
     public static final String WIPE_KEY = "pref_wipe";
+
     public static final String DATA_ON_WIFI_KEY = "pref_data_on_wifi";
     public static boolean dataOnWifi() {
         return PreferenceManager.getDefaultSharedPreferences(ForgetMyPictureApp.getContext()).getBoolean(DATA_ON_WIFI_KEY, false);
@@ -33,6 +35,12 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
     public static boolean offlineMode() {
         return PreferenceManager.getDefaultSharedPreferences(ForgetMyPictureApp.getContext()).getBoolean(OFFLINE_MODE_KEY, false);
     }
+
+    public static final String MATCH_THRESHOLD_KEY = "pref_match_threshold";
+    public static int matchTreshold() {
+        return Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(ForgetMyPictureApp.getContext()).getString(MATCH_THRESHOLD_KEY, "60"));
+    }
+
 
 
     @SuppressWarnings("deprecation")
@@ -52,11 +60,23 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
 
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if(DATA_ON_WIFI_KEY.equals(key) ||
                 OFFLINE_MODE_KEY.equals(key)) {
             Manager.getInstance().setAlarms();
+        } else if (MATCH_THRESHOLD_KEY.equals(key)) {
+            Resources res = getResources();
+            Preference pref = findPreference(MATCH_THRESHOLD_KEY);
+            int threshold = Integer.valueOf(sharedPreferences.getString(MATCH_THRESHOLD_KEY, "60"));
+            if(threshold > 1)
+                threshold = 1;
+            else if(threshold < 0)
+                threshold = -1;
+
+            String[] sum = res.getStringArray(R.array.settings_match_threshold_sum);
+            pref.setSummary((threshold == -1)? sum[1] : String.format(sum[0], threshold));
         }
     }
 
@@ -102,28 +122,49 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class SettingsFragment extends PreferenceFragment {
+    public static class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener{
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preferences);
-
-            findPreference(WIPE_KEY).setOnPreferenceClickListener(((Settings) getActivity()).wipeListener);
+            findPreference(WIPE_KEY).setOnPreferenceClickListener(((Settings)getActivity()).wipeListener);
         }
+
 
         @Override
         public void onResume() {
             super.onResume();
             getPreferenceScreen().getSharedPreferences()
-                    .registerOnSharedPreferenceChangeListener((Settings) getActivity());
+                    .registerOnSharedPreferenceChangeListener(this);
         }
 
         @Override
         public void onPause() {
             super.onPause();
             getPreferenceScreen().getSharedPreferences()
-                    .unregisterOnSharedPreferenceChangeListener((Settings) getActivity());
+                    .unregisterOnSharedPreferenceChangeListener(this);
         }
+
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            if(DATA_ON_WIFI_KEY.equals(key) ||
+                    OFFLINE_MODE_KEY.equals(key)) {
+                Manager.getInstance().setAlarms();
+            } else if (MATCH_THRESHOLD_KEY.equals(key)) {
+                Resources res = getResources();
+                Preference pref = findPreference(MATCH_THRESHOLD_KEY);
+                int threshold = Integer.valueOf(sharedPreferences.getString(MATCH_THRESHOLD_KEY, "60"));
+                if(threshold > 100)
+                    threshold = 100;
+                else if(threshold < 0)
+                    threshold = -1;
+
+                String[] sum = res.getStringArray(R.array.settings_match_threshold_sum);
+                pref.setSummary((threshold == -1)? sum[1] : String.format(sum[0], threshold));
+            }
+        }
+
     }
 
 }

@@ -5,13 +5,13 @@
     <style name="AppTheme" parent="android:Theme.Holo.Light">
     </style>
 
-    <style name="basic_view_with_marging">
+    <style name="basic_view_with_margin">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_margin">8dp</item>
     </style>
 
-    <style name="button_turquoise_background_and_white_text" parent="basic_view_with_marging">
+    <style name="button_turquoise_background_and_white_text" parent="basic_view_with_margin">
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">20sp</item>
         <item name="android:background">@color/turquoise</item>

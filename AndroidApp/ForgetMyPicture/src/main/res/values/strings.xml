@@ -62,17 +62,28 @@
     <string name="request_infos_pay_title">Unlock advanced features to continue</string>
     <string name="request_infos_form_sent">Google Form filled and sent !</string>
     <string name="request_infos_email_sent">E-mail sent !</string>
-    <string name="result_item_match">%d%% match</string>
+    <string-array name="result_item_match">
+        <item>%d%% match</item>
+        <item>Not processed yet</item>
+    </string-array>
     <string name="result_item_pic_ref_url">Site: %s</string>
     <string name="result_item_thumb_desc">Matched picture</string>
 
     <!-- settings activity -->
     <string name="settings_activity_name">Settings</string>
     <string name="settings_data_on_wifi">Data on Wi-fi only</string>
+    <string name="settings_data_on_wifi_sum">Enable networking only when connected to Wi-fi networks</string>
     <string name="settings_wipe">Wipe all data</string>
     <string name="settings_wipe_btn">Wipe</string>
     <string name="settings_wipe_warning">WARNING : This will erase all your data from the app and our server.\nProceed with caution.</string>
     <string name="settings_wipe_toast">Data wiped</string>
+    <string name="settings_offline_mode">Offline mode</string>
+    <string name="settings_offline_mode_sum">Prevent this app from using network resources</string>
+    <string name="settings_match_threshold">Match threshold</string>
+    <string-array name="settings_match_threshold_sum">
+        <item>We will only show you pictures we are %d%% sure you are on it</item>
+        <item>All pictures will be shown, even if you are not on it</item>
+    </string-array>
 
     <!-- enums values display -->
     <string name="enum_request_status_fetching">Fetching</string>
@@ -86,7 +97,7 @@
     <!-- misc -->
     <string name="cancel">Cancel</string>
     <string name="ask_continue">Continue ?</string>
-    <string name="settings_offline_mode">Oflline mode</string>
+
 
 
 </resources>
