@@ -3,14 +3,23 @@
     <CheckBoxPreference
         android:key="pref_data_on_wifi"
         android:title="@string/settings_data_on_wifi"
+        android:summary="@string/settings_data_on_wifi_sum"
         android:defaultValue="false" />
 
     <CheckBoxPreference
         android:key="pref_offline_mode"
         android:title="@string/settings_offline_mode"
+        android:summary="@string/settings_offline_mode_sum"
         android:defaultValue="false" />
+
+    <EditTextPreference
+        android:key="pref_match_threshold"
+        android:inputType="numberSigned"
+        android:title="@string/settings_match_threshold"
+        android:defaultValue="60" />
 
     <Preference
         android:key="pref_wipe"
         android:title="@string/settings_wipe"/>
+
 </PreferenceScreen>

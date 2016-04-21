@@ -20,6 +20,7 @@ import net.tenwame.forgetmypicture.DatabaseAdapter;
 import net.tenwame.forgetmypicture.ForgetMyPictureApp;
 import net.tenwame.forgetmypicture.R;
 import net.tenwame.forgetmypicture.Util;
+import net.tenwame.forgetmypicture.activities.Settings;
 import net.tenwame.forgetmypicture.database.Request;
 import net.tenwame.forgetmypicture.database.Result;
 import net.tenwame.forgetmypicture.services.FormFiller;
@@ -69,7 +70,7 @@ public class RequestInfos extends ConventionFragment {
         adapter.setFilter(new Util.Filter<Result>() {
             @Override
             public boolean isAllowed(Result candidate) {
-                return candidate.isProcessed();
+                return candidate.getMatch() >= Settings.matchTreshold();
             }
         });
         adapter.registerDataSetObserver(loader);
@@ -193,7 +194,9 @@ public class RequestInfos extends ConventionFragment {
         public void setView(View view, final Result item) {
         final Resources res = getResources();
 
-            ((TextView) view.findViewById(R.id.match)).setText(res.getString(R.string.result_item_match, item.getMatch()));
+            String[] match = res.getStringArray(R.array.result_item_match);
+            ((TextView) view.findViewById(R.id.match)).setText(item.isProcessed()? String.format(match[0], item.getMatch()) : match[1] );
+
             String host = "#######";
             try {
                 if(request.getStatus().isAfter(Request.Status.PAYED))
@@ -221,10 +224,8 @@ public class RequestInfos extends ConventionFragment {
                     }
                 });
 
-
-
             // TODO: 18/04/2016 Download server-side
-            ImageLoader.getInstance().displayImage(item.getPicURL(), (ImageView) view.findViewById(R.id.thumb) );
+            ImageLoader.getInstance().displayImage(item.getPicURL(), (ImageView) view.findViewById(R.id.thumb));
         }
 
         @Override

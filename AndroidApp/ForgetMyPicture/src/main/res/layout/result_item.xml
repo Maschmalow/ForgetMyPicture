@@ -9,8 +9,8 @@
         android:id="@+id/thumb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxHeight="20dp"
-        android:maxWidth="10dp"
+        android:adjustViewBounds="true"
+        android:maxHeight="50dp"
         android:contentDescription="@string/result_item_thumb_desc" />
 
 
@@ -38,7 +38,7 @@
     <CheckBox
         android:id="@+id/selected"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"/>
 
 
 </LinearLayout>
