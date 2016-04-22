@@ -9,6 +9,17 @@
         android:background="@color/white"
         style="@style/basic_view_with_margin"/>
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/logo"
+        android:layout_gravity="center_horizontal"/>
+
+    <TextView
+        android:layout_weight="40"
+        android:background="@color/white"
+        style="@style/basic_view_with_margin"/>
+
     <Button
         android:layout_weight="20"
         style="@style/button_turquoise_background_and_white_text"
