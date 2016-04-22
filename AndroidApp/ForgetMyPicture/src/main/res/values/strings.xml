@@ -15,8 +15,8 @@
     <string name="search_select_original_pic">Select picture</string>
     <string name="search_no_picture_selected">No Picture selected</string>
 
-    <!-- user_setup activity -->
-    <string name="user_setup_activity_name">Setup your data</string>
+    <!-- user_set_up activity -->
+    <string name="user_setup_activity_name">Set up your data</string>
     <string name="user_setup_title">Please fill in this form:</string>
     <string name="user_setup_name">Name:</string>
     <string name="user_setup_forename">Forename:</string>
@@ -32,7 +32,7 @@
     <string name="user_setup_idcard_desc">ID card picture thumbnail</string>
 
     <!-- homepage activity -->
-    <string name="homepage_activity_name">Forget My Picture</string>
+    <string name="homepage_activity_name">ForgetMyPicture</string>
     <string name="homepage_new_request">Start a new request</string>
     <string name="homepage_requests_panel">My requests</string>
     <string name="homepage_menu_account">My account</string>
