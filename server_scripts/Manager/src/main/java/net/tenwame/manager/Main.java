@@ -1,13 +1,13 @@
+package net.tenwame.manager;
+
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
-import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
-import com.j256.ormlite.table.TableUtils;
-import database.Request;
-import database.Result;
-import database.Selfie;
-import database.User;
+import net.tenwame.manager.database.Request;
+import net.tenwame.manager.database.Result;
+import net.tenwame.manager.database.Selfie;
+import net.tenwame.manager.database.User;
 
 import java.sql.SQLException;
 import java.util.HashSet;
@@ -18,15 +18,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-class Main {
+public class Main {
     private static final Logger logger = Logger.getLogger(Main.class.getName());
     private static final String DB_PATH = "jdbc:mysql:///forgetmypicture";
     private static final String USERNAME = "manager";
     private static final String PASSWORD = "AtosManager2016";
     private static final int NB_WORKERS = 16;
-    private static final int REFRESH_RATE = 500; //ms
+    private static final int REFRESH_RATE = 1000; //ms
 
-    private static Main instance = null;
+
+    private static ConnectionSource source;
 
     private Dao<User, String> userDao;
     private Dao<Request, String> requestDao;
@@ -34,22 +35,22 @@ class Main {
     private Dao<Selfie, String> selfieDao;
 
     public static void main(String[] args) throws Exception {
-        JdbcConnectionSource source = new JdbcPooledConnectionSource(DB_PATH, USERNAME, PASSWORD);
-        setupTables(source);
+        source = new JdbcPooledConnectionSource(DB_PATH, USERNAME, PASSWORD);
 
-        new Main(source).run();
+        new Main().run();
 
         source.close();
     }
 
 
-    private Main(ConnectionSource source) throws Exception {
+    private Main() throws Exception {
+        if(source == null)
+            throw new IllegalArgumentException("Source can't be null");
+
         userDao = DaoManager.createDao(source, User.class);
         requestDao = DaoManager.createDao(source, Request.class);
         resultDao = DaoManager.createDao(source, Result.class);
         selfieDao = DaoManager.createDao(source, Selfie.class);
-
-        instance = this;
     }
 
     private void run() { //checks for new jobs and runs them
@@ -86,27 +87,21 @@ class Main {
         }
     }
 
-    private static void setupTables(ConnectionSource source) throws SQLException {
-        TableUtils.createTableIfNotExists(source,Request.class);
-        TableUtils.createTableIfNotExists(source,Result.class);
-        TableUtils.createTableIfNotExists(source,Selfie.class);
-        TableUtils.createTableIfNotExists(source,User.class);
+
+    public static Dao<User, String> getUserDao() {
+        return DaoManager.lookupDao(source, User.class);
     }
 
-    static Dao<User, String> getUserDao() {
-        return instance.userDao;
+    public static Dao<Request, String> getRequestDao() {
+        return DaoManager.lookupDao(source, Request.class);
     }
 
-    static Dao<Request, String> getRequestDao() {
-        return instance.requestDao;
+    public static Dao<Result, String> getResultDao() {
+        return DaoManager.lookupDao(source, Result.class);
     }
 
-    static Dao<Result, String> getResultDao() {
-        return instance.resultDao;
-    }
-
-    static Dao<Selfie, String> getSelfieDao() {
-        return instance.selfieDao;
+    public static Dao<Selfie, String> getSelfieDao() {
+        return DaoManager.lookupDao(source, Selfie.class);
     }
 
 }

@@ -1,3 +1,9 @@
+package net.tenwame.manager;
+
+import net.tenwame.manager.database.Request;
+import net.tenwame.manager.database.Result;
+import net.tenwame.manager.database.Selfie;
+import net.tenwame.manager.database.User;
 import org.im4java.core.ConvertCmd;
 import org.im4java.core.IM4JavaException;
 import org.im4java.core.IMOperation;
@@ -17,11 +23,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import database.Request;
-import database.Result;
-import database.Selfie;
-import database.User;
 
 /**
  * Created by Antoine on 19/03/2016.
@@ -54,28 +55,25 @@ class ProcessingUnit implements Runnable {
     private void processResult() throws SQLException {
         Main.getResultDao().refresh(result);
         Request request = result.getRequest();
-        Main.getRequestDao().refresh(request);
         User user = request.getUser();
-        Main.getUserDao().refresh(user);
 
         String dst = BASE_FILES_PATH + user.getDeviceId() + "_" +
                 request.getId() + "_" + UUID.randomUUID() +
                 result.getPicURL().substring(0,result.getPicURL().lastIndexOf('.'));
         savePic(result.getPicURL(), dst);
-        result.setPicTempPath(convertPic(dst));
-        Main.getResultDao().update(result);
+        String picTmpPath = convertPic(dst);
 
         List<String> args = new ArrayList<>();
         if(request.getKind() == Request.Kind.EXHAUSTIVE) {
             args.add(FR_PATH);
-            args.add(result.getPicTempPath());
+            args.add(picTmpPath);
             for( Selfie selfie : user.getSelfies() ) {
-                Main.getSelfieDao().refresh(selfie);
                 args.add(selfie.getPath());
             }
-        }else {
+        }
+        if(request.getKind() == Request.Kind.QUICK) {
             args.add(IC_PATH);
-            args.add(result.getPicTempPath());
+            args.add(picTmpPath);
             args.add(request.getOriginalPicPath());
         }
         args.add(BASE_FILES_PATH + "error_log_" + new SimpleDateFormat("dd.MM.yyyy_HH.mm.ss.SS").format(Calendar.getInstance().getTime()));
@@ -87,8 +85,9 @@ class ProcessingUnit implements Runnable {
             result.setMatch(Integer.parseInt(reader.readLine()));
             Main.getResultDao().update(result);
             proc.waitFor();
+            Files.delete(Paths.get(picTmpPath));
         } catch (IOException | InterruptedException e) {
-            logger.log(Level.SEVERE, "Could process result " + result.getPicURL());
+            logger.log(Level.SEVERE, "Could not process result " + result.getPicURL());
             throw new RuntimeException(e);
         }
 
