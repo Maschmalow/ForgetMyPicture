@@ -8,29 +8,37 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:textAppearanceLarge"/>
 
-    <TextView
-        android:id="@+id/status"
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:textAppearanceMedium"/>
+        android:layout_marginLeft="30dp">
 
-    <TextView
-        android:id="@+id/stats"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:textAppearanceMedium"/>
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:textAppearanceMedium"/>
 
-    <TextView
-        android:id="@+id/keywords"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:textAppearanceMedium"/>
+        <TextView
+            android:id="@+id/stats"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:textAppearanceMedium"/>
 
-    <TextView
-        android:id="@+id/motive"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:textAppearanceMedium"/>
+        <TextView
+            android:id="@+id/keywords"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:textAppearanceMedium"/>
+
+        <TextView
+            android:id="@+id/motive"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:textAppearanceMedium"/>
+
+    </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
@@ -43,7 +51,7 @@
             android:layout_weight="20"
             android:text="@string/request_infos_fill_form_btn"
             android:onClick="fillFormFromUI"
-            style="@style/turquoise_background_and_white_text"/>
+            style="@style/small_button_turquoise_background_and_white_text"/>
 
         <TextView
             android:layout_weight="40"
@@ -56,7 +64,7 @@
             android:layout_weight="20"
             android:text="@string/request_infos_send_email_btn"
             android:onClick="sendEmailFromUI"
-            style="@style/turquoise_background_and_white_text"/>
+            style="@style/small_button_turquoise_background_and_white_text"/>
 
         <TextView
             android:layout_weight="20"

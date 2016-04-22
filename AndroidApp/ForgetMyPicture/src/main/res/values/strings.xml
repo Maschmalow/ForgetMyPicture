@@ -18,8 +18,8 @@
     <!-- user_set_up activity -->
     <string name="user_setup_activity_name">Set up your data</string>
     <string name="user_setup_title">Please fill in this form:</string>
-    <string name="user_setup_name">Name:</string>
-    <string name="user_setup_forename">Forename:</string>
+    <string name="user_setup_name">Family name:</string>
+    <string name="user_setup_forename">First name:</string>
     <string name="user_setup_email">E-mail:</string>
     <string name="user_setup_selfie">Please take a selfie:</string>
     <string name="user_setup_idcard">Please take a picture of your ID card:</string>

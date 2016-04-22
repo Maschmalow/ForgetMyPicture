@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:text="@string/search_select_original_pic"
             android:onClick="takeOriginalPicFromUI"
-            style="@style/turquoise_background_and_white_text"/>
+            style="@style/small_button_turquoise_background_and_white_text"/>
 
         <TextView
             android:id="@+id/original_pic_path"
@@ -78,6 +78,6 @@
         android:onClick="startSearchFromUI"
         android:text="@string/search_keywords_send_btn"
         android:layout_gravity="end"
-        style="@style/turquoise_background_and_white_text"/>
+        style="@style/small_button_turquoise_background_and_white_text"/>
 
 </LinearLayout>
