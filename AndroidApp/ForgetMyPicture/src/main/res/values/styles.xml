@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo.Light">
-    </style>
 
     <style name="basic_view_with_margin">
         <item name="android:layout_width">match_parent</item>
@@ -13,6 +10,7 @@
 
     <style name="button_turquoise_background_and_white_text" parent="basic_view_with_margin">
         <item name="android:textColor">@color/white</item>
+        <item name="android:layout_margin">5dp</item>
         <item name="android:textSize">20sp</item>
         <item name="android:background">@color/turquoise</item>
         <item name="android:textStyle">bold</item>
@@ -20,9 +18,8 @@
 
     <style name="small_button_turquoise_background_and_white_text">
         <item name="android:layout_margin">5dp</item>
-        <item name="android:padding">0dp</item>
         <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">15sp</item>
         <item name="android:background">@color/turquoise</item>
         <item name="android:textStyle">bold</item>
 

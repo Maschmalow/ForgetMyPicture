@@ -32,7 +32,7 @@ public abstract class DatabaseAdapter<T> extends BaseAdapter implements AdapterV
     private Map<String, Object> queryArgs = new ConcurrentHashMap<>();
     private int layoutItemId;
     private Util.Filter<T> filter;
-    private List<T> queriedItems;
+    private List<T> queriedItems = Collections.emptyList();
 
 
     public DatabaseAdapter(Class<T> tableClass, int layoutItemId) {

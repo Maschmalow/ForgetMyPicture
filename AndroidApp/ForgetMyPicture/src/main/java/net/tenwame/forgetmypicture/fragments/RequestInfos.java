@@ -91,6 +91,7 @@ public class RequestInfos extends ConventionFragment {
                         } catch (SQLException e) {
                             return; // TODO: 19/04/2016
                         }
+                        adapter.notifyDataSetChanged();
                         Toast.makeText(getContext(), R.string.request_infos_payed_toast, Toast.LENGTH_SHORT).show();
                     }
                 })
@@ -234,7 +235,9 @@ public class RequestInfos extends ConventionFragment {
                 });
 
             // TODO: 18/04/2016 Download server-side
-            ImageLoader.getInstance().displayImage(item.getPicURL(), (ImageView) itemView.findViewById(R.id.thumb));
+            ImageView thumb = (ImageView) itemView.findViewById(R.id.thumb);
+            thumb.setImageResource(android.R.drawable.ic_menu_rotate);
+            ImageLoader.getInstance().displayImage(item.getPicURL(), thumb);
 
         }
 

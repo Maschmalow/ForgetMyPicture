@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="horizontal"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="1dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
 
     <ImageView
         android:id="@+id/thumb"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
@@ -15,9 +19,23 @@
         android:maxWidth="70dp"
         android:contentDescription="@string/result_item_thumb_desc" />
 
+    <CheckBox
+        android:id="@+id/selected"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:checked="false"/>
+
 
     <LinearLayout
         android:orientation="vertical"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/thumb"
+        android:layout_toRightOf="@id/thumb"
+        android:layout_toStartOf="@id/selected"
+        android:layout_toLeftOf="@id/selected"
         android:layout_width="wrap_content"
         android:layout_height="match_parent">
 
@@ -37,10 +55,7 @@
 
     </LinearLayout>
 
-    <CheckBox
-        android:id="@+id/selected"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent" />
 
 
-</LinearLayout>
+</RelativeLayout>
+
