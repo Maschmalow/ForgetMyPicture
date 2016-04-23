@@ -185,7 +185,7 @@ public class Manager {
 
             if(ACTION_DO_UPDATE.equals(intent.getAction())) {
                 ServerInterface.execute(ServerInterface.ACTION_GET_INFO);
-                getInstance().resendResults();
+                //getInstance().resendResults();
             }
         }
     }

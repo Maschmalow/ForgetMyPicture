@@ -21,7 +21,7 @@ public class Result {
     @DatabaseField(canBeNull = false)
     private String pic_url;
 
-    @DatabaseField(defaultValue = "NULL")
+    @DatabaseField(canBeNull = false)
     private int pic_match;
 
     @DatabaseField(canBeNull = false)

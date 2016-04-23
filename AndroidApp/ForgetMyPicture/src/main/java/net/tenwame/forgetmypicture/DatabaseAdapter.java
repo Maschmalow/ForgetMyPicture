@@ -14,6 +14,7 @@ import com.j256.ormlite.dao.Dao;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -31,7 +32,7 @@ public abstract class DatabaseAdapter<T> extends BaseAdapter implements AdapterV
     private Map<String, Object> queryArgs = new ConcurrentHashMap<>();
     private int layoutItemId;
     private Util.Filter<T> filter;
-    private List<T> queriedItems = new ArrayList<>();
+    private List<T> queriedItems = Collections.synchronizedList(new ArrayList<T>());
 
 
     public DatabaseAdapter(Class<T> tableClass, int layoutItemId) {

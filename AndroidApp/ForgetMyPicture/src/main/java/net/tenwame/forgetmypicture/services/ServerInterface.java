@@ -154,6 +154,8 @@ public class ServerInterface extends NetworkService {
 
             for(String resultId : params.getStringArrayList(EXTRA_RESULTS_KEY))
                 results.add(ForgetMyPictureApp.getHelper().getResultDao().queryForId(resultId));
+            if(results.isEmpty())
+                return;
 
             Connection connection = Jsoup.connect(BASE_URL + FEED_URL)
                     .data("deviceId", UserData.getDeviceId())

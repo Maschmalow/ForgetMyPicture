@@ -118,8 +118,9 @@ public class Searcher extends NetworkService{
             }
         }
 
-        if(results.isEmpty())
-            throw new RuntimeException("No results found");
+        if(results.isEmpty()) {
+            Log.w(TAG, "No results");
+        }
 
         Log.d(TAG, "Parsed: " + results.size() + " results.");
         return results;
@@ -127,7 +128,7 @@ public class Searcher extends NetworkService{
 
 
     private void setCurUserAgent() { //TODO: check what is really needed here
-        userAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1";
+        userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.75.14 (KHTML, like Gecko) Version/7.0.3 Safari/7046A194A";
     }
 
 

@@ -7,6 +7,7 @@ import android.net.NetworkInfo;
 
 import com.crittercism.app.Crittercism;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
@@ -23,7 +24,9 @@ public class ForgetMyPictureApp extends Application {
     public void onCreate() {
         super.onCreate();
         context = getApplicationContext();
-        ImageLoader.getInstance().init(new ImageLoaderConfiguration.Builder(this).build());
+        ImageLoader.getInstance().init(new ImageLoaderConfiguration.Builder(this).defaultDisplayImageOptions(
+                new DisplayImageOptions.Builder().showImageOnFail(android.R.drawable.ic_menu_rotate).build()
+        ).build());
         Crittercism.initialize(context, "f540f2393bac4199bd54307a928e1a0a00444503");
         Crittercism.setUsername(UserData.getDeviceId());
         helper = OpenHelperManager.getHelper(context, DatabaseHelper.class);

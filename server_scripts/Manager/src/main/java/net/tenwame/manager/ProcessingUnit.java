@@ -30,7 +30,7 @@ import java.util.logging.Logger;
  */
 class ProcessingUnit implements Runnable {
     private static final Logger logger = Logger.getLogger(ProcessingUnit.class.getName());
-    private static final String FR_PATH = System.getenv("MANAGER_PATH") + "FR/Recognize";
+    private static final String FR_PATH = System.getenv("MANAGER_PATH") + "FR/Recognizer";
     private static final String IC_PATH = System.getenv("MANAGER_PATH") + "IC/recognize";
     private static final String BASE_FILES_PATH = System.getenv("BASE_FILES_PATH");
 
@@ -57,9 +57,9 @@ class ProcessingUnit implements Runnable {
         Request request = result.getRequest();
         User user = request.getUser();
 
+
         String dst = BASE_FILES_PATH + user.getDeviceId() + "_" +
-                request.getId() + "_" + UUID.randomUUID() +
-                result.getPicURL().substring(0,result.getPicURL().lastIndexOf('.'));
+                request.getId() + "_" + UUID.randomUUID();
         savePic(result.getPicURL(), dst);
         String picTmpPath = convertPic(dst);
 
@@ -79,18 +79,25 @@ class ProcessingUnit implements Runnable {
         args.add(BASE_FILES_PATH + "error_log_" + new SimpleDateFormat("dd.MM.yyyy_HH.mm.ss.SS").format(Calendar.getInstance().getTime()));
 
         try {
-            logger.log(Level.INFO, "Starting process...");
+            logger.log(Level.INFO, "Starting process" + args.toString());
             Process proc = new ProcessBuilder(args).redirectErrorStream(true).start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-            result.setMatch(Integer.parseInt(reader.readLine()));
-            Main.getResultDao().update(result);
             proc.waitFor();
-            Files.delete(Paths.get(picTmpPath));
-        } catch (IOException | InterruptedException e) {
-            logger.log(Level.SEVERE, "Could not process result " + result.getPicURL());
-            throw new RuntimeException(e);
-        }
+            String ret = reader.readLine();
+            logger.log(Level.INFO, ret);
+            result.setMatch(Integer.parseInt(ret));
+            Main.getResultDao().update(result);
 
+        } catch (IOException | InterruptedException e) {
+            logger.log(Level.SEVERE, "Could not process result " + result.getPicURL(), e);
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                Files.delete(Paths.get(picTmpPath));
+            } catch (IOException e) {
+                logger.log(Level.WARNING, "Could not delete tmp file" + picTmpPath, e);
+            }
+        }
     }
 
     private static void savePic(String url, String dst) {
@@ -102,7 +109,7 @@ class ProcessingUnit implements Runnable {
     }
 
     private static String convertPic(String path) {
-        String convertedPath = path.substring(0, path.lastIndexOf('.')) + "ppm";
+        String convertedPath = path + ".ppm";
         try {
             new ConvertCmd().run(new IMOperation().addImage().addImage(), path, convertedPath);
             Files.delete(Paths.get(path));

@@ -9,6 +9,7 @@ import net.tenwame.manager.database.Result;
 import net.tenwame.manager.database.Selfie;
 import net.tenwame.manager.database.User;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
@@ -36,10 +37,15 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         source = new JdbcPooledConnectionSource(DB_PATH, USERNAME, PASSWORD);
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                source.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }));
 
         new Main().run();
-
-        source.close();
     }
 
 
@@ -53,9 +59,12 @@ public class Main {
         selfieDao = DaoManager.createDao(source, Selfie.class);
     }
 
-    private void run() { //checks for new jobs and runs them
+    private void run() throws SQLException { //checks for new jobs and runs them
         logger.log(Level.INFO, "Server started.");
+        logger.log(Level.INFO, String.valueOf(getResultDao().queryForAll().size()));
+
         ExecutorService pool = Executors.newFixedThreadPool(NB_WORKERS);
+        Runtime.getRuntime().addShutdownHook(new Thread(pool::shutdownNow));
         Set<Result> processingResults = new HashSet<>();
 
         while( true ) {
@@ -70,8 +79,8 @@ public class Main {
                     processingResults.remove(r);
             }
 
-            for(Result result : resultDao) {
-                if(!result.isProcessed() && !processingResults.contains(result)) {
+            for(Result result : resultDao.queryForEq("pic_match", -1)) {
+                if(!processingResults.contains(result)) {
                     logger.log(Level.INFO, "New result is being processed.");
                     pool.execute(new ProcessingUnit(result));
                     processingResults.add(result);
