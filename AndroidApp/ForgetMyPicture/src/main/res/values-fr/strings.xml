@@ -43,61 +43,61 @@
     <string name="request_panel_activity_name">Requests Panel</string>
     <!-- requests_list fragment -->
     <string name="requests_list_title">Vos requêtes :</string>
-    <string name="requests_list_no_requests">No requests</string>
-    <string name="request_item_processed">%d%% processed</string>
-    <string name="request_item_fetched">%d%% fetched</string>
-    <string name="request_item_results">- %d results</string>
-    <string name="request_item_id">%1$s search No. %2$d</string>
+    <string name="requests_list_no_requests">Aucune requête</string>
+    <string name="request_item_processed">%d%% traitées</string>
+    <string name="request_item_fetched">%d%% récupérées</string>
+    <string name="request_item_results">- %d resultats</string>
+    <string name="request_item_id">%1$s Recherche n° %2$d</string>
     <!-- request_infos fragment -->
-    <string name="request_infos_title">%1$s search No. %2$d</string>
-    <string name="request_infos_status">Status : %s</string>
-    <string name="request_infos_stats">Stats: Aprox. %1$d/%2$d pictures fetched, %3$d results processed</string>
-    <string name="request_infos_motive">Motive : %s</string>
-    <string name="request_infos_keywords">Keywords: %s</string>
-    <string name="request_infos_no_results">No results yet</string>
-    <string name="request_infos_send_email_btn">Send e-mail</string>
-    <string name="request_infos_fill_form_btn">Fill form</string>
-    <string name="request_infos_pay_before_check">You have to unlock this request to see pictures origin and to remove them</string>
-    <string name="request_infos_pay_btn">Pay</string>
-    <string name="request_infos_payed_toast">Thank you for your purchase</string>
-    <string name="request_infos_pay_title">Unlock advanced features to continue</string>
-    <string name="request_infos_form_sent">Google Form filled and sent !</string>
-    <string name="request_infos_email_sent">E-mail sent !</string>
+    <string name="request_infos_title">%1$s Recherche n° %2$d</string>
+    <string name="request_infos_status">Etat : %s</string>
+    <string name="request_infos_stats">Stats: Aprox. %1$d/%2$d images récupérées, %3$d résultats traités</string>
+    <string name="request_infos_motive">Motif : %s</string>
+    <string name="request_infos_keywords">Mots-clefs: %s</string>
+    <string name="request_infos_no_results">Aucun résultat pour l'instant</string>
+    <string name="request_infos_send_email_btn">Envoyer mail</string>
+    <string name="request_infos_fill_form_btn">Remplir formulaire</string>
+    <string name="request_infos_pay_before_check">Vous devez déverrouiller cette requête pour pouvoir voir l'origine des photos et les supprimer</string>
+    <string name="request_infos_pay_btn">Payer</string>
+    <string name="request_infos_payed_toast">Merci de votre achat</string>
+    <string name="request_infos_pay_title">Déverrouillez les fonctionnalités avancées pour continuer</string>
+    <string name="request_infos_form_sent">Google Form rempli et envoyé!</string>
+    <string name="request_infos_email_sent">Mail envoyé!</string>
     <string-array name="result_item_match">
-        <item>%d%% match</item>
-        <item>Not processed yet</item>
+        <item>%d%% concordent</item>
+        <item>Pas encore traités</item>
     </string-array>
     <string name="result_item_pic_ref_url">Site: %s</string>
-    <string name="result_item_thumb_desc">Matched picture</string>
+    <string name="result_item_thumb_desc">Photo concordante</string>
 
     <!-- settings activity -->
-    <string name="settings_activity_name">Settings</string>
-    <string name="settings_data_on_wifi">Data on Wi-fi only</string>
-    <string name="settings_data_on_wifi_sum">Enable networking only when connected to Wi-fi networks</string>
-    <string name="settings_wipe">Wipe all data</string>
-    <string name="settings_wipe_btn">Wipe</string>
-    <string name="settings_wipe_warning">WARNING : This will erase all your data from the app and our server.\nProceed with caution.</string>
-    <string name="settings_wipe_toast">Data wiped</string>
-    <string name="settings_offline_mode">Offline mode</string>
-    <string name="settings_offline_mode_sum">Prevent this app from using network resources</string>
-    <string name="settings_match_threshold">Match threshold</string>
+    <string name="settings_activity_name">Paramètres</string>
+    <string name="settings_data_on_wifi">Données seulement par WI-fi</string>
+    <string name="settings_data_on_wifi_sum">Utiliser le réseau uniquement si connecté à un réseau Wi-fi</string>
+    <string name="settings_wipe">Supprimer toutes les données</string>
+    <string name="settings_wipe_btn">Supprimer</string>
+    <string name="settings_wipe_warning">ATTENTION : toutes vos données seront effacées de l'application et de notre serveur.\nProceed with caution.</string>
+    <string name="settings_wipe_toast">Suppression des données effectuée</string>
+    <string name="settings_offline_mode">Mode hors-ligne</string>
+    <string name="settings_offline_mode_sum">Empêcher l'application d'utiliser le réseau</string>
+    <string name="settings_match_threshold">Seuil de concordance</string>
     <string-array name="settings_match_threshold_sum">
-        <item>We will only show you pictures we are %d%% sure you are on it</item>
-        <item>All pictures will be shown, even if you are not on it</item>
+        <item>Nous vous montrerons seulement les images où nous sommes sûrs à %d%% que vous êtes dessus</item>
+        <item>Toutes les images seront montrées même si vous n'êtes pas dessus</item>
     </string-array>
 
     <!-- enums values display -->
-    <string name="enum_request_status_fetching">Fetching</string>
-    <string name="enum_request_status_processing">Processing</string>
-    <string name="enum_request_status_pending">Pending</string>
-    <string name="enum_request_status_finished">Finished</string>
-    <string name="enum_request_status_payed">Unlocked</string>
-    <string name="enum_request_kind_quick">Quick</string>
+    <string name="enum_request_status_fetching">En cours de récupération des images</string>
+    <string name="enum_request_status_processing">En cours de traitement</string>
+    <string name="enum_request_status_pending">En attente</string>
+    <string name="enum_request_status_finished">Terminé</string>
+    <string name="enum_request_status_payed">Déverrouillé</string>
+    <string name="enum_request_kind_quick">Rapide</string>
     <string name="enum_request_kind_exhaustive">Exhaustive</string>
 
     <!-- misc -->
-    <string name="cancel">Cancel</string>
-    <string name="ask_continue">Continue ?</string>
+    <string name="cancel">Annuler</string>
+    <string name="ask_continue">Continuer?</string>
 
     <!-- conditions -->
     <string name="conditions">When using the dereferencing and deletion service, I certify that I have read and accepted the following conditions:\n1- I certify that  the personal information I used to identify myself is true and correct and I accept any liability whatsoever concerning the given information.\n2- During the 14 days following the begining of the deletion and the dereferencing procedure, I authorize and mandate ForgetMyPicture to fill in the Google form for dereferencing requests https://support.google.com/legal/contact/lr_eudpa?product=websearch&hl=en and send it designating me as the requester and using my personal information.\n3- During the 14 days following the beginning of the deletion and the dereferencing procedure, I authorize and mandate ForgetMyPicture to email website host administrators for deletion requests using the warning mail available here [link to the email].\n4- For all the photos that I have selected, I certify that I am the one who launched the deletion and dereferencing procedure and I also accept to be considered as fully responsible of deleting or dereferencing these images.</string>
