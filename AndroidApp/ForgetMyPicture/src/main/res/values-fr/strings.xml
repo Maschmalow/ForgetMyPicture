@@ -1,48 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_full_name">ForgetMyPicture</string>
     <string name="open_helper_classname">DatabaseHelper</string>
 
 
     <!-- search activity -->
-    <string name="search_activity_name">Start a new request</string>
-    <string name="search_title">Please enter keywords:</string>
-    <string name="search_setup_data_toast">Please set up your data before starting a new Search</string>
-    <string name="search_keywords_send_btn">Send</string>
-    <string name="search_keywords_hint">Enter keywords here</string>
-    <string name="search_started_toast">Search started</string>
-    <string name="search_failed_toast">Failed to create search</string>
-    <string name="search_kind_checkbox">Quick search</string>
-    <string name="search_select_original_pic">Select picture</string>
-    <string name="search_no_picture_selected">No Picture selected</string>
+    <string name="search_activity_name">Commencer une nouvelle requête</string>
+    <string name="search_title">Ecrivez les mots-clefs svp :</string>
+    <string name="search_setup_data_toast">Mettez à jour vos données avant de commencer la recherche svp</string>
+    <string name="search_keywords_send_btn">Envoyer</string>
+    <string name="search_keywords_hint">Ecrivez les mots-clefs ici</string>
+    <string name="search_started_toast">Recherche lancée</string>
+    <string name="search_failed_toast">Echec du lancement de la recherche</string>
+    <string name="search_kind_checkbox">Recherche rapide</string>
+    <string name="search_select_original_pic">Sélectionnez une image</string>
+    <string name="search_no_picture_selected">Aucune image sélectionnée</string>
 
     <!-- user_set_up activity -->
-    <string name="user_setup_activity_name">Set up your data</string>
-    <string name="user_setup_title">Please fill in this form:</string>
-    <string name="user_setup_name">Family name:</string>
-    <string name="user_setup_forename">First name:</string>
-    <string name="user_setup_email">E-mail address:</string>
-    <string name="user_setup_selfie">Please take a selfie:</string>
-    <string name="user_setup_idcard">Please take a picture of your ID card:</string>
-    <string name="user_setup_save_btn">Save</string>
-    <string name="user_setup_save_toast">Saved</string>
-    <string name="user_setup_save_failed_toast">Failed to save data. Please retry later.</string>
-    <string name="user_setup_invalid_toast">Invalid data entered.</string>
-    <string name="user_setup_take_pic">Take</string>
-    <string name="user_setup_selfie_desc">Selfie thumbnail</string>
-    <string name="user_setup_idcard_desc">ID card picture thumbnail</string>
+    <string name="user_setup_activity_name">Mettez à jour vos données</string>
+    <string name="user_setup_title">Remplissez ce formulaire svp :</string>
+    <string name="user_setup_name">Nom de famille :</string>
+    <string name="user_setup_forename">Prénom :</string>
+    <string name="user_setup_email">Adresse mail :</string>
+    <string name="user_setup_selfie">Prenez un selfie svp :</string>
+    <string name="user_setup_idcard">Prenez une photo de votre pièce d'identité svp :</string>
+    <string name="user_setup_save_btn">Sauvegarder</string>
+    <string name="user_setup_save_toast">Sauvegarde effectuée</string>
+    <string name="user_setup_save_failed_toast">Echec de la sauvegarde de vos données. Récommencez plus tard svp.</string>
+    <string name="user_setup_invalid_toast">Données écrites invalides.</string>
+    <string name="user_setup_take_pic">Prendre</string>
+    <string name="user_setup_selfie_desc">Miniature du selfie</string>
+    <string name="user_setup_idcard_desc">Miniature de votre pièce d'identité</string>
 
     <!-- homepage activity -->
     <string name="homepage_activity_name">ForgetMyPicture</string>
-    <string name="homepage_new_request">Start a new request</string>
-    <string name="homepage_requests_panel">My requests</string>
-    <string name="homepage_menu_account">My account</string>
-    <string name="homepage_menu_settings">Settings</string>
+    <string name="homepage_new_request">Commencer une nouvelle requête</string>
+    <string name="homepage_requests_panel">Mes requêtes</string>
+    <string name="homepage_menu_account">Mon compte</string>
+    <string name="homepage_menu_settings">Paramètres</string>
 
     <!-- request_panel activity -->
     <string name="request_panel_activity_name">Requests Panel</string>
     <!-- requests_list fragment -->
-    <string name="requests_list_title">Your requests:</string>
-    <string name="requests_list_no_requests">No request</string>
+    <string name="requests_list_title">Vos requêtes :</string>
+    <string name="requests_list_no_requests">No requests</string>
     <string name="request_item_processed">%d%% processed</string>
     <string name="request_item_fetched">%d%% fetched</string>
     <string name="request_item_results">- %d results</string>
@@ -53,7 +54,7 @@
     <string name="request_infos_stats">Stats: Aprox. %1$d/%2$d pictures fetched, %3$d results processed</string>
     <string name="request_infos_motive">Motive : %s</string>
     <string name="request_infos_keywords">Keywords: %s</string>
-    <string name="request_infos_no_results">No result yet</string>
+    <string name="request_infos_no_results">No results yet</string>
     <string name="request_infos_send_email_btn">Send e-mail</string>
     <string name="request_infos_fill_form_btn">Fill form</string>
     <string name="request_infos_pay_before_check">You have to unlock this request to see pictures origin and to remove them</string>
