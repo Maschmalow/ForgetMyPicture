@@ -23,14 +23,14 @@
     <string name="user_setup_forename">Prénom :</string>
     <string name="user_setup_email">Adresse mail :</string>
     <string name="user_setup_selfie">Prenez un selfie svp :</string>
-    <string name="user_setup_idcard">Prenez une photo de votre pièce d'identité svp :</string>
+    <string name="user_setup_idcard">Prenez une photo de votre pièce d\'identité svp :</string>
     <string name="user_setup_save_btn">Sauvegarder</string>
     <string name="user_setup_save_toast">Sauvegarde effectuée</string>
     <string name="user_setup_save_failed_toast">Echec de la sauvegarde de vos données. Récommencez plus tard svp.</string>
     <string name="user_setup_invalid_toast">Données écrites invalides.</string>
     <string name="user_setup_take_pic">Prendre</string>
     <string name="user_setup_selfie_desc">Miniature du selfie</string>
-    <string name="user_setup_idcard_desc">Miniature de votre pièce d'identité</string>
+    <string name="user_setup_idcard_desc">Miniature de votre pièce d\'identité</string>
 
     <!-- homepage activity -->
     <string name="homepage_activity_name">ForgetMyPicture</string>
@@ -54,10 +54,10 @@
     <string name="request_infos_stats">Stats: Aprox. %1$d/%2$d images récupérées, %3$d résultats traités</string>
     <string name="request_infos_motive">Motif : %s</string>
     <string name="request_infos_keywords">Mots-clefs: %s</string>
-    <string name="request_infos_no_results">Aucun résultat pour l'instant</string>
+    <string name="request_infos_no_results">Aucun résultat pour l\'instant</string>
     <string name="request_infos_send_email_btn">Envoyer mail</string>
     <string name="request_infos_fill_form_btn">Remplir formulaire</string>
-    <string name="request_infos_pay_before_check">Vous devez déverrouiller cette requête pour pouvoir voir l'origine des photos et les supprimer</string>
+    <string name="request_infos_pay_before_check">Vous devez déverrouiller cette requête pour pouvoir voir l\'origine des photos et les supprimer</string>
     <string name="request_infos_pay_btn">Payer</string>
     <string name="request_infos_payed_toast">Merci de votre achat</string>
     <string name="request_infos_pay_title">Déverrouillez les fonctionnalités avancées pour continuer</string>
@@ -76,14 +76,14 @@
     <string name="settings_data_on_wifi_sum">Utiliser le réseau uniquement si connecté à un réseau Wi-fi</string>
     <string name="settings_wipe">Supprimer toutes les données</string>
     <string name="settings_wipe_btn">Supprimer</string>
-    <string name="settings_wipe_warning">ATTENTION : toutes vos données seront effacées de l'application et de notre serveur.\nProceed with caution.</string>
+    <string name="settings_wipe_warning">ATTENTION : toutes vos données seront effacées de l\'application et de notre serveur.\nProceed with caution.</string>
     <string name="settings_wipe_toast">Suppression des données effectuée</string>
     <string name="settings_offline_mode">Mode hors-ligne</string>
-    <string name="settings_offline_mode_sum">Empêcher l'application d'utiliser le réseau</string>
+    <string name="settings_offline_mode_sum">Empêcher l\'application d\'utiliser le réseau</string>
     <string name="settings_match_threshold">Seuil de concordance</string>
     <string-array name="settings_match_threshold_sum">
         <item>Nous vous montrerons seulement les images où nous sommes sûrs à %d%% que vous êtes dessus</item>
-        <item>Toutes les images seront montrées même si vous n'êtes pas dessus</item>
+        <item>Toutes les images seront montrées même si vous n\'êtes pas dessus</item>
     </string-array>
 
     <!-- enums values display -->
@@ -100,7 +100,7 @@
     <string name="ask_continue">Continuer?</string>
 
     <!-- conditions -->
-    <string name="conditions">When using the dereferencing and deletion service, I certify that I have read and accepted the following conditions:\n1- I certify that  the personal information I used to identify myself is true and correct and I accept any liability whatsoever concerning the given information.\n2- During the 14 days following the begining of the deletion and the dereferencing procedure, I authorize and mandate ForgetMyPicture to fill in the Google form for dereferencing requests https://support.google.com/legal/contact/lr_eudpa?product=websearch&hl=en and send it designating me as the requester and using my personal information.\n3- During the 14 days following the beginning of the deletion and the dereferencing procedure, I authorize and mandate ForgetMyPicture to email website host administrators for deletion requests using the warning mail available here [link to the email].\n4- For all the photos that I have selected, I certify that I am the one who launched the deletion and dereferencing procedure and I also accept to be considered as fully responsible of deleting or dereferencing these images.</string>
-    <string name="cancel">Dear Sir or Madam,\n\n\nOn your Internet domain, I have found a detrimental photo of myself, which breaches my rights and my image. I would like to draw your attention to this situation.\n\nIndeed, under Article 16 (ex Article 286 TEC) Title II of the Treaty on European Union and the Treaty on the Functioning of the European Union, and the Data Protection Act, I request that the photo be deleted [Photo URL] of your Internet domain.\n\nWithin two months, you have to respond to my request. Please contact me at the following email address [your e-mail address].\n\nI should like also to remind you that, under the Data Protection Act, if an individual suffers damage, they are entitled to claim compensation from you.\n\nIn the absence of action from you, I shall be compelled to take legal action by exercising later my right to object\n\nThanking you in advance for your diligence,\n\nYours faithfully,\n\n[your first name] [your family name]</string>
+    <string name="conditions">When using the dereferencing and deletion service, I certify that I have read and accepted the following conditions:\n1- I certify that  the personal information I used to identify myself is true and correct and I accept any liability whatsoever concerning the given information.\n2- During the 14 days following the begining of the deletion and the dereferencing procedure, I authorize and mandate ForgetMyPicture to fill in the Google form for dereferencing requests https://support.google.com/legal/contact/lr_eudpa?product=websearch&amp;hl=en and send it designating me as the requester and using my personal information.\n3- During the 14 days following the beginning of the deletion and the dereferencing procedure, I authorize and mandate ForgetMyPicture to email website host administrators for deletion requests using the warning mail available here [link to the email].\n4- For all the photos that I have selected, I certify that I am the one who launched the deletion and dereferencing procedure and I also accept to be considered as fully responsible of deleting or dereferencing these images.</string>
+    <string name="email">Dear Sir or Madam,\n\n\nOn your Internet domain, I have found a detrimental photo of myself, which breaches my rights and my image. I would like to draw your attention to this situation.\n\nIndeed, under Article 16 (ex Article 286 TEC) Title II of the Treaty on European Union and the Treaty on the Functioning of the European Union, and the Data Protection Act, I request that the photo be deleted [Photo URL] of your Internet domain.\n\nWithin two months, you have to respond to my request. Please contact me at the following email address [your e-mail address].\n\nI should like also to remind you that, under the Data Protection Act, if an individual suffers damage, they are entitled to claim compensation from you.\n\nIn the absence of action from you, I shall be compelled to take legal action by exercising later my right to object\n\nThanking you in advance for your diligence,\n\nYours faithfully,\n\n[your first name] [your family name]</string>
 
 </resources>

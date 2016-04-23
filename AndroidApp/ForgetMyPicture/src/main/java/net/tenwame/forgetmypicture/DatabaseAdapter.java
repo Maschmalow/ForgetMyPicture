@@ -32,7 +32,7 @@ public abstract class DatabaseAdapter<T> extends BaseAdapter implements AdapterV
     private Map<String, Object> queryArgs = new ConcurrentHashMap<>();
     private int layoutItemId;
     private Util.Filter<T> filter;
-    private List<T> queriedItems = Collections.synchronizedList(new ArrayList<T>());
+    private List<T> queriedItems;
 
 
     public DatabaseAdapter(Class<T> tableClass, int layoutItemId) {
@@ -42,12 +42,11 @@ public abstract class DatabaseAdapter<T> extends BaseAdapter implements AdapterV
     }
 
     public void loadData() {
-        queriedItems.clear();
         try {
             if(queryArgs.isEmpty())
-                queriedItems.addAll(dao.queryForAll());
+                queriedItems = Collections.synchronizedList(dao.queryForAll());
             else
-                queriedItems.addAll(dao.queryForFieldValuesArgs(queryArgs));
+                queriedItems = Collections.synchronizedList(dao.queryForFieldValuesArgs(queryArgs));
         } catch (SQLException e) { //data is empty so getView won't be called
             Log.e(TAG, "loadData: query failed", e);
             Crittercism.logHandledException(e);

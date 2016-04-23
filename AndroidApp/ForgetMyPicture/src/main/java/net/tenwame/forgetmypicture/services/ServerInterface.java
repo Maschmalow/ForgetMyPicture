@@ -195,7 +195,7 @@ public class ServerInterface extends NetworkService {
                         Log.w(TAG, "GetInfo: invalid result: " + resultURL + " (ignored)");
                         continue;
                     }
-                    result.setMatch(requestUpdate.getInt(resultURL));
+                    result.setMatch(Integer.parseInt(requestUpdate.getString(resultURL)));
                     helper.getResultDao().update(result);
                 }
 
