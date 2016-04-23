@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_weight="40"
+        android:background="@color/white"
+        style="@style/basic_view_with_margin"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_weight="40"
+            android:background="@color/white"
+            style="@style/basic_view_with_margin"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/logo"
+            android:layout_gravity="center_horizontal"/>
+
+        <TextView
+            android:layout_weight="40"
+            android:background="@color/white"
+            style="@style/basic_view_with_margin"/>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:layout_weight="20"
+                style="@style/button_turquoise_background_and_white_text"
+                android:onClick="startNewSearchFromUI"
+                android:text="@string/homepage_new_request"/>
+
+            <TextView
+                android:layout_weight="10"
+                android:background="@color/white"
+                style="@style/basic_view_with_margin"/>
+
+            <Button
+                android:layout_weight="20"
+                style="@style/button_turquoise_background_and_white_text"
+                android:onClick="goToRequestsFromUI"
+                android:text="@string/homepage_requests_panel"/>
+
+            <TextView
+                android:layout_weight="40"
+                android:background="@color/white"
+                style="@style/basic_view_with_margin"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_weight="40"
+            android:background="@color/white"
+            style="@style/basic_view_with_margin"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_weight="40"
+        android:background="@color/white"
+        style="@style/basic_view_with_margin"/>
+
+</LinearLayout>
