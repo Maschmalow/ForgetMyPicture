@@ -25,7 +25,11 @@ public class ForgetMyPictureApp extends Application {
         super.onCreate();
         context = getApplicationContext();
         ImageLoader.getInstance().init(new ImageLoaderConfiguration.Builder(this).defaultDisplayImageOptions(
-                new DisplayImageOptions.Builder().showImageOnFail(android.R.drawable.ic_menu_rotate).build()
+                new DisplayImageOptions.Builder()
+                        .showImageOnFail(android.R.drawable.ic_menu_rotate)
+                        .cacheInMemory(true)
+                        .cacheOnDisk(true)
+                        .build()
         ).build());
         Crittercism.initialize(context, "f540f2393bac4199bd54307a928e1a0a00444503");
         Crittercism.setUsername(UserData.getDeviceId());

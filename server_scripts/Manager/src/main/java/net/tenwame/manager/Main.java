@@ -3,6 +3,8 @@ package net.tenwame.manager;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
+import com.j256.ormlite.logger.LocalLog;
+import com.j256.ormlite.logger.LoggerFactory;
 import com.j256.ormlite.support.ConnectionSource;
 import net.tenwame.manager.database.Request;
 import net.tenwame.manager.database.Result;
@@ -36,6 +38,9 @@ public class Main {
     private Dao<Selfie, String> selfieDao;
 
     public static void main(String[] args) throws Exception {
+        System.setProperty(LoggerFactory.LOG_TYPE_SYSTEM_PROPERTY, "LOCAL");
+        System.setProperty(LocalLog.LOCAL_LOG_LEVEL_PROPERTY, "INFO");
+
         source = new JdbcPooledConnectionSource(DB_PATH, USERNAME, PASSWORD);
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
@@ -53,6 +58,7 @@ public class Main {
         if(source == null)
             throw new IllegalArgumentException("Source can't be null");
 
+        // eager init, and database scheme compatibility check
         userDao = DaoManager.createDao(source, User.class);
         requestDao = DaoManager.createDao(source, Request.class);
         resultDao = DaoManager.createDao(source, Result.class);

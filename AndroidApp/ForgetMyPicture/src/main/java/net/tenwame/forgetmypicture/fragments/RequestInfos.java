@@ -42,7 +42,9 @@ import java.util.Set;
  */
 public class RequestInfos extends ConventionFragment {
     private static final String TAG = RequestInfos.class.getName();
+
     private static final String REQUEST_ID_KEY = "REQUEST_ID_KEY";
+    private static final String PAY_DIALOG_KEY = "PAY_DIALOG_KEY";
 
     private Request request;
     private ResultsAdapter adapter = new ResultsAdapter();
@@ -169,6 +171,7 @@ public class RequestInfos extends ConventionFragment {
     public void onSaveInstanceState(Bundle outState) {
         if(request != null)
             outState.putInt(REQUEST_ID_KEY, request.getId());
+        outState.putBoolean(PAY_DIALOG_KEY, payDialog.isShowing());
         super.onSaveInstanceState(outState);
     }
 
@@ -184,6 +187,9 @@ public class RequestInfos extends ConventionFragment {
             Log.e(TAG, "onViewStateRestored: Could not retrieve request " + requestId, e);
             request = null;
         }
+
+        if(savedInstanceState.getBoolean(PAY_DIALOG_KEY, false))
+            payDialog.show();
     }
 
     public void setRequest(Request request) {
@@ -214,29 +220,32 @@ public class RequestInfos extends ConventionFragment {
             } catch (MalformedURLException ignored) { } //already checked in Searcher
             ((TextView) itemView.findViewById(R.id.pic_ref_url)).setText(res.getString(R.string.result_item_pic_ref_url, host));
 
+            CheckBox item_select = (CheckBox) itemView.findViewById(R.id.selected);
             if(request.getStatus() == Request.Status.FINISHED)
-                itemView.findViewById(R.id.selected).setVisibility(View.GONE);
-            else
-                ((CheckBox) itemView.findViewById(R.id.selected)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                item_select.setVisibility(View.GONE);
+            else {
+                item_select.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        if(request.getStatus() != Request.Status.PAYED && isChecked) {
+                        if (request.getStatus() != Request.Status.PAYED && isChecked) {
                             payDialog.show();
                             buttonView.setChecked(false);
                             return;
                         }
 
                         Log.d(TAG, "item " + item.getPicURL() + " selected: " + isChecked);
-                        if(isChecked)
+                        if (isChecked)
                             selected.add(item);
                         else
                             selected.remove(item);
                     }
                 });
+                item_select.setChecked(selected.contains(item));
+            }
 
             // TODO: 18/04/2016 Download server-side
             ImageView thumb = (ImageView) itemView.findViewById(R.id.thumb);
-            thumb.setImageResource(android.R.drawable.ic_menu_rotate);
+            //thumb.setImageResource(android.R.drawable.ic_menu_rotate);
             ImageLoader.getInstance().displayImage(item.getPicURL(), thumb);
 
         }

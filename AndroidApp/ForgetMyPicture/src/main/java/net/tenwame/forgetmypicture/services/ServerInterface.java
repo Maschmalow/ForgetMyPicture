@@ -16,6 +16,7 @@ import org.jsoup.Jsoup;
 
 import java.io.InputStream;
 import java.io.StringReader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -150,8 +151,8 @@ public class ServerInterface extends NetworkService {
         @Override
         public void handle(Bundle params) throws Exception {
             Request request = getRequest(params);
-            List<Result> results = new ArrayList<>();
 
+            List<Result> results = new ArrayList<>();
             for(String resultId : params.getStringArrayList(EXTRA_RESULTS_KEY))
                 results.add(ForgetMyPictureApp.getHelper().getResultDao().queryForId(resultId));
             if(results.isEmpty())
@@ -208,14 +209,30 @@ public class ServerInterface extends NetworkService {
     };
 
     private ActionHandler sendMail = new NetworkService.ActionHandler() {
+        @SuppressWarnings("ConstantConditions")
         @Override
         public void handle(Bundle params) throws Exception {
-            Request request = getRequest(params);
 
-            Jsoup.connect(BASE_URL + SEND_MAIL_URL)
-                    .data("deviceId", UserData.getDeviceId())
-                    .data("requestId", request.getId().toString())
-                    .get();
+            List<Result> results = new ArrayList<>();
+            for(String resultId : params.getStringArrayList(EXTRA_RESULTS_KEY))
+                results.add(ForgetMyPictureApp.getHelper().getResultDao().queryForId(resultId));
+            if(results.isEmpty())
+                return;
+
+            Set<String> hostURLs = new HashSet<>(results.size());
+            for(Result result : results) //remove duplicates
+                hostURLs.add(new URL(result.getPicRefURL()).getHost());
+
+            Connection connection = Jsoup.connect(BASE_URL + SEND_MAIL_URL)
+                    .data("deviceId", UserData.getDeviceId());
+
+            for(String host : hostURLs)
+                connection.data("host[]", host);
+
+            connection.post();
+
+            Log.d(TAG, "Mail sent (" + hostURLs.size() + " hosts");
+
         }
     };
 

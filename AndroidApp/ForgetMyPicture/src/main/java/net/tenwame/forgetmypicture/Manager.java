@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.crittercism.app.Crittercism;
@@ -55,16 +56,18 @@ public class Manager {
 
     private Manager() {
         setAlarms();
-        NetworkService.registerListener(ServerInterface.class, new NetworkService.ActionListener(ServerInterface.ACTION_FEED) {
+        NetworkService.registerListener(ServerInterface.class, new NetworkService.EmptyListener() {
             @Override
-            public void onFailed() {
-                shouldResent = true;
+            public void onActionFailed(@NonNull String action) {
+                if(action.equals(ServerInterface.ACTION_FEED))
+                    shouldResent = true;
             }
-        });
-        NetworkService.registerListener(ServerInterface.class, new NetworkService.ActionListener(ServerInterface.ACTION_GET_INFO) {
+
             @Override
-            public void onFinished() {
-                setAlarms();
+            public void onActionFinished(@NonNull String action) {
+                if(action.equals(ServerInterface.ACTION_GET_INFO) ||
+                        action.equals(ServerInterface.ACTION_NEW_REQUEST))
+                    setAlarms();
             }
         });
 
@@ -117,8 +120,17 @@ public class Manager {
 
     public void setAlarms() {
 
+        List<Request> requests = Collections.emptyList();
+        try {
+            requests = ForgetMyPictureApp.getHelper().getRequestDao().queryForAll();
+        } catch (SQLException e) {
+            Log.e(TAG, "Could not retrieve requests", e);
+            Crittercism.logHandledException(e);
+        }
+
+
         if(ForgetMyPictureApp.isNetworkAvailable() &&
-                !Util.applyFilter(UserData.getUser().getRequests(), new Util.Filter<Request>() {
+                !Util.applyFilter(requests, new Util.Filter<Request>() {
                     @Override
                     public boolean isAllowed(Request candidate) {
                         return !candidate.getStatus().isAfter(Request.Status.PAYED);

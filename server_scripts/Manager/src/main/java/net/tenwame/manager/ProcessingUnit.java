@@ -95,7 +95,7 @@ class ProcessingUnit implements Runnable {
             try {
                 Files.delete(Paths.get(picTmpPath));
             } catch (IOException e) {
-                logger.log(Level.WARNING, "Could not delete tmp file" + picTmpPath, e);
+                logger.log(Level.WARNING, "Could not delete converted file " + picTmpPath, e);
             }
         }
     }
@@ -112,10 +112,16 @@ class ProcessingUnit implements Runnable {
         String convertedPath = path + ".ppm";
         try {
             new ConvertCmd().run(new IMOperation().addImage().addImage(), path, convertedPath);
-            Files.delete(Paths.get(path));
         } catch (IOException | IM4JavaException | InterruptedException e) {
             throw new RuntimeException("Could not convert image", e);
+        } finally {
+            try {
+                Files.delete(Paths.get(path));
+            } catch (IOException e) {
+                logger.log(Level.WARNING, "Could not delete downloaded file " + path, e);
+            }
         }
+
         return convertedPath;
     }
 
