@@ -40,7 +40,7 @@
     <string name="homepage_menu_settings">Paramètres</string>
 
     <!-- request_panel activity -->
-    <string name="request_panel_activity_name">Requests Panel</string>
+    <string name="request_panel_activity_name">Récapitulatif des requêtes</string>
     <!-- requests_list fragment -->
     <string name="requests_list_title">Vos requêtes :</string>
     <string name="requests_list_no_requests">Aucune requête</string>
