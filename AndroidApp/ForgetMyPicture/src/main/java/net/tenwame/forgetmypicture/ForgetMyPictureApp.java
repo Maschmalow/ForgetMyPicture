@@ -26,7 +26,7 @@ public class ForgetMyPictureApp extends Application {
         context = getApplicationContext();
         ImageLoader.getInstance().init(new ImageLoaderConfiguration.Builder(this).defaultDisplayImageOptions(
                 new DisplayImageOptions.Builder()
-                        .showImageOnFail(android.R.drawable.ic_menu_rotate)
+                        .showImageOnFail(android.R.drawable.ic_delete)
                         .cacheInMemory(true)
                         .cacheOnDisk(true)
                         .build()

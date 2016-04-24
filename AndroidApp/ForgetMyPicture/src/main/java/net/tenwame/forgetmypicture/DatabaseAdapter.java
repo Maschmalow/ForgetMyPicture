@@ -51,11 +51,11 @@ public abstract class DatabaseAdapter<T> extends BaseAdapter implements AdapterV
             Log.e(TAG, "loadData: query failed", e);
             Crittercism.logHandledException(e);
         }
-        filter();
 
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
+                filter();
                 notifyDataSetChanged();
             }
         });
@@ -75,7 +75,12 @@ public abstract class DatabaseAdapter<T> extends BaseAdapter implements AdapterV
 
     public void setFilter(Util.Filter<T> filter) {
         this.filter = filter;
-        filter();
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                filter();
+            }
+        });
     }
 
     private void filter() {
