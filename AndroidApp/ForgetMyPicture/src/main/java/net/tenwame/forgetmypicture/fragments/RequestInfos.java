@@ -54,6 +54,7 @@ public class RequestInfos extends ConventionFragment {
     private DataSetObserver loader;
     private Set<Result> selected = new HashSet<>();
     private AlertDialog payDialog;
+    private AlertDialog userAgreement;
 
     //auto-retrieved views
     private TextView title;
@@ -102,6 +103,18 @@ public class RequestInfos extends ConventionFragment {
                 })
                 .setNeutralButton(R.string.cancel, null)
                 .setTitle(R.string.request_infos_pay_title)
+                .create();
+
+        userAgreement = new AlertDialog.Builder(getContext())
+                .setMessage(R.string.agreement)
+                .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .setNeutralButton(R.string.refuse, null)
+                .setTitle(R.string.agreement_title)
                 .create();
     }
 

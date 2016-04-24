@@ -15,6 +15,15 @@
     <string name="search_select_original_pic">Select picture</string>
     <string name="search_no_picture_selected">No Picture selected</string>
 
+    <!-- account activity -->
+    <string name="account_activity_name">My Account</string>
+    <string name="account_title">Your account :</string>
+    <string name="account_id_card">Your ID Card :</string>
+    <string name="account_name">Family name: %s</string>
+    <string name="account_forename">First name: %s</string>
+    <string name="account_email">E-mail: %s</string>
+    <string name="account_set_id_card">Set ID card</string>
+
     <!-- user_set_up activity -->
     <string name="user_setup_activity_name">Set up your data</string>
     <string name="user_setup_title">Please fill in this form:</string>
@@ -103,21 +112,18 @@
     <string name="save_btn">Save</string>
     <string name="saved_toast">Saved</string>
 
-    <!-- conditions -->
-    <string name="conditions">When using the dereferencing and deletion service, I certify that I have read and accepted the following conditions:\n1- I certify that  the personal information I used to identify myself is true and correct and I accept any liability whatsoever concerning the given information.\n2- During the 14 days following the beginning of the deletion and the dereferencing procedure, I authorize and mandate ForgetMyPicture to fill in the Google form for dereferencing requests https://support.google.com/legal/contact/lr_eudpa?product=websearch&amp;hl=en and send it designating me as the requester and using my personal information.\n3- During the 14 days following the beginning of the deletion and the dereferencing procedure, I authorize and mandate ForgetMyPicture to email website host administrators for deletion requests using the warning mail available here [link to the email].\n4- For all the photos that I have selected, I certify that I am the one who launched the deletion and dereferencing procedure and I also accept to be considered as fully responsible of deleting or dereferencing these images.</string>
+    <!-- agreement -->
+    <string name="agreement_title">User agreement</string>
+    <string name="agreement">When using the dereferencing and deletion service, I certify that I have read and accepted the following conditions:\n1- I certify that  the personal information I used to identify myself is true and correct and I accept any liability whatsoever concerning the given information.\n2- During the 14 days following the beginning of the deletion and the dereferencing procedure, I authorize and mandate ForgetMyPicture to fill in the Google form for dereferencing requests https://support.google.com/legal/contact/lr_eudpa?product=websearch&amp;hl=en and send it designating me as the requester and using my personal information.\n3- During the 14 days following the beginning of the deletion and the dereferencing procedure, I authorize and mandate ForgetMyPicture to email website host administrators for deletion requests using the warning mail available here [link to the email].\n4- For all the photos that I have selected, I certify that I am the one who launched the deletion and dereferencing procedure and I also accept to be considered as fully responsible of deleting or dereferencing these images.</string>
     <string name="email">Dear Sir or Madam,\n\n\nOn your Internet domain, I have found a detrimental photo of myself, which breaches my rights and my image. I would like to draw your attention to this situation.\n\nIndeed, under Article 16 (ex Article 286 TEC) Title II of the Treaty on European Union and the Treaty on the Functioning of the European Union, and the Data Protection Act, I request that the photo be deleted [Photo URL] of your Internet domain.\n\nWithin two months, you have to respond to my request. Please contact me at the following email address [your e-mail address].\n\nI should like also to remind you that, under the Data Protection Act, if an individual suffers damage, they are entitled to claim compensation from you.\n\nIn the absence of action from you, I shall be compelled to take legal action by exercising later my right to object\n\nThanking you in advance for your diligence,\n\nYours faithfully,\n\n[your first name] [your family name]</string>
+    <string name="accept">Accept</string>
+    <string name="refuse">Refuse</string>
 
     <!-- links -->
     <string name="info_link">If you want more information (especially if the application requests failed) about the dereferencing and deletion procedures, you can search on ICO\'s site https://ico.org.uk .</string>
     <string name="id_card_invalid_toast">Invalid ID card</string>
-    <string name="account_activity_name">My Account</string>
-    <string name="account_title">Your account :</string>
     <string name="edit_btn">Edit</string>
-    <string name="account_id_card">Your ID Card :</string>
-    <string name="account_name">Family name: %s</string>
-    <string name="account_forename">First name: %s</string>
-    <string name="account_email">E-mail: %s</string>
-    <string name="account_set_id_card">Set ID card</string>
+
 
 
 </resources>
