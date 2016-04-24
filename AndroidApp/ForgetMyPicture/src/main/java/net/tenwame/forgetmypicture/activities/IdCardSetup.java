@@ -10,6 +10,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -35,6 +36,7 @@ public class IdCardSetup extends Activity {
     private Bitmap idCard;
 
     private ImageView idCardThumb;
+    private Button saveButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,7 @@ public class IdCardSetup extends Activity {
         setContentView(R.layout.activity_id_card_setup);
 
         idCardThumb = (ImageView) findViewById(R.id.idcard_thumb);
+        saveButton = (Button) findViewById(R.id.save_btn);
     }
 
     public void takeIdCardFromUI(View v) {
@@ -96,6 +99,7 @@ public class IdCardSetup extends Activity {
 
         idCard = BitmapFactory.decodeFile(curIdCardPath);
         idCardThumb.setImageBitmap(idCard);
+        saveButton.setVisibility(View.VISIBLE);
     }
 
 

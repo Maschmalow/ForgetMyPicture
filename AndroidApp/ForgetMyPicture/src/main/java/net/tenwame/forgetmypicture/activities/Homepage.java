@@ -31,7 +31,7 @@ public class Homepage extends Activity {
         if(R.id.settings_btn == item.getItemId())
             startActivity(new Intent(this, Settings.class));
         else if(R.id.account_btn == item.getItemId())
-            startActivity(new Intent(this, UserSetup.class));
+            startActivity(new Intent(this, Account.class));
         else
             return super.onMenuItemSelected(featureId, item);
 

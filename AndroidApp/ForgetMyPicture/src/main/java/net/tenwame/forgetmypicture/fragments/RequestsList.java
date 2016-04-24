@@ -86,6 +86,8 @@ public class RequestsList extends ConventionFragment {
                 status.setTextColor(res.getColor(R.color.orange_light));
             if(item.getStatus() == Request.Status.PENDING)
                 status.setTextColor(res.getColor(R.color.green_light));
+            if(item.getStatus() == Request.Status.PAYED)
+                status.setTextColor(res.getColor(R.color.green_dark));
             if(item.getStatus() == Request.Status.FINISHED)
                 status.setTextColor(res.getColor(R.color.gray_dark));
             ((TextView) view.findViewById(R.id.id)).setText(res.getString(R.string.request_item_id, item.getKind().getString(res), item.getId()));

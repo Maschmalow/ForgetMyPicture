@@ -39,7 +39,7 @@
 
 
     <Button
-        android:id="@+id/save"
+        android:id="@+id/save_btn"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -51,7 +51,7 @@
     <ImageView
         android:id="@+id/idcard_thumb"
         android:layout_below="@id/content_layout"
-        android:layout_above="@id/save"
+        android:layout_above="@id/save_btn"
         android:adjustViewBounds="true"
         android:contentDescription="@string/id_card_setup_thumb_desc"
         android:layout_width="match_parent"

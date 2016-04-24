@@ -44,7 +44,7 @@ public class FormFiller extends NetworkService{
         public void handle(Bundle params) throws Exception {
             Request request = getRequest(params);
             //pending because the work isn't done unless we did fill the form
-            if(request.getStatus() != Request.Status.PENDING)
+            if(!request.getStatus().isAfter(Request.Status.PENDING))
                 throw new RuntimeException("Invalid request status: " + request.getStatus());
 
 
