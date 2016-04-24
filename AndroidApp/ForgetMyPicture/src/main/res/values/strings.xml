@@ -22,14 +22,15 @@
     <string name="user_setup_forename">First name:</string>
     <string name="user_setup_email">E-mail address:</string>
     <string name="user_setup_selfie">Please take a selfie:</string>
-    <string name="user_setup_idcard">Please take a picture of your ID card:</string>
-    <string name="user_setup_save_btn">Save</string>
-    <string name="user_setup_save_toast">Saved</string>
     <string name="user_setup_save_failed_toast">Failed to save data. Please retry later.</string>
     <string name="user_setup_invalid_toast">Invalid data entered.</string>
-    <string name="user_setup_take_pic">Take</string>
     <string name="user_setup_selfie_desc">Selfie thumbnail</string>
-    <string name="user_setup_idcard_desc">ID card picture thumbnail</string>
+
+    <!-- id_card_setup_activity -->
+    <string name="id_card_setup_activity_name">Adding an ID card</string>
+    <string name="id_card_setup_thumb_desc">ID card picture thumbnail</string>
+    <string name="id_card_setup_title">Please take a picture of your ID card</string>
+    <string name="id_card_setup_help">This picture will only be used to fill the dereferencing form.\nYou can hide any data irrelevant for identification.</string>
 
     <!-- homepage activity -->
     <string name="homepage_activity_name">ForgetMyPicture</string>
@@ -56,6 +57,7 @@
     <string name="request_infos_no_results">No result yet</string>
     <string name="request_infos_send_email_btn">Send e-mail</string>
     <string name="request_infos_fill_form_btn">Fill form</string>
+    <string name="request_infos_id_card_toast">Please add an ID card before continuing</string>
     <string name="request_infos_pay_before_check">You have to unlock this request to see pictures origin and to remove them</string>
     <string name="request_infos_pay_btn">Pay</string>
     <string name="request_infos_payed_toast">Thank you for your purchase</string>
@@ -97,6 +99,9 @@
     <!-- misc -->
     <string name="cancel">Cancel</string>
     <string name="ask_continue">Continue ?</string>
+    <string name="take_pic">Take</string>
+    <string name="save_btn">Save</string>
+    <string name="saved_toast">Saved</string>
 
     <!-- conditions -->
     <string name="conditions">When using the dereferencing and deletion service, I certify that I have read and accepted the following conditions:\n1- I certify that  the personal information I used to identify myself is true and correct and I accept any liability whatsoever concerning the given information.\n2- During the 14 days following the beginning of the deletion and the dereferencing procedure, I authorize and mandate ForgetMyPicture to fill in the Google form for dereferencing requests https://support.google.com/legal/contact/lr_eudpa?product=websearch&amp;hl=en and send it designating me as the requester and using my personal information.\n3- During the 14 days following the beginning of the deletion and the dereferencing procedure, I authorize and mandate ForgetMyPicture to email website host administrators for deletion requests using the warning mail available here [link to the email].\n4- For all the photos that I have selected, I certify that I am the one who launched the deletion and dereferencing procedure and I also accept to be considered as fully responsible of deleting or dereferencing these images.</string>
@@ -104,6 +109,8 @@
 
     <!-- links -->
     <string name="info_link">If you want more information (especially if the application requests failed) about the dereferencing and deletion procedures, you can search on ICO\'s site https://ico.org.uk .</string>
+    <string name="id_card_invalid_toast">Invalid ID card</string>
+
 
 
 </resources>

@@ -23,14 +23,16 @@
     <string name="user_setup_forename">Prénom :</string>
     <string name="user_setup_email">Adresse mail :</string>
     <string name="user_setup_selfie">Prenez un selfie svp :</string>
-    <string name="user_setup_idcard">Prenez une photo de votre pièce d\'identité svp :</string>
-    <string name="user_setup_save_btn">Sauvegarder</string>
-    <string name="user_setup_save_toast">Sauvegarde effectuée</string>
     <string name="user_setup_save_failed_toast">Echec de la sauvegarde de vos données. Récommencez plus tard svp.</string>
     <string name="user_setup_invalid_toast">Données écrites invalides.</string>
-    <string name="user_setup_take_pic">Prendre</string>
     <string name="user_setup_selfie_desc">Miniature du selfie</string>
     <string name="user_setup_idcard_desc">Miniature de votre pièce d\'identité</string>
+
+    <!-- id_card_setup_activity -->
+    <string name="id_card_setup_activity_name">Ajout d\'une carte d\'identité</string>
+    <string name="id_card_setup_thumb_desc">Miniature de la carte d\'identité</string>
+    <string name="id_card_setup_title">Prenez une photo de votre pièce d\'identité svp :</string>
+    <string name="id_card_setup_help">Cette photo ne sera utilisée uniquement à des fins de déréférencement.\nVous pouvez cachez n\'importe quelle information non nécéssaire à l\'identification.</string>
 
     <!-- homepage activity -->
     <string name="homepage_activity_name">ForgetMyPicture</string>
@@ -57,6 +59,7 @@
     <string name="request_infos_no_results">Aucun résultat pour l\'instant</string>
     <string name="request_infos_send_email_btn">Envoyer mail</string>
     <string name="request_infos_fill_form_btn">Remplir formulaire</string>
+    <string name="request_infos_id_card_toast">Veuillez ajouter votre photo d\'identité avant de continuer</string>
     <string name="request_infos_pay_before_check">Vous devez déverrouiller cette requête pour pouvoir voir l\'origine des photos et les supprimer</string>
     <string name="request_infos_pay_btn">Payer</string>
     <string name="request_infos_payed_toast">Merci de votre achat</string>
@@ -97,7 +100,10 @@
 
     <!-- misc -->
     <string name="cancel">Annuler</string>
-    <string name="ask_continue">Continuer?</string>
+    <string name="ask_continue">Continuer ?</string>
+    <string name="take_pic">Prendre</string>
+    <string name="save_btn">Sauvegarder</string>
+    <string name="saved_toast">Sauvegarde effectuée</string>
 
     <!-- conditions -->
     <string name="conditions">En utilisant le service de déréférencement et de suppression, je certifie avoir lu et approuvé les conditions suivantes :\n1- Je certifie que mes informations personnelles sont correctes et j\'accepte d\'en être tenu(e) pour responsable.\n2- Pendant les prochains 14 jours à compter du début de la procédure de déréférencement et de suppression, j\'autorise et mandate ForgetMyPicture à remplir et envoyer à ma place, notamment en me désignant comme le demandeur, et donc a fortiori avec mes informations personnelles le formulaire Google https://support.google.com/legal/contact/lr_eudpa?product=websearch&amp;hl=en pour les différentes requêtes de déréférencement.\n3- Pendant les prochains 14 jours à compter du début de la procédure de déréférencement et de suppression, j\'autorise et mandate ForgetMyPicture à envoyer aux responsables des sites hébergeurs pour les demandes de suppression le mail d\'avertissement disponible ici [mettre un lien vers le mail type].\n4- Pour les images que j\'ai sélectionnées, je certifie être à l\'origine des procédures de déréférencement et de suppression, et j\'accepte d\'être tenu(e) pour responsable du déréférencement et de la suppression de ces images.</string>
@@ -105,5 +111,7 @@
 
     <!-- links -->
     <string name="info_link">Si vous souhaitez des informations complémentaires (surtout en cas d\'échec des requêtes générées par l\'application) concernant les procédures de déréférencement et de suppression, vous pouvez consulter la CNIL avec les liens https://www.cnil.fr/fr/le-droit-au-dereferencement et https://www.cnil.fr/fr/demander-le-retrait-de-votre-image-en-ligne .</string>
+    <string name="id_card_invalid_toast">Invalid ID card</string>
+
 
 </resources>

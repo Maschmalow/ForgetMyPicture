@@ -2,6 +2,7 @@ package net.tenwame.forgetmypicture.fragments;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.database.DataSetObserver;
 import android.os.Bundle;
@@ -20,7 +21,9 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import net.tenwame.forgetmypicture.DatabaseAdapter;
 import net.tenwame.forgetmypicture.ForgetMyPictureApp;
 import net.tenwame.forgetmypicture.R;
+import net.tenwame.forgetmypicture.UserData;
 import net.tenwame.forgetmypicture.Util;
+import net.tenwame.forgetmypicture.activities.IdCardSetup;
 import net.tenwame.forgetmypicture.activities.Settings;
 import net.tenwame.forgetmypicture.database.Request;
 import net.tenwame.forgetmypicture.database.Result;
@@ -151,7 +154,12 @@ public class RequestInfos extends ConventionFragment {
             return;
         }
 
-        // TODO: 19/04/2016 status
+        if(UserData.getUser().getIdCard().get() == null) {
+            Toast.makeText(getContext(), R.string.request_infos_id_card_toast, Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getContext(), IdCardSetup.class));
+            return;
+        }
+
         FormFiller.execute(request);
         Toast.makeText(getContext(), R.string.request_infos_form_sent, Toast.LENGTH_SHORT).show();
     }
@@ -163,7 +171,7 @@ public class RequestInfos extends ConventionFragment {
         }
 
         // TODO: 19/04/2016 status
-        ServerInterface.execute(ServerInterface.ACTION_SEND_MAIL, request);
+        ServerInterface.execute(ServerInterface.ACTION_SEND_MAIL, null, selected);
         Toast.makeText(getContext(), R.string.request_infos_email_sent, Toast.LENGTH_SHORT).show();
     }
 
@@ -233,7 +241,6 @@ public class RequestInfos extends ConventionFragment {
                             return;
                         }
 
-                        Log.d(TAG, "item " + item.getPicURL() + " selected: " + isChecked);
                         if (isChecked)
                             selected.add(item);
                         else

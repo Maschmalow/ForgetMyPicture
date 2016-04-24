@@ -26,6 +26,10 @@
             android:label="@string/user_setup_activity_name">
         </activity>
         <activity
+            android:name=".activities.IdCardSetup"
+            android:label="@string/id_card_setup_activity_name">
+        </activity>
+        <activity
             android:name=".activities.Settings"
             android:label="@string/settings_activity_name">
         </activity>

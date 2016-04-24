@@ -93,7 +93,7 @@
                     <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/user_setup_take_pic"
+                        android:text="@string/take_pic"
                         android:id="@+id/take_selfie_btn"
                         android:onClick="takePictureFromUI"
                         style="@style/small_button_turquoise_background_and_white_text"/>
@@ -107,7 +107,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/user_setup_save_btn"
+        android:text="@string/save_btn"
         android:onClick="saveDataFromUI"
         android:layout_gravity="end"
         style="@style/small_button_turquoise_background_and_white_text"/>

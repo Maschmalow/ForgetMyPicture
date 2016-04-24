@@ -35,7 +35,7 @@ import java.util.UUID;
  * Activity that asks user information
  */
 public class UserSetup extends Activity {
-    private static final String TAG = UserSetup.class.getName();
+    private static final String TAG = UserSetup.class.getSimpleName();
 
     public static final String CUR_TMP_FILE_KEY = "CUR_TMP_FILE";
     private static final int REQUEST_SELFIE_PIC =1;
@@ -75,7 +75,7 @@ public class UserSetup extends Activity {
             finish();
         }
         ServerInterface.execute(ServerInterface.ACTION_REGISTER);
-        Toast.makeText(this, R.string.user_setup_save_toast, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.saved_toast, Toast.LENGTH_SHORT).show();
         setResult(RESULT_OK);
         finish();
     }
@@ -126,6 +126,7 @@ public class UserSetup extends Activity {
         thumbView.setAdjustViewBounds(true);
         thumbView.setMaxWidth(w);
         thumbView.setMaxHeight(h);
+        thumbView.setContentDescription(getResources().getString(R.string.user_setup_selfie_desc));
 
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inJustDecodeBounds = true;

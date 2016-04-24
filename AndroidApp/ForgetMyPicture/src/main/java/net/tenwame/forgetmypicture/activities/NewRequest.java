@@ -26,8 +26,8 @@ import java.util.Arrays;
 public class NewRequest extends Activity {
     private static final String TAG = NewRequest.class.getCanonicalName();
 
-    private static int SELECT_PICTURE = 1;
-    private static int REQUEST_USER_SETUP = 1;
+    private static final int SELECT_PICTURE = 1;
+    private static final int REQUEST_USER_SETUP = 1;
 
 
     private LinearLayout selectOriginalPic;
@@ -113,7 +113,7 @@ public class NewRequest extends Activity {
             originalPic = BitmapFactory.decodeFile(picturePath);
             originalPicPath.setText(picturePath);
         }
-        if(requestCode == REQUEST_USER_SETUP && resultCode == RESULT_CANCELED) {
+        if(requestCode == REQUEST_USER_SETUP && resultCode != RESULT_OK) {
             finish();
         }
 
