@@ -49,7 +49,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="20"
+            android:layout_weight="15"
             android:text="@string/request_infos_fill_form_btn"
             android:onClick="fillFormFromUI"
             style="@style/small_button_turquoise_background_and_white_text"/>

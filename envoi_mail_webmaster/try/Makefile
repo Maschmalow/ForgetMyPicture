@@ -8,7 +8,7 @@ test_parseur: Who_is Parseur
 	@sleep 1 # Need to wait a little because whois requests are rejected if it is too fast between two whois requests
 	@echo For the URL: http://fr.atos.net/fr-fr/accueil.html:
 	@./who_is http://fr.atos.net/fr-fr/accueil.html > adr_mail.txt
-	@./parseur adr_mail.txt client_email_adr@gmail.com first_name name URL_photo en
+	@./parseur adr_mail.txt client_email_adr@gmail.com first_name name URL_photo uk
 	@echo
 	@sleep 1
 	@echo For the URL: https://www.google.fr/:
@@ -18,7 +18,7 @@ test_parseur: Who_is Parseur
 	@sleep 1
 	@echo For the URL: http://www.bbc.co.uk/:
 	@./who_is http://www.bbc.co.uk/ > adr_mail.txt
-	@./parseur adr_mail.txt client_email_adr@gmail.com first_name name URL_photo en
+	@./parseur adr_mail.txt client_email_adr@gmail.com first_name name URL_photo uk
 	@echo
 	@sleep 1
 	@echo For the URL: https://www.legifrance.gouv.fr/Droit-francais:
@@ -33,7 +33,7 @@ test_parseur: Who_is Parseur
 	@sleep 1
 	@echo For the URL: https://fr.wikipedia.org/wiki/Wikip%C3%A9dia:Accueil_principal:
 	@./who_is https://fr.wikipedia.org/wiki/Wikip%C3%A9dia:Accueil_principal > adr_mail.txt
-	@./parseur adr_mail.txt client_email_adr@gmail.com first_name name URL_photo ed
+	@./parseur adr_mail.txt client_email_adr@gmail.com first_name name URL_photo uk
 
 test_who_is: Who_is
 # Need to wait a little between two tests

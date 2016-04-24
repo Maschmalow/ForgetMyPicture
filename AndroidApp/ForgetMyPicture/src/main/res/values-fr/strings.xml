@@ -41,7 +41,7 @@
     <string name="id_card_setup_activity_name">Ajout d\'une carte d\'identité</string>
     <string name="id_card_setup_thumb_desc">Miniature de la carte d\'identité</string>
     <string name="id_card_setup_title">Prenez une photo de votre pièce d\'identité svp :</string>
-    <string name="id_card_setup_help">Cette photo ne sera utilisée uniquement à des fins de déréférencement.\nVous pouvez cachez n\'importe quelle information non nécéssaire à l\'identification.</string>
+    <string name="id_card_setup_help">Cette photo sera utilisée uniquement pour la procédure de déréférencement via le remplissage du formulaire de déréférencement.\nVous pouvez cacher n\'importe quelle information non nécessaire à l\'identification.</string>
 
     <!-- homepage activity -->
     <string name="homepage_activity_name">ForgetMyPicture</string>
@@ -123,7 +123,7 @@
 
     <!-- links -->
     <string name="info_link">Si vous souhaitez des informations complémentaires (surtout en cas d\'échec des requêtes générées par l\'application) concernant les procédures de déréférencement et de suppression, vous pouvez consulter la CNIL avec les liens https://www.cnil.fr/fr/le-droit-au-dereferencement et https://www.cnil.fr/fr/demander-le-retrait-de-votre-image-en-ligne .</string>
-    <string name="id_card_invalid_toast">Invalid ID card</string>
+    <string name="id_card_invalid_toast">Pièce d'identité invalide</string>
     <string name="edit_btn">Editer</string>
 
 
