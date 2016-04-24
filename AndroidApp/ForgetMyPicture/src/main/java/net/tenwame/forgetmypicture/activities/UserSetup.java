@@ -3,14 +3,19 @@ package net.tenwame.forgetmypicture.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.crittercism.app.Crittercism;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import net.tenwame.forgetmypicture.DatabaseHelper;
@@ -18,9 +23,12 @@ import net.tenwame.forgetmypicture.R;
 import net.tenwame.forgetmypicture.UserData;
 import net.tenwame.forgetmypicture.services.ServerInterface;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.UUID;
 
 /**
  * Created by Antoine on 21/02/2016.
@@ -29,17 +37,17 @@ import java.util.Collection;
 public class UserSetup extends Activity {
     private static final String TAG = UserSetup.class.getName();
 
+    public static final String CUR_TMP_FILE_KEY = "CUR_TMP_FILE";
     private static final int REQUEST_SELFIE_PIC =1;
-    private static final int REQUEST_IDCARD_PIC =2;
 
-    private Bitmap idcardBitmap; //TODO: to be removed
-    private Collection<Bitmap> selfiesBitmaps = new ArrayList<>();
+    private Collection<String> selfiesPath = new ArrayList<>();
 
     private EditText nameField;
     private EditText forenameField;
     private EditText emailField;
-    private ImageView selfieThumb;
-    private ImageView idcardThumb;
+    private LinearLayout thumbHolder;
+
+    private String curTmpFilePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +57,11 @@ public class UserSetup extends Activity {
         nameField = (EditText) findViewById(R.id.name_field);
         forenameField = (EditText) findViewById(R.id.forename_field);
         emailField = (EditText) findViewById(R.id.email_field);
-        selfieThumb = (ImageView) findViewById(R.id.selfie_thumb);
-        idcardThumb = (ImageView) findViewById(R.id.idcard_thumb);
+        thumbHolder = (LinearLayout) findViewById(R.id.thumb_holder);
     }
 
     public void saveDataFromUI(View view) {
-        UserData.getUser().setup(emailField.getText().toString(), nameField.getText().toString(), forenameField.getText().toString(), idcardBitmap, selfiesBitmaps);
+        UserData.getUser().setup(emailField.getText().toString(), nameField.getText().toString(), forenameField.getText().toString(), selfiesPath);
         if(!UserData.getUser().isValid()) {
             Toast.makeText(this, R.string.user_setup_invalid_toast, Toast.LENGTH_SHORT).show();
             return;
@@ -79,30 +86,70 @@ public class UserSetup extends Activity {
         Intent picIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if(picIntent.resolveActivity(getPackageManager()) == null) {
             Log.e(TAG, "Could not find app to take picture");
+            Toast.makeText(this, "Could not find app to take picture", Toast.LENGTH_SHORT).show();
             return;
         }
-        int requestCode = 0;
-        if(view.getId() == R.id.take_selfie_btn)
-            requestCode = REQUEST_SELFIE_PIC;
-        if(view.getId() == R.id.take_idcard_btn)
-            requestCode = REQUEST_IDCARD_PIC;
 
+        File tmpFile;
+        try {
+            tmpFile = File.createTempFile(
+                    "selfie_" + UUID.randomUUID().toString(),
+                    ".jpg",
+                    getExternalFilesDir(Environment.DIRECTORY_PICTURES));
+        } catch (IOException e) {
+            Log.e(TAG, "Could not create temporary file for picture", e);
+            Crittercism.logHandledException(e);
+            return;
+        }
 
-        startActivityForResult(picIntent, requestCode);
+        curTmpFilePath = tmpFile.getAbsolutePath();
+        picIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(tmpFile));
+
+        startActivityForResult(picIntent, REQUEST_SELFIE_PIC);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode != RESULT_OK) return;
-        Bitmap thumb = (Bitmap) data.getExtras().get("data");
+        if(resultCode != RESULT_OK || requestCode != REQUEST_SELFIE_PIC)
+            return;
 
-        if(requestCode == REQUEST_SELFIE_PIC) {
-            selfiesBitmaps.add(thumb);
-            selfieThumb.setImageBitmap(thumb);
-        }
-        if(requestCode == REQUEST_IDCARD_PIC) {
-            idcardBitmap = thumb;
-            idcardThumb.setImageBitmap(thumb);
-        }
+        addSelfieThumb();
+        selfiesPath.add(curTmpFilePath);
+        curTmpFilePath = null;
+
+    }
+
+    private void addSelfieThumb() {
+        ImageView thumbView = new ImageView(this);
+        int w = getResources().getDimensionPixelSize(R.dimen.selfie_thumb_width);
+        int h = getResources().getDimensionPixelSize(R.dimen.selfie_thumb_height);
+        thumbView.setAdjustViewBounds(true);
+        thumbView.setMaxWidth(w);
+        thumbView.setMaxHeight(h);
+
+        BitmapFactory.Options opts = new BitmapFactory.Options();
+        opts.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(curTmpFilePath, opts);
+        opts.inJustDecodeBounds = false;
+        opts.inSampleSize = Math.min(opts.outWidth/w, opts.outHeight/h);
+
+        Bitmap pic = BitmapFactory.decodeFile(curTmpFilePath, opts);
+
+        thumbView.setImageBitmap(pic);
+        thumbHolder.addView(thumbView);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString(CUR_TMP_FILE_KEY, curTmpFilePath);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle state) {
+        super.onRestoreInstanceState(state);
+        if(state == null) return;
+
+        curTmpFilePath = state.getString(CUR_TMP_FILE_KEY);
     }
 }

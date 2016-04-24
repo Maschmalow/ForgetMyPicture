@@ -103,7 +103,7 @@
     <string name="email">Dear Sir or Madam,\n\n\nOn your Internet domain, I have found a detrimental photo of myself, which breaches my rights and my image. I would like to draw your attention to this situation.\n\nIndeed, under Article 16 (ex Article 286 TEC) Title II of the Treaty on European Union and the Treaty on the Functioning of the European Union, and the Data Protection Act, I request that the photo be deleted [Photo URL] of your Internet domain.\n\nWithin two months, you have to respond to my request. Please contact me at the following email address [your e-mail address].\n\nI should like also to remind you that, under the Data Protection Act, if an individual suffers damage, they are entitled to claim compensation from you.\n\nIn the absence of action from you, I shall be compelled to take legal action by exercising later my right to object\n\nThanking you in advance for your diligence,\n\nYours faithfully,\n\n[your first name] [your family name]</string>
 
     <!-- links -->
-    <string name="info_link">If you want more information (especially if the application requests failed) about the dereferencing and deletion procedures, you can search on ICO's site https://ico.org.uk .</string>
+    <string name="info_link">If you want more information (especially if the application requests failed) about the dereferencing and deletion procedures, you can search on ICO\'s site https://ico.org.uk .</string>
 
 
 </resources>

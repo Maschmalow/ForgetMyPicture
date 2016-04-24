@@ -29,12 +29,7 @@ public class UserData {
                     setUser();
             }
 
-        try {
-            ForgetMyPictureApp.getHelper().getUserDao().refresh(user);
-        } catch (SQLException e) {
-            Log.w(TAG, "Could not refresh user", e);
-            Crittercism.logHandledException(e);
-        }
+
         return user;
     }
 

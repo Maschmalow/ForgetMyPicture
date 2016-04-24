@@ -1,6 +1,7 @@
 package net.tenwame.forgetmypicture.database;
 
-import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
@@ -9,6 +10,7 @@ import com.j256.ormlite.table.DatabaseTable;
 
 import net.tenwame.forgetmypicture.PictureAccess;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -20,6 +22,7 @@ import java.util.UUID;
 
 @DatabaseTable(tableName = "user")
 public class User {
+    private static final String TAG = User.class.getSimpleName();
     private static final String IDCARD_PREFIX = "user_idcard_";
 
     User() {}
@@ -50,14 +53,22 @@ public class User {
     @ForeignCollectionField(eager = true)
     private ForeignCollection<Selfie> selfies;
 
-    public void setup(String email, String name, String forename, Bitmap idCard, Collection<Bitmap> selfies) {
+    public void setup(String email, String name, String forename, Collection<String> selfies) {
         this.email = email.replace(" ", "");
         this.name = name;
         this.forename = forename;
-        getIdCard().set(idCard);
         this.selfies.clear();
-        for( Bitmap selfiePic : selfies )
-            this.selfies.add(new Selfie(selfiePic));
+        for( String path : selfies )
+            addSelfie(path);
+    }
+
+    private void addSelfie(String path) {
+        Selfie selfie = new Selfie(BitmapFactory.decodeFile(path));
+        if(selfie.getPic() == null)
+            return;
+        this.selfies.add(selfie);
+        if(!new File(path).delete())
+            Log.w(TAG, "Could not delete file " + path);
     }
 
     public boolean isValid() {
@@ -65,7 +76,7 @@ public class User {
         for(Selfie selfie : selfies)
             if(selfie.getPic().get() == null)
                 return false;
-        return email != null && name != null && forename != null && getIdCard().get() != null;
+        return email != null && name != null && forename != null;
     }
 
     public PictureAccess getIdCard() {

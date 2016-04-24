@@ -85,6 +85,7 @@
                     android:text="@string/user_setup_selfie" />
 
                 <LinearLayout
+                    android:id="@+id/thumb_holder"
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -97,47 +98,7 @@
                         android:onClick="takePictureFromUI"
                         style="@style/small_button_turquoise_background_and_white_text"/>
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/selfie_thumb"
-                        android:maxHeight="150dp"
-                        android:contentDescription="@string/user_setup_selfie_desc"/>
                 </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                style="@style/basic_layout"
-                android:layout_margin="@dimen/activity_margin" >
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/user_setup_idcard" />
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/user_setup_take_pic"
-                        android:id="@+id/take_idcard_btn"
-                        android:onClick="takePictureFromUI"
-                        style="@style/small_button_turquoise_background_and_white_text"/>
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/idcard_thumb"
-                        android:maxHeight="150dp"
-                        android:contentDescription="@string/user_setup_idcard_desc" />
-                </LinearLayout>
-
             </LinearLayout>
 
         </LinearLayout>
