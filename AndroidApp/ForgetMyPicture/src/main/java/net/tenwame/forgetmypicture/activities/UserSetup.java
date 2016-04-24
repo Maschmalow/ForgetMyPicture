@@ -3,7 +3,6 @@ package net.tenwame.forgetmypicture.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -19,6 +18,7 @@ import com.crittercism.app.Crittercism;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import net.tenwame.forgetmypicture.DatabaseHelper;
+import net.tenwame.forgetmypicture.PictureAccess;
 import net.tenwame.forgetmypicture.R;
 import net.tenwame.forgetmypicture.UserData;
 import net.tenwame.forgetmypicture.services.ServerInterface;
@@ -61,18 +61,20 @@ public class UserSetup extends Activity {
     }
 
     public void saveDataFromUI(View view) {
-        UserData.getUser().setup(emailField.getText().toString(), nameField.getText().toString(), forenameField.getText().toString(), selfiesPath);
-        if(!UserData.getUser().isValid()) {
-            Toast.makeText(this, R.string.user_setup_invalid_toast, Toast.LENGTH_SHORT).show();
-            return;
-        }
+
         DatabaseHelper helper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
         try {
+            UserData.getUser().setup(emailField.getText().toString(), nameField.getText().toString(), forenameField.getText().toString(), selfiesPath);
+            if(!UserData.getUser().isValid()) {
+                Toast.makeText(this, R.string.user_setup_invalid_toast, Toast.LENGTH_SHORT).show();
+                return;
+            }
             helper.getUserDao().update(UserData.getUser());
         } catch (SQLException e) {
             Log.e(TAG, "Could not save user data", e);
             Toast.makeText(this, R.string.user_setup_save_failed_toast, Toast.LENGTH_LONG).show();
             finish();
+            return;
         }
         ServerInterface.execute(ServerInterface.ACTION_REGISTER);
         Toast.makeText(this, R.string.saved_toast, Toast.LENGTH_SHORT).show();
@@ -128,13 +130,7 @@ public class UserSetup extends Activity {
         thumbView.setMaxHeight(h);
         thumbView.setContentDescription(getResources().getString(R.string.user_setup_selfie_desc));
 
-        BitmapFactory.Options opts = new BitmapFactory.Options();
-        opts.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(curTmpFilePath, opts);
-        opts.inJustDecodeBounds = false;
-        opts.inSampleSize = Math.min(opts.outWidth/w, opts.outHeight/h);
-
-        Bitmap pic = BitmapFactory.decodeFile(curTmpFilePath, opts);
+        Bitmap pic = new PictureAccess(curTmpFilePath, false).get(w, h);
 
         thumbView.setImageBitmap(pic);
         thumbHolder.addView(thumbView);

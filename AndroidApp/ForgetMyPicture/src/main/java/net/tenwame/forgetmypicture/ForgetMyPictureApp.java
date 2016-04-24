@@ -1,9 +1,12 @@
 package net.tenwame.forgetmypicture;
 
+import android.app.AlertDialog;
 import android.app.Application;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 
 import com.crittercism.app.Crittercism;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -13,11 +16,14 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import net.tenwame.forgetmypicture.activities.Settings;
 
+import java.sql.SQLException;
+
 /**
  * Created by Antoine on 19/02/2016.
  * Application, for context
  */
 public class ForgetMyPictureApp extends Application {
+    private static final String TAG = ForgetMyPictureApp.class.getSimpleName();
     private static Context context;
     private static DatabaseHelper helper;
 
@@ -59,5 +65,26 @@ public class ForgetMyPictureApp extends Application {
 
     public static String getName() {
         return context.getPackageName();
+    }
+
+    public static AlertDialog getAgreementDialog(Context context) {
+        return new AlertDialog.Builder(context)
+                .setMessage(R.string.agreement)
+                .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        try {
+                            UserData.getUser().setAgreementAccepted();
+                        } catch (SQLException e) {
+                            Log.e(TAG, "Could not save user", e);
+                            Crittercism.logHandledException(e);
+                            return;
+                        }
+                        Log.i(TAG, "Agreement accepted");
+                    }
+                })
+                .setNeutralButton(R.string.refuse, null)
+                .setTitle(R.string.agreement_title)
+                .create();
     }
 }

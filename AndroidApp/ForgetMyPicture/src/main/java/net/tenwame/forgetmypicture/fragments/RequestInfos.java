@@ -48,6 +48,7 @@ public class RequestInfos extends ConventionFragment {
 
     private static final String REQUEST_ID_KEY = "REQUEST_ID_KEY";
     private static final String PAY_DIALOG_KEY = "PAY_DIALOG_KEY";
+    private static final String AGREEMENT_DIALOG_KEY = "AGREEMENT_DIALOG_KEY";
 
     private Request request;
     private ResultsAdapter adapter = new ResultsAdapter();
@@ -105,17 +106,7 @@ public class RequestInfos extends ConventionFragment {
                 .setTitle(R.string.request_infos_pay_title)
                 .create();
 
-        userAgreement = new AlertDialog.Builder(getContext())
-                .setMessage(R.string.agreement)
-                .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                })
-                .setNeutralButton(R.string.refuse, null)
-                .setTitle(R.string.agreement_title)
-                .create();
+        userAgreement = ForgetMyPictureApp.getAgreementDialog(getContext());
     }
 
 
@@ -162,8 +153,13 @@ public class RequestInfos extends ConventionFragment {
     }
 
     public void fillFormFromUI(View v) {
-        if(request.getStatus() != Request.Status.PAYED) {
+        if(!request.getStatus().isAfter(Request.Status.PAYED)) {
             payDialog.show();
+            return;
+        }
+
+        if(!UserData.getUser().isAgreementAccepted()) {
+            userAgreement.show();
             return;
         }
 
@@ -178,8 +174,13 @@ public class RequestInfos extends ConventionFragment {
     }
 
     public void sendEmailFromUI(View v) {
-        if(request.getStatus() != Request.Status.PAYED) {
+        if(!request.getStatus().isAfter(Request.Status.PAYED)) {
             payDialog.show();
+            return;
+        }
+
+        if(!UserData.getUser().isAgreementAccepted()) {
+            userAgreement.show();
             return;
         }
 
@@ -193,6 +194,7 @@ public class RequestInfos extends ConventionFragment {
         if(request != null)
             outState.putInt(REQUEST_ID_KEY, request.getId());
         outState.putBoolean(PAY_DIALOG_KEY, payDialog.isShowing());
+        outState.putBoolean(AGREEMENT_DIALOG_KEY, userAgreement.isShowing());
         super.onSaveInstanceState(outState);
     }
 
@@ -211,6 +213,8 @@ public class RequestInfos extends ConventionFragment {
 
         if(savedInstanceState.getBoolean(PAY_DIALOG_KEY, false))
             payDialog.show();
+        if(savedInstanceState.getBoolean(AGREEMENT_DIALOG_KEY, false))
+            userAgreement.show();
     }
 
     public void setRequest(Request request) {

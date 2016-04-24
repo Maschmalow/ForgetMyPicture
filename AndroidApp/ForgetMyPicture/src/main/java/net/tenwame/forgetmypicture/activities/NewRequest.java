@@ -1,6 +1,7 @@
 package net.tenwame.forgetmypicture.activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -17,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import net.tenwame.forgetmypicture.ForgetMyPictureApp;
 import net.tenwame.forgetmypicture.Manager;
 import net.tenwame.forgetmypicture.R;
 import net.tenwame.forgetmypicture.UserData;
@@ -28,6 +30,7 @@ public class NewRequest extends Activity {
 
     private static final int SELECT_PICTURE = 1;
     private static final int REQUEST_USER_SETUP = 1;
+    private static final String AGREEMENT_DIALOG_KEY = "AGREEMENT_DIALOG";
 
 
     private LinearLayout selectOriginalPic;
@@ -35,6 +38,7 @@ public class NewRequest extends Activity {
     private EditText keywordsField;
 
     private Bitmap originalPic = null;
+    private AlertDialog userAgreement;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,10 +64,18 @@ public class NewRequest extends Activity {
                 return false;
             }
         });
+
+        userAgreement = ForgetMyPictureApp.getAgreementDialog(this);
     }
 
     public void startSearchFromUI(View view) {
-        Log.v(TAG, "Request started from UI");
+
+        if(!UserData.getUser().isAgreementAccepted()) {
+            userAgreement.show();
+            return;
+        }
+
+        Log.i(TAG, "Request started from UI");
         String[] keywords = keywordsField.getText().toString().split(" ");
 
         if(Manager.getInstance().startNewRequest(Arrays.asList(keywords), originalPic) == null) {
@@ -116,6 +128,18 @@ public class NewRequest extends Activity {
         if(requestCode == REQUEST_USER_SETUP && resultCode != RESULT_OK) {
             finish();
         }
+    }
 
+    @Override
+    protected void onRestoreInstanceState(Bundle state) {
+        super.onRestoreInstanceState(state);
+        if(state != null && state.getBoolean(AGREEMENT_DIALOG_KEY, false))
+            userAgreement.show();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(AGREEMENT_DIALOG_KEY, userAgreement.isShowing());
+        super.onSaveInstanceState(outState);
     }
 }

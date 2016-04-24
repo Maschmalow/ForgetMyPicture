@@ -8,9 +8,11 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import net.tenwame.forgetmypicture.ForgetMyPictureApp;
 import net.tenwame.forgetmypicture.PictureAccess;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -30,6 +32,7 @@ public class User {
     public User(String deviceId) {
         this.deviceId = deviceId;
         idCardPath = IDCARD_PREFIX + UUID.randomUUID().toString();
+        acceptedAgreement = false;
     }
 
     @DatabaseField(id = true)
@@ -53,13 +56,17 @@ public class User {
     @ForeignCollectionField(eager = true)
     private ForeignCollection<Selfie> selfies;
 
-    public void setup(String email, String name, String forename, Collection<String> selfies) {
+    @DatabaseField(canBeNull = false)
+    private boolean acceptedAgreement;
+
+    public void setup(String email, String name, String forename, Collection<String> selfies) throws SQLException {
         this.email = email.replace(" ", "");
         this.name = name;
         this.forename = forename;
         this.selfies.clear();
         for( String path : selfies )
             addSelfie(path);
+        save();
     }
 
     private void addSelfie(String path) {
@@ -105,5 +112,18 @@ public class User {
 
     public ForeignCollection<Request> getRequests() {
         return requests;
+    }
+
+    public boolean isAgreementAccepted() {
+        return acceptedAgreement;
+    }
+
+    public void setAgreementAccepted() throws SQLException {
+        acceptedAgreement = true;
+        save();
+    }
+
+    private void save() throws SQLException {
+        ForgetMyPictureApp.getHelper().getUserDao().update(this);
     }
 }

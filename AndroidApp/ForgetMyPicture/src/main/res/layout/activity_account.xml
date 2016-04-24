@@ -52,6 +52,20 @@
             android:contentDescription="@string/id_card_setup_thumb_desc" />
 
     </LinearLayout>
+    
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        
+        <LinearLayout
+            android:id="@+id/selfies_container"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+
+        </LinearLayout>
+    </HorizontalScrollView>
 
     <LinearLayout
         android:orientation="horizontal"
@@ -74,8 +88,7 @@
             style="@style/small_button_turquoise_background_and_white_text"
             android:text="@string/edit_btn"
             android:onClick="editAccountFromUI"/>
-
-
+        
     </LinearLayout>
 
 
