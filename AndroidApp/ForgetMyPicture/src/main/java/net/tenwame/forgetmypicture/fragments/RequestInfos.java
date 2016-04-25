@@ -173,7 +173,10 @@ public class RequestInfos extends ConventionFragment {
             return;
         }
 
-        FormFiller.execute(request);
+        Bundle params = new Bundle(); //we do it manually because Id's are already saved, no need to fetch DB
+        params.putInt(FormFiller.EXTRA_REQUEST_ID_KEY, request.getId());
+        params.putStringArrayList(FormFiller.EXTRA_RESULTS_KEY, new ArrayList<>(selected));
+        NetworkService.execute(FormFiller.class, FormFiller.ACTION_FILL_FORM, params);
         Toast.makeText(getContext(), R.string.request_infos_form_sent, Toast.LENGTH_SHORT).show();
     }
 
