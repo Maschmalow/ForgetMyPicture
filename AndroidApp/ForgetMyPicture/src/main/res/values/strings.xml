@@ -57,7 +57,7 @@
     <string name="requests_list_no_requests">No request</string>
     <string name="request_list_help">About your requests:\\nThe fetching searches are still looking for picture on the Internet. Our servers are taking a look at your Processing searches.\\nThe pending searches are waiting for your action.\\nUnlocking your searches allow you to take act on them.\\nFinished searches are kept for history</string>
     <string name="requests_list_help">Help</string>
-    <string name="requests_list_links">Procedure info</string>
+    <string name="requests_list_links">More info</string>
     <string name="request_item_processed">%d%% processed</string>
     <string name="request_item_fetched">%d%% fetched</string>
     <string name="request_item_results">- %d results</string>
@@ -131,8 +131,8 @@
     <string name="id_card_invalid_toast">Invalid ID card</string>
     <string name="edit_btn">Edit</string>
     <string name="info_dialog_title">Additional information</string>
-    <string name="search_info_btn">More info on Searches</string>
-    <string name="search_info_msg">Searches</string>
+    <string name="search_info_btn">More info</string>
+    <string name="search_info_msg">AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</string>
     <string name="email_preview_btn">See e-mail</string>
 
 

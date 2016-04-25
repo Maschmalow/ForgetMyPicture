@@ -57,9 +57,9 @@
     <!-- requests_list fragment -->
     <string name="requests_list_title">Vos requêtes :</string>
     <string name="requests_list_no_requests">Aucune requête</string>
-    <string name="request_list_help">About your requests:\nThe fetching searches are still looking for picture on the Internet.\nOur servers are taking a look at your Processing searches.\nThe pending searches are waiting for your action.\nUnlocking your searches allow you to take act on them.\nFinished searches are kept for history.</string>
+    <string name="request_list_help">Concernant vos requêtes :\n Récupération des images signifie que les images sont en train d\'être recherchées sur Internet.\nTraitement signifie que les images sont en cours de traitement sur nos serveurs.\nLes recherches en attente attendent une action de votre part.\nDéverrouiller vos recherches vous permet d\'obtenir des informations supplémentaires sur celles-ci et de lancer les procédures de déréférencement et de suppression de ces recherches.\nLes recherches terminées sont gardées dans l\'historique de vos requêtes.</string>
     <string name="requests_list_help">Aide</string>
-    <string name="requests_list_links">Procédures</string>
+    <string name="requests_list_links">Plus d\'info</string>
     <string name="request_item_processed">%d%% traitées</string>
     <string name="request_item_fetched">%d%% récupérées</string>
     <string name="request_item_results">- %d resultats</string>
@@ -67,7 +67,7 @@
     <!-- request_infos fragment -->
     <string name="request_infos_title">%1$s Recherche n° %2$d</string>
     <string name="request_infos_status">Etat : %s</string>
-    <string name="request_infos_stats">Stats: Aprox. %1$d/%2$d images récupérées, %3$d résultats traités</string>
+    <string name="request_infos_stats">Stats : Aprox. %1$d/%2$d images récupérées, %3$d résultats traités</string>
     <string name="request_infos_motive">Motif : %s</string>
     <string name="request_infos_keywords">Mots-clefs: %s</string>
     <string name="request_infos_no_results">Aucun résultat pour l\'instant</string>
@@ -133,9 +133,9 @@
     <string name="id_card_invalid_toast">Pièce d\'identité invalide</string>
     <string name="edit_btn">Editer</string>
     <string name="info_dialog_title">Informations complémentaires</string>
-    <string name="search_info_btn">More info on Searches</string>
-    <string name="search_info_msg">Searches</string>
-    <string name="email_preview_btn">See e-mail</string>
+    <string name="search_info_btn">Plus d\'info</string>
+    <string name="search_info_msg">AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</string>
+    <string name="email_preview_btn">Voir mail</string>
 
 
 </resources>
