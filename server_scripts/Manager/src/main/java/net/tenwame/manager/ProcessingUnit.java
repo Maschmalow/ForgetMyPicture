@@ -37,18 +37,28 @@ class ProcessingUnit implements Runnable {
     private static final String IC_PATH = System.getenv("MANAGER_PATH") + "IC/recognize";
     private static final String BASE_FILES_PATH = System.getenv("BASE_FILES_PATH");
 
-    private final Result result;
+    private final int resultId;
+    private Result result;
 
-    ProcessingUnit(Result toProcess) {
-        result = toProcess;
+    ProcessingUnit(int toProcess) {
+        resultId = toProcess;
     }
 
     @Override
     public void run() {
-        if(result == null) return;
+        try{
+            try {
+                result = Main.getResultDao().queryForId(resultId);
+                if(result == null) return;
 
-        try {
-            processResult();
+                processResult();
+            } catch (RuntimeException e) {
+                result.incNbFail();
+                Main.getResultDao().update(result);
+                logger.log(Level.SEVERE, "Could not process result " + result.getPicURL(), e);
+                throw new RuntimeException(e);
+            }
+            Main.getResultDao().update(result);
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "SQL error while processing result", e);
             throw new RuntimeException(e);
@@ -92,7 +102,6 @@ class ProcessingUnit implements Runnable {
             String ret = reader.readLine();
             logger.log(Level.INFO, result.getPicURL() + " result: " + ret);
             result.setMatch(Integer.parseInt(ret));
-            Main.getResultDao().update(result);
 
         } catch (IOException | InterruptedException e) {
             logger.log(Level.SEVERE, "Could not process result " + result.getPicURL(), e);

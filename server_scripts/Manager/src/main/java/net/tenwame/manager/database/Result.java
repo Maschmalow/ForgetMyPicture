@@ -14,7 +14,9 @@ import java.sql.SQLException;
 @DatabaseTable(tableName = "result")
 public class Result {
 
-    Result() {}
+    Result() {
+        nb_fail = 0; //default value
+    }
 
     @DatabaseField(generatedId = true)
     private int id; //for redbeans
@@ -27,6 +29,13 @@ public class Result {
 
     @DatabaseField(canBeNull = false)
     private String request_id;
+
+    @DatabaseField(defaultValue = "0", canBeNull = false)
+    private int nb_fail;
+
+    public int getId() {
+        return id;
+    }
 
     public boolean isProcessed() {
         return pic_match != -1;
@@ -48,6 +57,13 @@ public class Result {
         return Main.getRequestDao().queryForEq("request_id", request_id).get(0);
     }
 
+    public int getNb_fail() {
+        return nb_fail;
+    }
+    public void incNbFail() {
+        nb_fail++;
+    }
+
     @Override
     public boolean equals(Object o) {
         if( this == o ) return true;
@@ -66,4 +82,6 @@ public class Result {
         result = 31 * result + request_id.hashCode();
         return result;
     }
+
+
 }

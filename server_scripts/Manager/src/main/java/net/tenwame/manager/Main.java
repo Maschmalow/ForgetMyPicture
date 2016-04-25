@@ -14,9 +14,9 @@ import net.tenwame.manager.database.User;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -32,13 +32,14 @@ public class Main {
     private static final int NB_WORKERS = 16;
     private static final int REFRESH_RATE = 1000; //ms
 
+    public static final int NB_FAIL_MAX = 5;
 
     private static ConnectionSource source;
 
-    private Dao<User, String> userDao;
-    private Dao<Request, String> requestDao;
-    private Dao<Result, String> resultDao;
-    private Dao<Selfie, String> selfieDao;
+    private Dao<User, Integer> userDao;
+    private Dao<Request, Integer> requestDao;
+    private Dao<Result, Integer> resultDao;
+    private Dao<Selfie, Integer> selfieDao;
 
     public static void main(String[] args) throws Exception {
         System.setProperty(LoggerFactory.LOG_TYPE_SYSTEM_PROPERTY, "LOCAL");
@@ -74,22 +75,24 @@ public class Main {
 
         ExecutorService pool = Executors.newFixedThreadPool(NB_WORKERS);
         Runtime.getRuntime().addShutdownHook(new Thread(pool::shutdownNow));
-        Map<Result, Future<Result>> processingResults = new HashMap<>();
+        Map<Result, Future<Result>> processingResults = new ConcurrentHashMap<>();
 
         while( true ) {
-            List<Result> unprocessed = resultDao.queryForEq("pic_match", -1);
-            for(Result result : unprocessed) {
-                if(processingResults.containsKey(result) &&
-                        processingResults.get(result).isDone()) {
-                    processingResults.remove(result);
-                    resultDao.refresh(result);
-                    if(!result.isProcessed())
-                        logger.log(Level.WARNING, "Result could not be processed: " + result.getPicURL());
-                }
 
-                if( !processingResults.containsKey(result) ) {
-                    processingResults.put(result, pool.submit(new ProcessingUnit(result), result));
+            List<Result> unprocessed = resultDao.queryForEq("pic_match", -1);
+
+            for(Map.Entry<Result, Future<Result>> entry : processingResults.entrySet()) {
+                if(entry.getValue().isDone()){
+                    processingResults.remove(entry.getKey());
+                    resultDao.refresh(entry.getKey());
+                    if(entry.getKey().getNb_fail() >= NB_FAIL_MAX)
+                        logger.log(Level.WARNING, "FAILED : Result definitely abandoned " + entry.getKey().getPicURL());
                 }
+            }
+
+            for(Result result : unprocessed) {
+                if( !processingResults.containsKey(result)  && result.getNb_fail() < NB_FAIL_MAX)
+                    processingResults.put(result, pool.submit(new ProcessingUnit(result.getId()), result));
             }
 
             logger.log(Level.INFO, unprocessed.size() + " unprocessed results, " + processingResults.size() + " processing");
@@ -104,19 +107,19 @@ public class Main {
     }
 
 
-    public static Dao<User, String> getUserDao() {
+    public static Dao<User, Integer> getUserDao() {
         return DaoManager.lookupDao(source, User.class);
     }
 
-    public static Dao<Request, String> getRequestDao() {
+    public static Dao<Request, Integer> getRequestDao() {
         return DaoManager.lookupDao(source, Request.class);
     }
 
-    public static Dao<Result, String> getResultDao() {
+    public static Dao<Result, Integer> getResultDao() {
         return DaoManager.lookupDao(source, Result.class);
     }
 
-    public static Dao<Selfie, String> getSelfieDao() {
+    public static Dao<Selfie, Integer> getSelfieDao() {
         return DaoManager.lookupDao(source, Selfie.class);
     }
 
