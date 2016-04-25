@@ -28,7 +28,6 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.UUID;
 
 /**
@@ -39,9 +38,10 @@ public class UserSetup extends Activity {
     private static final String TAG = UserSetup.class.getSimpleName();
 
     public static final String CUR_TMP_FILE_KEY = "CUR_TMP_FILE";
+    public static final String SELFIES_PATH_KEY = "SELFIES_PATH";
     private static final int REQUEST_SELFIE_PIC =1;
 
-    private Collection<String> selfiesPath = new ArrayList<>();
+    private ArrayList<String> selfiesPath = new ArrayList<>();
 
     private EditText nameField;
     private EditText forenameField;
@@ -59,6 +59,16 @@ public class UserSetup extends Activity {
         forenameField = (EditText) findViewById(R.id.forename_field);
         emailField = (EditText) findViewById(R.id.email_field);
         thumbHolder = (LinearLayout) findViewById(R.id.thumb_holder);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        thumbHolder.removeAllViews();
+        for(String curSelfiePath : selfiesPath) {
+            addSelfieThumb(curSelfiePath);
+        }
     }
 
     public void saveDataFromUI(View view) {
@@ -122,13 +132,12 @@ public class UserSetup extends Activity {
             Log.w(TAG, "Could not rotate picture " + curTmpFilePath, e);
             Crittercism.logHandledException(e);
         }
-        addSelfieThumb();
         selfiesPath.add(curTmpFilePath);
         curTmpFilePath = null;
 
     }
 
-    private void addSelfieThumb() {
+    private void addSelfieThumb(String selfiePath) {
         ImageView thumbView = new ImageView(this);
         int w = getResources().getDimensionPixelSize(R.dimen.thumb_max_width);
         int h = getResources().getDimensionPixelSize(R.dimen.thumb_max_height);
@@ -137,7 +146,7 @@ public class UserSetup extends Activity {
         thumbView.setMaxHeight(h);
         thumbView.setContentDescription(getResources().getString(R.string.user_setup_selfie_desc));
 
-        Bitmap pic = new PictureAccess(curTmpFilePath).get(w, h);
+        Bitmap pic = new PictureAccess(selfiePath).get(w, h);
 
         thumbView.setImageBitmap(pic);
         thumbHolder.addView(thumbView);
@@ -146,6 +155,7 @@ public class UserSetup extends Activity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putString(CUR_TMP_FILE_KEY, curTmpFilePath);
+        outState.putStringArrayList(SELFIES_PATH_KEY, selfiesPath);
         super.onSaveInstanceState(outState);
     }
 
@@ -155,5 +165,6 @@ public class UserSetup extends Activity {
         if(state == null) return;
 
         curTmpFilePath = state.getString(CUR_TMP_FILE_KEY);
+        selfiesPath = state.getStringArrayList(SELFIES_PATH_KEY);
     }
 }

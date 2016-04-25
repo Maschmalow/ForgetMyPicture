@@ -14,7 +14,7 @@
 
     <TextView
         android:id="@+id/empty"
-        android:text="@string/activity_no_account"
+        android:text="@string/account_not_registered"
         android:padding="10dp"
         android:textAppearance="?android:textAppearanceMedium"
         android:layout_below="@id/title"
