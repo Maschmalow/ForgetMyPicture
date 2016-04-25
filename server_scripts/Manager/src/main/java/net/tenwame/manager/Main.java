@@ -14,6 +14,7 @@ import net.tenwame.manager.database.User;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -81,20 +82,19 @@ public class Main {
 
             List<Result> unprocessed = resultDao.queryForEq("pic_match", -1);
 
-            for(Map.Entry<Result, Future<Result>> entry : processingResults.entrySet()) {
-                if(entry.getValue().isDone()){
-                    processingResults.remove(entry.getKey());
-                    resultDao.refresh(entry.getKey());
-                    if(entry.getKey().getNb_fail() >= NB_FAIL_MAX) {
-                        logger.log(Level.WARNING, "FAILED : Result definitely abandoned " + entry.getKey().getPicURL());
-                        entry.getKey().setMatch(0);
-                        resultDao.update(entry.getKey());
-                    }
+            for( Iterator<Map.Entry<Result, Future<Result>>> iterator = processingResults.entrySet().iterator(); iterator.hasNext(); ) {
+                Map.Entry<Result, Future<Result>> entry = iterator.next();
+                if( entry.getValue().isDone() ) {
+                    iterator.remove();
                 }
             }
 
             for(Result result : unprocessed) {
-                if( !processingResults.containsKey(result)  && result.getNb_fail() < NB_FAIL_MAX)
+                if( result.getNb_fail() >= NB_FAIL_MAX ) {
+                    logger.log(Level.WARNING, "FAILED : Result definitely abandoned " + result.getPicURL());
+                    result.setMatch(0);
+                    resultDao.update(result);
+                } else if( !processingResults.containsKey(result))
                     processingResults.put(result, pool.submit(new ProcessingUnit(result.getId()), result));
             }
 
