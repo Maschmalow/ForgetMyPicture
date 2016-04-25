@@ -1,3 +1,5 @@
+all: Who_is Parseur Have_adr
+
 test_parseur: Who_is Parseur
 	@rm -rf error.txt
 	@echo
