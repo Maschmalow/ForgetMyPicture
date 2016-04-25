@@ -107,7 +107,7 @@ public class Searcher extends NetworkService{
         Set<Result> results = new HashSet<>(); //convert this to a list to support server prioritisation
         final Document doc;
 
-        doc = Jsoup.connect(URL).data(queryData).userAgent(userAgent).get();
+        doc = Jsoup.connect(URL).data(queryData)/*.userAgent(userAgent)*/.get();
         Log.d(TAG, "Request: " + doc.baseUri());
 
         //get picture link

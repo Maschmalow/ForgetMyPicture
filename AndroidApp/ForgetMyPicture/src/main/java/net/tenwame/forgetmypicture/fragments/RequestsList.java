@@ -1,5 +1,6 @@
 package net.tenwame.forgetmypicture.fragments;
 
+import android.app.AlertDialog;
 import android.content.res.Resources;
 import android.database.DataSetObserver;
 import android.support.annotation.NonNull;
@@ -26,6 +27,7 @@ public class RequestsList extends ConventionFragment {
 
     private RequestsAdapter adapter = new RequestsAdapter();
     private DataSetObserver loader;
+    private AlertDialog moreInfo;
 
     //auto-retrieved views
     private ListView requestsList;
@@ -44,6 +46,12 @@ public class RequestsList extends ConventionFragment {
         adapter.registerDataSetObserver(loader);
         adapter.loadData();
         adapter.trackDatabase(Result.class, true);
+
+        moreInfo = new AlertDialog.Builder(getContext())
+                .setTitle(R.string.links_title)
+                .setMessage(R.string.links_info)
+                .setNeutralButton(R.string.ok, null)
+                .create();
     }
 
     @Override
@@ -66,6 +74,10 @@ public class RequestsList extends ConventionFragment {
 
     public void setFilterFromUI(/* filter */) {//will be from UI
         //adapter.setMatchingArgs(new HashMap<String, Object>());
+    }
+
+    public void getMoreInfoFromUI(View v) {
+        moreInfo.show();
     }
 
 

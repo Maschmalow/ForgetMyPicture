@@ -1,25 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/basic_root_layout_white_background_with_padding">
 
     <TextView
+        android:id="@+id/title"
+        android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/requests_list_title"
         android:textAppearance="?android:textAppearanceLarge"/>
 
-    <ListView
-        android:id="@+id/requests_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </ListView>
+    <Button
+        android:id="@+id/info"
+        android:text="@string/requests_list_links"
+        android:onClick="getMoreInfoFromUI"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
-    <TextView
-        android:id="@+id/empty"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/content_layout"
+        android:layout_below="@id/title"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:textAppearanceMedium"
-        android:visibility="gone"
-        android:text="@string/requests_list_no_requests"/>
+        android:layout_above="@+id/info">
 
-</LinearLayout>
+        <ListView
+            android:id="@+id/requests_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </ListView>
+
+        <TextView
+            android:id="@+id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:visibility="gone"
+            android:text="@string/requests_list_no_requests"/>
+
+    </LinearLayout>
+
+
+
+</RelativeLayout>

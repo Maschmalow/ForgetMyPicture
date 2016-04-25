@@ -48,11 +48,11 @@ public class PictureAccess {
      * @return the bitmap, or null if there is an error
      */
     public final Bitmap get() {
-        return BitmapFactory.decodeFile(getFile().getAbsolutePath());
+        return get(MAX_WIDTH, MAX_HEIGHT);
     }
 
     /**
-     * Returns te stored bitmap, scaled match the supplied size.
+     * Returns te stored bitmap, scaled to fit the supplied size.
      * Only the needed for the target bitmap memory is allocated,
      * and the aspect ratio is conserved.
      * @param width the desired width
