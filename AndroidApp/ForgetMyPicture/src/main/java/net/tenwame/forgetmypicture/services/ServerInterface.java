@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.Stack;
 
@@ -222,7 +223,8 @@ public class ServerInterface extends NetworkService {
                 return;
 
             Connection connection = Jsoup.connect(BASE_URL + SEND_MAIL_URL)
-                    .data("deviceId", UserData.getDeviceId());
+                    .data("deviceId", UserData.getDeviceId())
+                    .data("lang", Locale.getDefault().getLanguage());
 
             for(Result result : results) {
                 connection.data("host[]", new URL(result.getPicRefURL()).getHost());
