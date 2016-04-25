@@ -165,7 +165,7 @@ public class RequestInfos extends ConventionFragment {
         }
 
         if(UserData.getUser().getIdCard().get() == null) {
-            Toast.makeText(getContext(), R.string.request_infos_id_card_toast, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.request_infos_id_card_toast, Toast.LENGTH_LONG).show();
             startActivity(new Intent(getContext(), IdCardSetup.class));
             return;
         }
@@ -187,7 +187,7 @@ public class RequestInfos extends ConventionFragment {
 
         // TODO: 19/04/2016 status
         ServerInterface.execute(ServerInterface.ACTION_SEND_MAIL, null, selected);
-        Toast.makeText(getContext(), R.string.request_infos_email_sent, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), R.string.request_infos_email_sent, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -247,9 +247,10 @@ public class RequestInfos extends ConventionFragment {
             ((TextView) itemView.findViewById(R.id.pic_ref_url)).setText(res.getString(R.string.result_item_pic_ref_url, host));
 
             CheckBox item_select = (CheckBox) itemView.findViewById(R.id.selected);
-            if(request.getStatus() == Request.Status.FINISHED)
+            if(request.getStatus() == Request.Status.FINISHED || !request.getStatus().isAfter(Request.Status.PROCESSING))
                 item_select.setVisibility(View.GONE);
             else {
+                item_select.setVisibility(View.VISIBLE);
                 item_select.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

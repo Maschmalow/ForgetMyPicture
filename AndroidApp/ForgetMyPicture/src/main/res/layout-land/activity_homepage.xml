@@ -1,76 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="@dimen/activity_margin"
     android:background="@color/white">
 
 
-    <TextView
-        android:layout_weight="40"
-        android:background="@color/white"
-        style="@style/basic_view_with_margin"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:src="@drawable/logo"
+        android:layout_gravity="center_vertical"/>
 
     <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:orientation="vertical"
+        android:layout_margin="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <TextView
-            android:layout_weight="40"
             android:background="@color/white"
             style="@style/basic_view_with_margin"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/logo"
-            android:layout_gravity="center_horizontal"/>
+        <Button
+            style="@style/button_turquoise_background_and_white_text"
+            android:onClick="startNewSearchFromUI"
+            android:text="@string/homepage_new_request"/>
 
         <TextView
-            android:layout_weight="40"
             android:background="@color/white"
             style="@style/basic_view_with_margin"/>
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+        <Button
+            style="@style/button_turquoise_background_and_white_text"
+            android:onClick="goToRequestsFromUI"
+            android:text="@string/homepage_requests_panel"/>
 
-            <Button
-                android:layout_weight="20"
-                style="@style/button_turquoise_background_and_white_text"
-                android:onClick="startNewSearchFromUI"
-                android:text="@string/homepage_new_request"/>
-
-            <TextView
-                android:layout_weight="10"
-                android:background="@color/white"
-                style="@style/basic_view_with_margin"/>
-
-            <Button
-                android:layout_weight="20"
-                style="@style/button_turquoise_background_and_white_text"
-                android:onClick="goToRequestsFromUI"
-                android:text="@string/homepage_requests_panel"/>
-
-            <TextView
-                android:layout_weight="40"
-                android:background="@color/white"
-                style="@style/basic_view_with_margin"/>
-
-        </LinearLayout>
-
-        <TextView
-            android:layout_weight="40"
-            android:background="@color/white"
-            style="@style/basic_view_with_margin"/>
 
     </LinearLayout>
 
     <TextView
-        android:layout_weight="40"
+        android:layout_margin="8dp"
         android:background="@color/white"
-        style="@style/basic_view_with_margin"/>
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"/>
 
 </LinearLayout>
