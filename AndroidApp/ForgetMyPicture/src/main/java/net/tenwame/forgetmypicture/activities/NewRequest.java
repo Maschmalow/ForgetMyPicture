@@ -2,6 +2,7 @@ package net.tenwame.forgetmypicture.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -18,7 +19,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import net.tenwame.forgetmypicture.ForgetMyPictureApp;
 import net.tenwame.forgetmypicture.Manager;
 import net.tenwame.forgetmypicture.R;
 import net.tenwame.forgetmypicture.UserData;
@@ -38,7 +38,7 @@ public class NewRequest extends Activity {
     private EditText keywordsField;
 
     private Bitmap originalPic = null;
-    private AlertDialog userAgreement;
+    private AlertDialog searchAgreement;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,16 +65,24 @@ public class NewRequest extends Activity {
             }
         });
 
-        userAgreement = ForgetMyPictureApp.getAgreementDialog(this);
+        searchAgreement = new AlertDialog.Builder(this)
+                .setNeutralButton(R.string.cancel, null)
+                .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startSearch();
+                    }
+                })
+                .setMessage(R.string.search_agreement)
+                .setTitle(R.string.agreement_title)
+                .create();
     }
 
     public void startSearchFromUI(View view) {
+        searchAgreement.show();
+    }
 
-        if(!UserData.getUser().isAgreementAccepted()) {
-            userAgreement.show();
-            return;
-        }
-
+    private void startSearch() {
         Log.i(TAG, "Request started from UI");
         String[] keywords = keywordsField.getText().toString().split(" ");
 
@@ -134,12 +142,12 @@ public class NewRequest extends Activity {
     protected void onRestoreInstanceState(Bundle state) {
         super.onRestoreInstanceState(state);
         if(state != null && state.getBoolean(AGREEMENT_DIALOG_KEY, false))
-            userAgreement.show();
+            searchAgreement.show();
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putBoolean(AGREEMENT_DIALOG_KEY, userAgreement.isShowing());
+        outState.putBoolean(AGREEMENT_DIALOG_KEY, searchAgreement.isShowing());
         super.onSaveInstanceState(outState);
     }
 }
