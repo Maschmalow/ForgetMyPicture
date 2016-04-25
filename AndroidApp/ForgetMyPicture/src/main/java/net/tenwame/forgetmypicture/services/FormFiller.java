@@ -13,7 +13,12 @@ import org.jsoup.Jsoup;
 
 import java.io.InputStream;
 import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * (see {@Link NetworkService})
@@ -24,6 +29,7 @@ public class FormFiller extends NetworkService{
     private static final String TAG = FormFiller.class.getSimpleName();
 
     public static final String EXTRA_REQUEST_ID_KEY = ForgetMyPictureApp.getName() + ".requestId";
+    public static final String EXTRA_RESULTS_KEY = ForgetMyPictureApp.getName() + ".results";
 
     public static final String ACTION_FILL_FORM = ForgetMyPictureApp.getName() + ".fill_form";
 
@@ -37,9 +43,13 @@ public class FormFiller extends NetworkService{
     }
 
 
-    public static void execute(Request request) {
+    public static void execute(Request request, Collection<Result> results) {
         Bundle params = new Bundle();
         params.putInt(EXTRA_REQUEST_ID_KEY, request.getId());
+        Set<String> ids = new HashSet<>(results.size());
+        for(Result result : results)
+            ids.add(result.getId());
+        params.putStringArrayList(EXTRA_RESULTS_KEY, new ArrayList<>(ids));
         execute(FormFiller.class, ACTION_FILL_FORM, params);
     }
 
@@ -50,9 +60,17 @@ public class FormFiller extends NetworkService{
      *  - the relevant request
      */
     private ActionHandler fillForm = new ActionHandler() {
+        @SuppressWarnings("ConstantConditions")
         @Override
         public void handle(Bundle params) throws Exception {
             Request request = getRequest(params);
+
+            List<Result> results = new ArrayList<>();
+            for(String resultId : params.getStringArrayList(EXTRA_RESULTS_KEY))
+                results.add(ForgetMyPictureApp.getHelper().getResultDao().queryForId(resultId));
+            if(results.isEmpty())
+                return;
+
             //pending because the work isn't done unless we did fill the form
             if(!request.getStatus().isAfter(Request.Status.PENDING))
                 throw new RuntimeException("Invalid request status: " + request.getStatus());
@@ -66,7 +84,7 @@ public class FormFiller extends NetworkService{
             connection.data("requestor_name", user.getForename() + " " + user.getName());
             connection.data("contact_email_noprefill", user.getEmail());
 
-            for( Result result : request.getResults())
+            for( Result result : results)
                 connection.data("url_box3", result.getPicURL());
 
             connection.data("eudpa_explain", request.getMotive());
