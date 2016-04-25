@@ -84,7 +84,7 @@ int main(int argc, char ** argv)
 	    if (strcmp(single_time_adr[j], ""))
 	      {
 		char * chaine = "";
-		asprintf(&chaine, "php send_mail.php %s %s %s %s %s %s", single_time_adr[j], argv[2], argv[3], argv[4], argv[5], argv[6]);
+		asprintf(&chaine, "php send_single_mail.php %s %s %s %s %s %s", single_time_adr[j], argv[2], argv[3], argv[4], argv[5], argv[6]);
 		system(chaine);
 		free(chaine);
 	      }
