@@ -9,6 +9,7 @@ import android.view.View;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -75,9 +76,10 @@ public class Util {
      */
     public static <T> Collection<T> applyFilter(@Nullable Collection<T> collection, @Nullable Filter<T>filter) {
         if(collection == null || filter == null) return collection;
-        for (T item : collection)
-            if (!filter.isAllowed(item))
-                collection.remove(item);
+        for( Iterator<T> iterator = collection.iterator(); iterator.hasNext(); )
+            if( !filter.isAllowed(iterator.next()) )
+                iterator.remove();
+
         return collection;
     }
 
