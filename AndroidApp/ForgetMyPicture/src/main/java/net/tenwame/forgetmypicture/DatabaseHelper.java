@@ -64,6 +64,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, User.class, false);
             TableUtils.dropTable(connectionSource, Selfie.class, false);
             createDatabase();
+            userDao.refresh(UserData.getUser());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

@@ -77,17 +77,16 @@
                 style="@style/basic_layout"
                 android:layout_margin="@dimen/activity_margin" >
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/user_setup_selfie" />
-
                 <LinearLayout
-                    android:id="@+id/thumb_holder"
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="@string/user_setup_selfie" />
 
                     <Button
                         android:layout_width="wrap_content"
@@ -96,8 +95,20 @@
                         android:id="@+id/take_selfie_btn"
                         android:onClick="takePictureFromUI"
                         style="@style/small_button_turquoise_background_and_white_text"/>
-
                 </LinearLayout>
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:id="@+id/thumb_holder"
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                    </LinearLayout>
+                </HorizontalScrollView>
+
             </LinearLayout>
 
         </LinearLayout>

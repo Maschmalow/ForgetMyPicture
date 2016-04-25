@@ -75,7 +75,7 @@ public class FormFiller extends NetworkService{
             connection.data("signature_date", DateFormat.getDateTimeInstance().format(new Date()));
 
             InputStream stream = user.getIdCard().openStream();
-            connection.data("legal_idupload", "carte identite", stream);
+            connection.data("legal_idupload", "carte_identite.jpg", stream);
             connection.post();
 
             stream.close();

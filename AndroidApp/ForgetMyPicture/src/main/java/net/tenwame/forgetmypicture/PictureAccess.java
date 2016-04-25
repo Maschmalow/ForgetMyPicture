@@ -14,10 +14,15 @@ import java.io.OutputStream;
 
 /**
  * Created by Antoine on 26/03/2016.
- * used to get access to pictures stored on disk (png format)
+ * used to get access to pictures stored on disk (jpg format)
  */
 public class PictureAccess {
     private static final String TAG = PictureAccess.class.getSimpleName();
+
+    public static final int MAX_HEIGHT = 1200;
+    public static final int MAX_WIDTH = 1000;
+    public static final int PIC_QUALITY = 90;
+
     protected final String path;
 
 
@@ -75,12 +80,16 @@ public class PictureAccess {
             return;
         }
 
+        float ratio = Math.min( Math.min((float) MAX_WIDTH / pic.getWidth(), (float) MAX_HEIGHT / pic.getHeight()), 1.0f);
+        Bitmap out = Bitmap.createScaledBitmap(pic, (int) (pic.getWidth()*ratio), (int) (pic.getHeight()*ratio), true);
+
         try {
             OutputStream stream = new FileOutputStream(getFile());
             try {
-                pic.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                out.compress(Bitmap.CompressFormat.JPEG, PIC_QUALITY, stream);
             } finally {
                 stream.close();
+                out.recycle();
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

@@ -21,6 +21,7 @@ public class Selfie {
     public Selfie(Bitmap selfie) {
         path = SELFIE_PREFIX + UUID.randomUUID().toString();
         getPic().set(selfie);
+        selfie.recycle();
         this.user = UserData.getUser();
     }
 

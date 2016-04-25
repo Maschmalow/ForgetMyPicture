@@ -96,6 +96,7 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
                             public void onClick(DialogInterface dialog, int which) {
                                 ForgetMyPictureApp.getHelper().wipeDatabase();
                                 Manager.getInstance().setAlarms();
+                                //TODO delete internal storage (in a clean way :/)
                                 ServerInterface.execute(ServerInterface.ACTION_WIPE_USER);
                                 Toast.makeText(Settings.this, R.string.settings_wipe_toast, Toast.LENGTH_SHORT).show();
                             }

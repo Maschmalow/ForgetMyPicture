@@ -1,6 +1,5 @@
 package net.tenwame.forgetmypicture.database;
 
-import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.j256.ormlite.dao.ForeignCollection;
@@ -70,9 +69,7 @@ public class User {
     }
 
     private void addSelfie(String path) {
-        Selfie selfie = new Selfie(BitmapFactory.decodeFile(path));
-        if(selfie.getPic() == null)
-            return;
+        Selfie selfie = new Selfie(new PictureAccess(path).get());
         this.selfies.add(selfie);
         if(!new File(path).delete())
             Log.w(TAG, "Could not delete file " + path);

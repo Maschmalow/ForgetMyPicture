@@ -18,7 +18,6 @@ import com.crittercism.app.Crittercism;
 import net.tenwame.forgetmypicture.PictureAccess;
 import net.tenwame.forgetmypicture.R;
 import net.tenwame.forgetmypicture.UserData;
-import net.tenwame.forgetmypicture.Util;
 
 import java.io.File;
 import java.io.IOException;
@@ -82,6 +81,7 @@ public class IdCardSetup extends Activity {
         }
 
         UserData.getUser().getIdCard().set(idCard);
+        idCard.recycle();
 
         if(UserData.getUser().getIdCard().get() == null)
             Log.d(TAG, "Could not save UD card"); //for debug only
@@ -93,20 +93,6 @@ public class IdCardSetup extends Activity {
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode != RESULT_OK || requestCode != REQUEST_IDCARD_PIC)
-            return;
-
-        try {
-            Util.rotatePicture(new PictureAccess(curIdCardPath));
-        } catch (IOException e) {
-            Log.w(TAG, "Could not rotate picture " + curIdCardPath, e);
-            curIdCardPath = null;
-            Crittercism.logHandledException(e);
-        }
-
-    }
 
     @Override
     protected void onResume() {
