@@ -57,7 +57,7 @@
     <!-- requests_list fragment -->
     <string name="requests_list_title">Vos requêtes :</string>
     <string name="requests_list_no_requests">Aucune requête</string>
-    <string name="request_list_help">Concernant vos requêtes :\n Récupération des images signifie que les images sont en train d\'être recherchées sur Internet.\nTraitement signifie que les images sont en cours de traitement sur nos serveurs.\nLes recherches en attente attendent une action de votre part.\nDéverrouiller vos recherches vous permet d\'obtenir des informations supplémentaires sur celles-ci et de lancer les procédures de déréférencement et de suppression de ces recherches.\nLes recherches terminées sont gardées dans l\'historique de vos requêtes.</string>
+    <string name="request_list_help">Concernant vos requêtes :\nRécupération des images signifie que les images sont en train d\'être recherchées sur Internet.\nTraitement signifie que les images sont en cours de traitement sur nos serveurs.\nLes recherches en attente attendent une action de votre part.\nDéverrouiller vos recherches vous permet d\'obtenir des informations supplémentaires sur celles-ci et de lancer les procédures de déréférencement et de suppression de ces recherches.\nLes recherches terminées sont conservées dans l\'historique de vos requêtes.</string>
     <string name="requests_list_help">Aide</string>
     <string name="requests_list_links">Plus d\'info</string>
     <string name="request_item_processed">%d%% traitées</string>
