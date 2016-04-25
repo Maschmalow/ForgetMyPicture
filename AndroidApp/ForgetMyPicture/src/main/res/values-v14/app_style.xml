@@ -2,7 +2,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo.Light">
+    <style name="AppTheme" parent="android:Theme.DeviceDefault.Light">
     </style>
 
 </resources>

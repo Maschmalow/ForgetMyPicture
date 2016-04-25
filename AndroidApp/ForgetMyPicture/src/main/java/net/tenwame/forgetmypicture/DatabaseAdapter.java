@@ -159,7 +159,7 @@ public abstract class DatabaseAdapter<T> extends BaseAdapter implements AdapterV
      * To use simply set this adapter as the ListView OnItemClickListener
      * @param item the Clicked item
      */
-    abstract public void onItemClick(T item);
+    public void onItemClick(T item) { }
 
     @Override
     public int getCount() {

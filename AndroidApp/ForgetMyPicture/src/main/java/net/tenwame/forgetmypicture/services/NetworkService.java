@@ -62,6 +62,7 @@ public abstract class NetworkService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        if(intent == null) return;
         curAction = intent.getAction();
         if(curAction == null) {
             Log.w(TAG, "No action, aborted");

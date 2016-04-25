@@ -9,8 +9,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -29,12 +29,14 @@ import net.tenwame.forgetmypicture.activities.Settings;
 import net.tenwame.forgetmypicture.database.Request;
 import net.tenwame.forgetmypicture.database.Result;
 import net.tenwame.forgetmypicture.services.FormFiller;
+import net.tenwame.forgetmypicture.services.NetworkService;
 import net.tenwame.forgetmypicture.services.Searcher;
 import net.tenwame.forgetmypicture.services.ServerInterface;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -47,14 +49,15 @@ import java.util.Set;
 public class RequestInfos extends ConventionFragment {
     private static final String TAG = RequestInfos.class.getName();
 
-    private static final String REQUEST_ID_KEY = "REQUEST_ID_KEY";
-    private static final String PAY_DIALOG_KEY = "PAY_DIALOG_KEY";
-    private static final String AGREEMENT_DIALOG_KEY = "AGREEMENT_DIALOG_KEY";
+    private static final String REQUEST_ID_KEY = "REQUEST_ID";
+    private static final String SELECTED_KEY = "SELECTED";
+    private static final String PAY_DIALOG_KEY = "PAY_DIALOG";
+    private static final String AGREEMENT_DIALOG_KEY = "AGREEMENT_DIALOG";
 
     private Request request;
     private ResultsAdapter adapter = new ResultsAdapter();
     private DataSetObserver loader; //observer that (re)load fragment when data changes
-    private Set<Result> selected = new HashSet<>();
+    private Set<String> selected = new HashSet<>();
     private AlertDialog payDialog;
     private AlertDialog userAgreement;
 
@@ -185,8 +188,10 @@ public class RequestInfos extends ConventionFragment {
             return;
         }
 
-        // TODO: 19/04/2016 status
-        ServerInterface.execute(ServerInterface.ACTION_SEND_MAIL, null, selected);
+        Bundle params = new Bundle(); //we do it manually because Id's are already saved, no need to fetch DB
+        params.putInt(ServerInterface.EXTRA_REQUEST_ID_KEY, request.getId());
+        params.putStringArrayList(ServerInterface.EXTRA_RESULTS_KEY, new ArrayList<>(selected));
+        NetworkService.execute(ServerInterface.class, ServerInterface.ACTION_SEND_MAIL, params);
         Toast.makeText(getContext(), R.string.request_infos_email_sent, Toast.LENGTH_LONG).show();
     }
 
@@ -194,17 +199,18 @@ public class RequestInfos extends ConventionFragment {
     public void onSaveInstanceState(Bundle outState) {
         if(request != null)
             outState.putInt(REQUEST_ID_KEY, request.getId());
+        outState.putStringArrayList(SELECTED_KEY, new ArrayList<>(selected));
         outState.putBoolean(PAY_DIALOG_KEY, payDialog.isShowing());
         outState.putBoolean(AGREEMENT_DIALOG_KEY, userAgreement.isShowing());
         super.onSaveInstanceState(outState);
     }
 
     @Override
-    public void onViewStateRestored(Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-        if(savedInstanceState == null || !savedInstanceState.containsKey(REQUEST_ID_KEY)) return;
+    public void onViewStateRestored(Bundle savedState) {
+        super.onViewStateRestored(savedState);
+        if(savedState == null || !savedState.containsKey(REQUEST_ID_KEY)) return;
 
-        Integer requestId = savedInstanceState.getInt(REQUEST_ID_KEY);
+        Integer requestId = savedState.getInt(REQUEST_ID_KEY);
         try {
             setRequest(ForgetMyPictureApp.getHelper().getRequestDao().queryForId(requestId));
         } catch (SQLException e) {
@@ -212,21 +218,25 @@ public class RequestInfos extends ConventionFragment {
             request = null;
         }
 
-        if(savedInstanceState.getBoolean(PAY_DIALOG_KEY, false))
+        selected.clear();
+        if(savedState.containsKey(SELECTED_KEY)) //noinspection ConstantConditions
+            selected.addAll(savedState.getStringArrayList(SELECTED_KEY));
+        if(savedState.getBoolean(PAY_DIALOG_KEY, false))
             payDialog.show();
-        if(savedInstanceState.getBoolean(AGREEMENT_DIALOG_KEY, false))
+        if(savedState.getBoolean(AGREEMENT_DIALOG_KEY, false))
             userAgreement.show();
     }
 
     public void setRequest(Request request) {
         this.request = request;
+        selected.clear();
         if(request == null) return;
         adapter.setMatchingArgs(Collections.singletonMap("request_id", (Object) request.getId()));
         //no need to call load, adapter will do
     }
 
 
-    private class ResultsAdapter extends DatabaseAdapter<Result> {
+    private class ResultsAdapter extends DatabaseAdapter<Result> implements AdapterView.OnItemClickListener {
 
         public ResultsAdapter() {
             super(Result.class, R.layout.result_item);
@@ -246,29 +256,7 @@ public class RequestInfos extends ConventionFragment {
             } catch (MalformedURLException ignored) { } //already checked in Searcher
             ((TextView) itemView.findViewById(R.id.pic_ref_url)).setText(res.getString(R.string.result_item_pic_ref_url, host));
 
-            CheckBox item_select = (CheckBox) itemView.findViewById(R.id.selected);
-            if(request.getStatus() == Request.Status.FINISHED || !request.getStatus().isAfter(Request.Status.PROCESSING))
-                item_select.setVisibility(View.GONE);
-            else {
-                item_select.setVisibility(View.VISIBLE);
-                item_select.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        if (request.getStatus() != Request.Status.UNLOCKED && isChecked) {
-                            payDialog.show();
-                            buttonView.setChecked(false);
-                            return;
-                        }
-
-                        if (isChecked)
-                            selected.add(item);
-                        else
-                            selected.remove(item);
-                    }
-                });
-                item_select.setChecked(selected.contains(item));
-            }
-
+            ((CheckBox) itemView.findViewById(R.id.selected)).setChecked(selected.contains(item.getId()));
             // TODO: 18/04/2016 Download server-side
             ImageView thumb = (ImageView) itemView.findViewById(R.id.thumb);
             thumb.setImageResource(R.drawable.ic_loading);
@@ -277,15 +265,26 @@ public class RequestInfos extends ConventionFragment {
         }
 
         @Override
-        public void onItemClick(Result item) {
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Log.i(TAG, "onItemClick");
-            if(!request.getStatus().isAfter(Request.Status.UNLOCKED)) {
+            if(request.getStatus() == Request.Status.FINISHED || !request.getStatus().isAfter(Request.Status.PENDING))
+                return;
+            if(request.getStatus() == Request.Status.PENDING) {
                 payDialog.show();
                 return;
             }
 
-            //show picture
+            Result item = getItem(position);
+            if(selected.contains(item.getId())) {
+                ((CheckBox) view.findViewById(R.id.selected)).setChecked(false);
+                selected.remove(item.getId());
+            } else {
+                ((CheckBox) view.findViewById(R.id.selected)).setChecked(true);
+                selected.add(item.getId());
+            }
+
         }
+
 
     }
 
