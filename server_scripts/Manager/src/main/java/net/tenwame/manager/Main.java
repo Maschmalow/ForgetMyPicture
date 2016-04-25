@@ -79,13 +79,16 @@ public class Main {
         while( true ) {
             List<Result> unprocessed = resultDao.queryForEq("pic_match", -1);
             for(Result result : unprocessed) {
-                if( !processingResults.containsKey(result) ) {
-                    processingResults.put(result, pool.submit(new ProcessingUnit(result), result));
-                } else if(processingResults.get(result).isDone()) {
+                if(processingResults.containsKey(result) &&
+                        processingResults.get(result).isDone()) {
                     processingResults.remove(result);
                     resultDao.refresh(result);
                     if(!result.isProcessed())
                         logger.log(Level.WARNING, "Result could not be processed: " + result.getPicURL());
+                }
+
+                if( !processingResults.containsKey(result) ) {
+                    processingResults.put(result, pool.submit(new ProcessingUnit(result), result));
                 }
             }
 
