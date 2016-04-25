@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import net.tenwame.forgetmypicture.ForgetMyPictureApp;
 import net.tenwame.forgetmypicture.Manager;
 import net.tenwame.forgetmypicture.R;
 import net.tenwame.forgetmypicture.UserData;
@@ -39,6 +40,7 @@ public class NewRequest extends Activity {
 
     private Bitmap originalPic = null;
     private AlertDialog searchAgreement;
+    private AlertDialog searchInformation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,16 +68,25 @@ public class NewRequest extends Activity {
         });
 
         searchAgreement = new AlertDialog.Builder(this)
-                .setNeutralButton(R.string.cancel, null)
+                .setNeutralButton(R.string.search_info_btn, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        searchInformation.show();
+                    }
+                })
                 .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         startSearch();
                     }
                 })
+                .setNegativeButton(R.string.cancel, null)
                 .setMessage(R.string.search_agreement)
                 .setTitle(R.string.agreement_title)
                 .create();
+
+
+        searchInformation = ForgetMyPictureApp.getInfoDialog(this, R.string.search_info_msg);
     }
 
     public void startSearchFromUI(View view) {

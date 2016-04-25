@@ -67,7 +67,7 @@ public class ForgetMyPictureApp extends Application {
         return context.getPackageName();
     }
 
-    public static AlertDialog getAgreementDialog(Context context) {
+    public static AlertDialog getAgreementDialog(final Context context) {
         return new AlertDialog.Builder(context)
                 .setMessage(R.string.agreement)
                 .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
@@ -83,7 +83,13 @@ public class ForgetMyPictureApp extends Application {
                         Log.i(TAG, "Agreement accepted");
                     }
                 })
-                .setNeutralButton(R.string.refuse, null)
+                .setNegativeButton(R.string.refuse, null)
+                .setNeutralButton(R.string.email_preview_btn, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getInfoDialog(context, R.string.email_preview).show();
+                    }
+                })
                 .setTitle(R.string.agreement_title)
                 .create();
     }
