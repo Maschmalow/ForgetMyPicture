@@ -71,7 +71,9 @@ public class RequestsPanel extends FragmentActivity {
     public void sendEmailFromUI(View v) {
         infos.sendEmailFromUI(v);
     }
-
+    public void getMoreInfoFromUI(View v) {
+        requests.getMoreInfoFromUI(v);
+    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

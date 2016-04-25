@@ -123,10 +123,12 @@
     <string name="refuse">Refuse</string>
 
     <!-- links -->
-    <string name="info_link">If you want more information (especially if within two months, the application requests do not succeed) about the dereferencing and deletion procedures, you can search on ICO\'s site https://ico.org.uk .</string>
+    <string name="links_info">If you want more information (especially if within two months, the application requests do not succeed) about the dereferencing and deletion procedures, you can search on ICO\'s site https://ico.org.uk .</string>
     <string name="id_card_invalid_toast">Invalid ID card</string>
     <string name="edit_btn">Edit</string>
-
+    <string name="requests_list_links">More info</string>
+    <string name="ok">Ok</string>
+    <string name="links_title">Additonal information</string>
 
 
 </resources>

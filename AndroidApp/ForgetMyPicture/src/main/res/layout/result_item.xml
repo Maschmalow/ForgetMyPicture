@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
-        android:src="@android:drawable/ic_menu_rotate"
+        android:src="@drawable/ic_loading"
         android:maxHeight="60dp"
         android:maxWidth="70dp"
         android:contentDescription="@string/result_item_thumb_desc" />
