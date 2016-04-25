@@ -90,7 +90,7 @@
     <string name="settings_data_on_wifi_sum">Utiliser le réseau uniquement si connecté à un réseau Wi-fi</string>
     <string name="settings_wipe">Supprimer toutes les données</string>
     <string name="settings_wipe_btn">Supprimer</string>
-    <string name="settings_wipe_warning">ATTENTION : toutes vos données seront effacées de l\'application et de notre serveur.\nProceed with caution.</string>
+    <string name="settings_wipe_warning">ATTENTION : toutes vos données seront effacées de l\'application et de notre serveur.</string>
     <string name="settings_wipe_toast">Suppression des données effectuée</string>
     <string name="settings_offline_mode">Mode hors-ligne</string>
     <string name="settings_offline_mode_sum">Empêcher l\'application d\'utiliser le réseau</string>
