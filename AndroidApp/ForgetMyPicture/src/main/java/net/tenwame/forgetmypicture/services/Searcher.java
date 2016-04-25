@@ -25,9 +25,12 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by Antoine on 16/02/2016.
- * class that do Google searches on behalf of the user
+ * Created by Antoine on 16/02/2016. (see {@Link NetworkService} )
+ * Network Service that do Google searches on behalf of the user
  * and update requests accordingly
+ * This service has only one action (execute one search) with no parameters
+ * This service should not be called more than once each {@Link SEARCH_DELAY} ms,
+ * or the user can be blacklisted from Google
  */
 public class Searcher extends NetworkService{
     private static final String TAG = Searcher.class.getSimpleName();
@@ -36,10 +39,10 @@ public class Searcher extends NetworkService{
 
     private static final String URL = "https://www.google.fr/search";
     public static final long SEARCH_DELAY = 100*60; //time in ms between each search
-    public static final int AVG_RESULTS_NB = 100;  //average number of results per search
+    public static final int AVG_RESULTS_NB = 100;  //average number of results per search (for display)
 
     private final  DatabaseHelper helper = ForgetMyPictureApp.getHelper();
-    private final Map<String, String> queryData;
+    private final Map<String, String> queryData; //google search parameters
     private String userAgent;
     private Request curRequest;
 
@@ -47,10 +50,10 @@ public class Searcher extends NetworkService{
         super(TAG);
         handlers.put(ACTION_SEARCH, search);
         queryData = new HashMap<>();
-        queryData.put("tbm", "isch");
-        queryData.put("safe", "off");
-        queryData.put("num", "100"); //most of the time, this is ignored
-        queryData.put("qws_rd", "ssl"); //try to see if it works without this
+        queryData.put("tbm", "isch");  //image search
+        queryData.put("safe", "off");  //obviously
+        queryData.put("num", String.valueOf(AVG_RESULTS_NB)); //most of the time, this is ignored
+        queryData.put("qws_rd", "ssl"); //it appears that search can sometimes fail without this
     }
 
 
@@ -83,6 +86,7 @@ public class Searcher extends NetworkService{
     };
 
 
+
     private void doSearch() throws Exception {
         int progress = curRequest.getProgress();
         setCurKeywords(Util.powerSetAtIndex(curRequest.getKeywords(), progress));
@@ -96,6 +100,9 @@ public class Searcher extends NetworkService{
     }
 
 
+    /*
+     * Retrieve a Result Set from current keywords
+     */
     private Set<Result> scrapeData() throws IOException {
         Set<Result> results = new HashSet<>(); //convert this to a list to support server prioritisation
         final Document doc;
@@ -103,11 +110,11 @@ public class Searcher extends NetworkService{
         doc = Jsoup.connect(URL).data(queryData).userAgent(userAgent).get();
         Log.d(TAG, "Request: " + doc.baseUri());
 
-
+        //get picture link
         for( Element elem : doc.select("div.rg_di.rg_el.ivg-i > a[href]")) {
             UrlQuerySanitizer query = new UrlQuerySanitizer(elem.attr("href"));
             if(query.hasParameter("imgurl") && query.hasParameter("imgrefurl")) {
-                try {
+                try { //all intersting data is within link query
                     new URL(query.getValue("imgurl"));
                     new URL(query.getValue("imgrefurl"));
                 } catch (MalformedURLException e) {
@@ -127,7 +134,9 @@ public class Searcher extends NetworkService{
     }
 
 
-    private void setCurUserAgent() { //TODO: check what is really needed here
+    // this is hard to set, but it seems that it should be changed from times to times
+    // (rather than used the phone default)
+    private void setCurUserAgent() {
         userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.75.14 (KHTML, like Gecko) Version/7.0.3 Safari/7046A194A";
     }
 

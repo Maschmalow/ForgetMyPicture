@@ -20,7 +20,8 @@ import net.tenwame.forgetmypicture.services.ServerInterface;
 
 /**
  * Created by Antoine on 16/04/2016.
- * do I need to explain?
+ * Everything is in double here because of API <= 11 support
+ * TODO: factorization
  */
 public class Settings extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener{
 
@@ -28,7 +29,7 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
 
     public static final String DATA_ON_WIFI_KEY = "pref_data_on_wifi";
     public static boolean dataOnWifi() {
-        return PreferenceManager.getDefaultSharedPreferences(ForgetMyPictureApp.getContext()).getBoolean(DATA_ON_WIFI_KEY, false);
+        return PreferenceManager.getDefaultSharedPreferences(ForgetMyPictureApp.getContext()).getBoolean(DATA_ON_WIFI_KEY, true);
     }
 
     public static final String OFFLINE_MODE_KEY = "pref_offline_mode";
@@ -36,9 +37,10 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
         return PreferenceManager.getDefaultSharedPreferences(ForgetMyPictureApp.getContext()).getBoolean(OFFLINE_MODE_KEY, false);
     }
 
+    private static final Integer MATCH_THRESHOLD_DEFAULT = 60;
     public static final String MATCH_THRESHOLD_KEY = "pref_match_threshold";
     public static int matchTreshold() {
-        return Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(ForgetMyPictureApp.getContext()).getString(MATCH_THRESHOLD_KEY, "60"));
+        return Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(ForgetMyPictureApp.getContext()).getString(MATCH_THRESHOLD_KEY, MATCH_THRESHOLD_DEFAULT.toString()));
     }
 
 
@@ -56,6 +58,8 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
         else {
             addPreferencesFromResource(R.xml.preferences);
             findPreference(WIPE_KEY).setOnPreferenceClickListener(wipeListener);
+            //String sum = getResources().getStringArray(R.array.settings_match_threshold_sum)[0];
+            //findPreference(MATCH_THRESHOLD_KEY).setSummary(String.format(sum, MATCH_THRESHOLD_DEFAULT));
         }
 
     }
@@ -69,7 +73,7 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
         } else if (MATCH_THRESHOLD_KEY.equals(key)) {
             Resources res = getResources();
             Preference pref = findPreference(MATCH_THRESHOLD_KEY);
-            int threshold = Integer.valueOf(sharedPreferences.getString(MATCH_THRESHOLD_KEY, "60"));
+            int threshold = Integer.valueOf(sharedPreferences.getString(MATCH_THRESHOLD_KEY, MATCH_THRESHOLD_DEFAULT.toString()));
             if(threshold > 1)
                 threshold = 1;
             else if(threshold < 0)
@@ -91,6 +95,7 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 ForgetMyPictureApp.getHelper().wipeDatabase();
+                                Manager.getInstance().setAlarms();
                                 ServerInterface.execute(ServerInterface.ACTION_WIPE_USER);
                                 Toast.makeText(Settings.this, R.string.settings_wipe_toast, Toast.LENGTH_SHORT).show();
                             }
@@ -129,6 +134,8 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preferences);
             findPreference(WIPE_KEY).setOnPreferenceClickListener(((Settings)getActivity()).wipeListener);
+            //String sum = getResources().getStringArray(R.array.settings_match_threshold_sum)[0];
+            //findPreference(MATCH_THRESHOLD_KEY).setSummary(String.format(sum, MATCH_THRESHOLD_DEFAULT));
         }
 
 
@@ -154,7 +161,7 @@ public class Settings extends PreferenceActivity implements SharedPreferences.On
             } else if (MATCH_THRESHOLD_KEY.equals(key)) {
                 Resources res = getResources();
                 Preference pref = findPreference(MATCH_THRESHOLD_KEY);
-                int threshold = Integer.valueOf(sharedPreferences.getString(MATCH_THRESHOLD_KEY, "60"));
+                int threshold = Integer.valueOf(sharedPreferences.getString(MATCH_THRESHOLD_KEY, MATCH_THRESHOLD_DEFAULT.toString()));
                 if(threshold > 100)
                     threshold = 100;
                 else if(threshold < 0)

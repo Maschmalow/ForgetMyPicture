@@ -6,7 +6,7 @@ import com.j256.ormlite.table.DatabaseTable;
 
 /**
  * Created by Antoine on 18/03/2016.
- * results table
+ * results table (see Request for generic explanations)
  */
 @DatabaseTable(tableName = "result")
 public class Result {

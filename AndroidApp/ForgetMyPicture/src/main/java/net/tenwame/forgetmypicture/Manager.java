@@ -27,10 +27,11 @@ import java.util.Map;
 
 /**
  * Created by Antoine on 10/03/2016.
- * multi purpose class
+ * multi purpose class (with Singleton pattern)
  * - handle new requests
- * - start/stop service when needed
+ * - launch searches when possible
  * - periodically get updates from server
+ * - handle failure (not entirely implemented yet)
  */
 public class Manager {
     private static final String TAG = Manager.class.getSimpleName();
@@ -118,6 +119,11 @@ public class Manager {
         shouldResent = false;
     }
 
+    /**
+     * Notify the manager that the updates (search and server update) may have
+     * to be rescheduled.
+     * The Manager will ultimately decide what to do.
+     */
     public void setAlarms() {
 
         List<Request> requests = Collections.emptyList();
@@ -133,7 +139,7 @@ public class Manager {
                 !Util.applyFilter(requests, new Util.Filter<Request>() {
                     @Override
                     public boolean isAllowed(Request candidate) {
-                        return !candidate.getStatus().isAfter(Request.Status.PAYED);
+                        return !candidate.getStatus().isAfter(Request.Status.UNLOCKED);
                     }}).isEmpty())
             scheduleAlarms();
         else
@@ -174,6 +180,9 @@ public class Manager {
         return PendingIntent.getBroadcast(context, AlarmReceiver.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
+    /**
+     * Broadcast receiver used to track network status
+     */
     public static class NetworkReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -182,6 +191,11 @@ public class Manager {
         }
     }
 
+    /**
+     * Internal receiver that fires relevant NetworkService when an alarm is triggered.
+     * This allow searching and update to continue even if the app is closed.
+     * The user can decide to disable theses.
+     */
     public static class AlarmReceiver extends  BroadcastReceiver {
         public static final int REQUEST_CODE = 0; //not used
         public static final String ACTION_DO_SEARCH = ForgetMyPictureApp.getName() + ".alarm.search";

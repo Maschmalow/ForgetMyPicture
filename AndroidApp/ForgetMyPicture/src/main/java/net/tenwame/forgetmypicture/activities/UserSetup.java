@@ -21,6 +21,7 @@ import net.tenwame.forgetmypicture.DatabaseHelper;
 import net.tenwame.forgetmypicture.PictureAccess;
 import net.tenwame.forgetmypicture.R;
 import net.tenwame.forgetmypicture.UserData;
+import net.tenwame.forgetmypicture.Util;
 import net.tenwame.forgetmypicture.services.ServerInterface;
 
 import java.io.File;
@@ -115,6 +116,12 @@ public class UserSetup extends Activity {
         if(resultCode != RESULT_OK || requestCode != REQUEST_SELFIE_PIC)
             return;
 
+        try {
+            Util.rotatePicture(new PictureAccess(curTmpFilePath));
+        } catch (IOException e) {
+            Log.w(TAG, "Could not rotate picture " + curTmpFilePath, e);
+            Crittercism.logHandledException(e);
+        }
         addSelfieThumb();
         selfiesPath.add(curTmpFilePath);
         curTmpFilePath = null;
@@ -123,14 +130,14 @@ public class UserSetup extends Activity {
 
     private void addSelfieThumb() {
         ImageView thumbView = new ImageView(this);
-        int w = getResources().getDimensionPixelSize(R.dimen.selfie_thumb_width);
-        int h = getResources().getDimensionPixelSize(R.dimen.selfie_thumb_height);
+        int w = getResources().getDimensionPixelSize(R.dimen.thumb_max_width);
+        int h = getResources().getDimensionPixelSize(R.dimen.thumb_max_height);
         thumbView.setAdjustViewBounds(true);
         thumbView.setMaxWidth(w);
         thumbView.setMaxHeight(h);
         thumbView.setContentDescription(getResources().getString(R.string.user_setup_selfie_desc));
 
-        Bitmap pic = new PictureAccess(curTmpFilePath, false).get(w, h);
+        Bitmap pic = new PictureAccess(curTmpFilePath).get(w, h);
 
         thumbView.setImageBitmap(pic);
         thumbHolder.addView(thumbView);

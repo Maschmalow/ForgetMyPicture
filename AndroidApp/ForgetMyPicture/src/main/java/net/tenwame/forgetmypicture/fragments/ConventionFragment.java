@@ -15,8 +15,8 @@ import java.lang.reflect.Field;
 /**
  * Created by Antoine on 27/09/2015.
  * utility Fragment that rely on naming conventions to initialize its elements
- * MyFragment has layout id fragment_my_fragment
- * if he has a View field name myView, its resId is my_view
+ * i.e. MyFragment has layout id fragment_my_fragment,
+ * if it has a View field name myView, its resId is my_view.
  */
 public class ConventionFragment extends Fragment {
     private static final String TAG = ConventionFragment.class.getSimpleName();

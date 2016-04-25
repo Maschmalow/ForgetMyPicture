@@ -2,6 +2,7 @@ package net.tenwame.forgetmypicture;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,15 +23,20 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Created by Antoine on 07/04/2016.
  * generic ListView adapter for database items
+ * @param <T> class representing the database table. Must belong to the 'database' package
  */
 public abstract class DatabaseAdapter<T> extends BaseAdapter implements AdapterView.OnItemClickListener{
     private final static String TAG = DatabaseAdapter.class.getName();
 
-
     private final Dao<T, ?> dao;
-    private List<T> data = new ArrayList<>();
-    private Map<String, Object> queryArgs = new ConcurrentHashMap<>();
     private int layoutItemId;
+    private List<T> data = new ArrayList<>();
+
+    // args used to filter from db
+    // should be set once on View creation
+    private Map<String, Object> queryArgs = new ConcurrentHashMap<>();
+
+    //lightweight filter for dynamic display (does not trigger db query)
     private Util.Filter<T> filter;
     private List<T> queriedItems = Collections.emptyList();
 
@@ -41,6 +47,10 @@ public abstract class DatabaseAdapter<T> extends BaseAdapter implements AdapterV
         //data isn't initialised, because we want the app to notify when loading from db is needed
     }
 
+    /**
+     * reload items from database
+     * note: triggers {@Link notifyDataSetChanged}
+     */
     public void loadData() {
         try {
             if(queryArgs.isEmpty())
@@ -97,6 +107,9 @@ public abstract class DatabaseAdapter<T> extends BaseAdapter implements AdapterV
         }
     };
 
+    /**
+     * same as {@Link trackDatabase(Class tableClass, boolean track)}, with the adapter relevant class
+     */
     public void trackDatabase(boolean track) {
         if(track)
             dao.registerObserver(obs);
@@ -104,6 +117,10 @@ public abstract class DatabaseAdapter<T> extends BaseAdapter implements AdapterV
             dao.unregisterObserver(obs);
     }
 
+    /**
+     * set whether to reload data each time the given database table is updated
+     * @param tableClass the class associated with the table. Must be within 'database' package
+     */
     public void trackDatabase(Class<?> tableClass, boolean track) {
         try {
             if(track)
@@ -123,13 +140,25 @@ public abstract class DatabaseAdapter<T> extends BaseAdapter implements AdapterV
         return convertView;
     }
 
-    abstract public void setView(View view, T item);
+    /**
+     * Simplified version of getView, where View recylcling has already been taken care of,
+     * and the concerned item is directly available
+     * @param view The View representing the {@param item} parameter. All relevant fields should
+     *             be set either to the {@param item} corresponding value or a default one, but not left
+     *             unchanged.
+     */
+    abstract public void setView(@NonNull View view, T item);
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         onItemClick(getItem(position));
     }
 
+    /**
+     * Convenience method to be use for setting item's click listeners
+     * To use simply set this adapter as the ListView OnItemClickListener
+     * @param item the Clicked item
+     */
     abstract public void onItemClick(T item);
 
     @Override

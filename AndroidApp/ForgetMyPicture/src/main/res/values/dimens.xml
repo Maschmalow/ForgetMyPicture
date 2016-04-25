@@ -3,6 +3,10 @@
     <dimen name="activity_margin">8dp</dimen>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="selfie_thumb_height">200dp</dimen>
-    <dimen name="selfie_thumb_width">150dp</dimen>
+
+    <dimen name="thumb_max_height">200dp</dimen>
+    <dimen name="thumb_max_width">150dp</dimen>
+
+    <dimen name="big_thumb_max_height">300dp</dimen>
+    <dimen name="big_thumb_max_width">200dp</dimen>
 </resources>

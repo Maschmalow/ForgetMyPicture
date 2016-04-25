@@ -4,7 +4,7 @@
         android:key="pref_data_on_wifi"
         android:title="@string/settings_data_on_wifi"
         android:summary="@string/settings_data_on_wifi_sum"
-        android:defaultValue="false" />
+        android:defaultValue="true" />
 
     <CheckBoxPreference
         android:key="pref_offline_mode"

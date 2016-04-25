@@ -2,6 +2,7 @@ package net.tenwame.forgetmypicture.fragments;
 
 import android.content.res.Resources;
 import android.database.DataSetObserver;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
@@ -75,7 +76,7 @@ public class RequestsList extends ConventionFragment {
         }
 
         @Override
-        public void setView(View view, Request item) {
+        public void setView(@NonNull View view, Request item) {
             Resources res = getResources();
 
             TextView status = (TextView) view.findViewById(R.id.status);
@@ -86,7 +87,7 @@ public class RequestsList extends ConventionFragment {
                 status.setTextColor(res.getColor(R.color.orange_light));
             if(item.getStatus() == Request.Status.PENDING)
                 status.setTextColor(res.getColor(R.color.green_light));
-            if(item.getStatus() == Request.Status.PAYED)
+            if(item.getStatus() == Request.Status.UNLOCKED )
                 status.setTextColor(res.getColor(R.color.green_dark));
             if(item.getStatus() == Request.Status.FINISHED)
                 status.setTextColor(res.getColor(R.color.gray_dark));

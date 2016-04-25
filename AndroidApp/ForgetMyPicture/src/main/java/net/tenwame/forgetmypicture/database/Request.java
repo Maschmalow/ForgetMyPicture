@@ -23,12 +23,14 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * Created by Antoine on 18/03/2016.
+ * Each database table is represented by a Java class
+ * They all are within the 'database' package
+ * db fields
  * requests table
  */
 @DatabaseTable(tableName = "request")
 public class Request {
-    private static final String REQUEST_PREFIX = "request_";
+    private static final String REQUEST_PREFIX = "request_"; //prefixes are for files storage
 
     public enum Kind {QUICK, EXHAUSTIVE;
 
@@ -44,7 +46,7 @@ public class Request {
         FETCHING, //still searching for new pictures
         PROCESSING, //some pictures are being processed
         PENDING, //waiting for user
-        PAYED, //paying features unlocked
+        UNLOCKED, //paying features unlocked
         FINISHED; //done
 
         public boolean isAfter(Status status) {
@@ -59,15 +61,17 @@ public class Request {
                 return res.getString(R.string.enum_request_status_processing);
             else if(this == PENDING)
                 return res.getString(R.string.enum_request_status_pending);
-            else if(this == PAYED)
+            else if(this == UNLOCKED )
                 return res.getString(R.string.enum_request_status_payed);
             else  //FINISHED
                 return res.getString(R.string.enum_request_status_finished);
         }
     }
 
-    Request() {}
+    //disable empty instantiation
+    Request() {} //package access needed for ORMLite
 
+    //constructor to be used when creating new rows
     public Request(List<String> keywords, Bitmap originalPic) {
         this.keywords = new ArrayList<>(keywords);
         setStatus(Status.FETCHING);
@@ -98,8 +102,8 @@ public class Request {
     @DatabaseField(canBeNull = false)
     private String kind;
 
-    @DatabaseField
-    private String originalPicPath;
+    @DatabaseField //All db files are stored internally, and only the path is kept
+    private String originalPicPath; //the path is uniquely init'd in the constructor
 
     @DatabaseField(foreign = true)
     private User user;
@@ -155,7 +159,7 @@ public class Request {
     }
 
     public PictureAccess getOriginalPic() {
-        return new PictureAccess(originalPicPath);
+        return new PictureAccess.Internal(originalPicPath);
     }
 
     public ForeignCollection<Result> getResults() {
@@ -170,7 +174,7 @@ public class Request {
         }
         Set<Result> newResults = new HashSet<>();
         for(Result result : results)
-            if(!this.results.contains(result)) { //this is retarded, but ORMLite's add crashes instead of returning false
+            if(!this.results.contains(result)) { //this is stupid, but ORMLite's add crashes instead of returning false
                 this.results.add(result);        //okay, maybe they don't want to make too much assumptions, but still
                 newResults.add(result);
             }

@@ -10,6 +10,10 @@ import net.tenwame.forgetmypicture.database.Request;
 import net.tenwame.forgetmypicture.fragments.RequestInfos;
 import net.tenwame.forgetmypicture.fragments.RequestsList;
 
+/**
+ * Base Activity that holds both the Request list ({@Link RequestList}) Fragment and
+ * the Request-specific Fragment ({@Link RequestInfos})
+ */
 public class RequestsPanel extends FragmentActivity {
 
     private static final String IN_LIST_FRAG_KEY = "IN_LIST_FRAG_KEY";
@@ -57,7 +61,7 @@ public class RequestsPanel extends FragmentActivity {
                 .addToBackStack(null)
                 .commit();
 
-        if(request != null)
+        if(request != null) //the request is not actually set to null, it is just kept unchanged
             infos.setRequest(request);
     }
 

@@ -28,7 +28,7 @@ import javax.json.Json;
 import javax.json.JsonObject;
 
 /**
- * Created by Antoine on 24/02/2016.
+ * Created by Antoine on 24/02/2016. (see {@Link NetworkService})
  * service to call when communicating with the back-end server
  * updates are directly made to the database
  */
@@ -122,6 +122,8 @@ public class ServerInterface extends NetworkService {
             Jsoup.connect(BASE_URL + WIPE_USER_URL)
                     .data("deviceId", UserData.getDeviceId())
                     .post();
+
+            Log.d(TAG, "Device " + UserData.getDeviceId() + " data wiped.");
         }
     };
 

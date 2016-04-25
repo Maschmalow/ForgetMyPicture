@@ -18,7 +18,7 @@ import java.sql.SQLException;
 
 /**
  * Created by Antoine on 22/03/2016.
- * for DAOs and stuff
+ * Generic ORMLite Helper implementation
  */
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final String TAG = DatabaseHelper.class.getSimpleName();

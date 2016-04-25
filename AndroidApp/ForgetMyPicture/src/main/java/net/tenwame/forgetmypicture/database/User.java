@@ -19,7 +19,7 @@ import java.util.UUID;
 
 /**
  * Created by Antoine on 18/03/2016.
- * User table
+ * User table (see Request for generic explanations)
  */
 
 @DatabaseTable(tableName = "user")
@@ -87,7 +87,7 @@ public class User {
     }
 
     public PictureAccess getIdCard() {
-        return new PictureAccess(idCardPath);
+        return new PictureAccess.Internal(idCardPath);
     }
 
     public String getDeviceId() {

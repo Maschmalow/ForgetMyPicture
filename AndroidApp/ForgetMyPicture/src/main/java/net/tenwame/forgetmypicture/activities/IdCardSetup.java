@@ -3,7 +3,6 @@ package net.tenwame.forgetmypicture.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -16,8 +15,10 @@ import android.widget.Toast;
 
 import com.crittercism.app.Crittercism;
 
+import net.tenwame.forgetmypicture.PictureAccess;
 import net.tenwame.forgetmypicture.R;
 import net.tenwame.forgetmypicture.UserData;
+import net.tenwame.forgetmypicture.Util;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,7 +34,6 @@ public class IdCardSetup extends Activity {
     private static final int REQUEST_IDCARD_PIC = 1;
 
     private String curIdCardPath;
-    private Bitmap idCard;
 
     private ImageView idCardThumb;
     private Button saveButton;
@@ -74,6 +74,7 @@ public class IdCardSetup extends Activity {
     }
 
     public void saveIdCardFromUI(View v) {
+        Bitmap idCard = new PictureAccess(curIdCardPath).get();
         if(idCard == null) {
             Log.w(TAG, "No idCard taken");
             Toast.makeText(this, R.string.id_card_invalid_toast, Toast.LENGTH_LONG).show();
@@ -97,13 +98,30 @@ public class IdCardSetup extends Activity {
         if(resultCode != RESULT_OK || requestCode != REQUEST_IDCARD_PIC)
             return;
 
-        idCard = BitmapFactory.decodeFile(curIdCardPath);
-        idCardThumb.setImageBitmap(idCard);
-        saveButton.setVisibility(View.VISIBLE);
+        try {
+            Util.rotatePicture(new PictureAccess(curIdCardPath));
+        } catch (IOException e) {
+            Log.w(TAG, "Could not rotate picture " + curIdCardPath, e);
+            curIdCardPath = null;
+            Crittercism.logHandledException(e);
+        }
+
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
 
-
+        if(curIdCardPath != null) {
+            Bitmap thumb = new PictureAccess(curIdCardPath).get();
+            idCardThumb.setImageBitmap(thumb);
+            idCardThumb.setVisibility(View.VISIBLE);
+            saveButton.setVisibility(View.VISIBLE);
+        } else {
+            idCardThumb.setVisibility(View.GONE);
+            saveButton.setVisibility(View.GONE);
+        }
+    }
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putString(CUR_TMP_FILE_KEY, curIdCardPath);

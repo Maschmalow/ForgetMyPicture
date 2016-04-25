@@ -18,6 +18,15 @@ import java.util.Map;
 /**
  * Created by Antoine on 17/04/2016.
  * Service template for networking
+ * IntentServices are used for two reasons:
+ *  - networking requires a separate Thread.
+ *  - It can be called while the app is dead (Alarms broadcast)
+ * each subclass represent an interface to a remote host
+ * subclass have to register ActionHandlers associated to the Intent action.
+ * parameters are given through the Intent extra Bundle
+ *
+ * This class handle listeners and error/success logging.
+ * For other communications, the app db is used.
  */
 public abstract class NetworkService extends IntentService {
     private static final String TAG = NetworkService.class.getSimpleName();
@@ -35,6 +44,13 @@ public abstract class NetworkService extends IntentService {
         execute(clazz, action, null);
     }
 
+    /**
+     * generic static method to call for a network action.
+     * subclass should override this for additional convenience
+     * @param clazz the service class to execute
+     * @param action the action to be done
+     * @param params additional parameters
+     */
     public static void execute(Class<? extends IntentService> clazz, String action, Bundle params) {
         Intent intent = new Intent(ForgetMyPictureApp.getContext(), clazz);
         intent.setPackage(ForgetMyPictureApp.getName());

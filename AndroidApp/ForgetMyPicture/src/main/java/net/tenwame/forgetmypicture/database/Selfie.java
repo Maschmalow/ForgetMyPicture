@@ -11,7 +11,7 @@ import java.util.UUID;
 
 /**
  * Created by Antoine on 21/03/2016.
- * wrapper for selfie path storage
+ * wrapper for selfie path storage (see Request for generic explanations)
  */
 public class Selfie {
     private static final String SELFIE_PREFIX = "user_selfie_";
@@ -35,6 +35,6 @@ public class Selfie {
     }
 
     public PictureAccess getPic() {
-        return new PictureAccess(path);
+        return new PictureAccess.Internal(path);
     }
 }

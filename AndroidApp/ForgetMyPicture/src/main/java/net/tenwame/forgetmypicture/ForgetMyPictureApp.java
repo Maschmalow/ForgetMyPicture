@@ -20,7 +20,7 @@ import java.sql.SQLException;
 
 /**
  * Created by Antoine on 19/02/2016.
- * Application, for context
+ * Application, for context and early initialisation
  */
 public class ForgetMyPictureApp extends Application {
     private static final String TAG = ForgetMyPictureApp.class.getSimpleName();

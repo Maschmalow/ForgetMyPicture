@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.database.DataSetObserver;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
@@ -41,7 +42,7 @@ import java.util.Set;
 /**
  * Created by Antoine on 07/04/2016.
  * Fragment that displays information for one request
- * TODO: select mode
+ *
  */
 public class RequestInfos extends ConventionFragment {
     private static final String TAG = RequestInfos.class.getName();
@@ -52,7 +53,7 @@ public class RequestInfos extends ConventionFragment {
 
     private Request request;
     private ResultsAdapter adapter = new ResultsAdapter();
-    private DataSetObserver loader;
+    private DataSetObserver loader; //observer that (re)load fragment when data changes
     private Set<Result> selected = new HashSet<>();
     private AlertDialog payDialog;
     private AlertDialog userAgreement;
@@ -92,7 +93,7 @@ public class RequestInfos extends ConventionFragment {
                 .setPositiveButton(R.string.request_infos_pay_btn, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        request.setStatus(Request.Status.PAYED);
+                        request.setStatus(Request.Status.UNLOCKED);
                         try {
                             ForgetMyPictureApp.getHelper().getRequestDao().update(request);
                         } catch (SQLException e) {
@@ -153,7 +154,7 @@ public class RequestInfos extends ConventionFragment {
     }
 
     public void fillFormFromUI(View v) {
-        if(!request.getStatus().isAfter(Request.Status.PAYED)) {
+        if(!request.getStatus().isAfter(Request.Status.UNLOCKED)) {
             payDialog.show();
             return;
         }
@@ -174,7 +175,7 @@ public class RequestInfos extends ConventionFragment {
     }
 
     public void sendEmailFromUI(View v) {
-        if(!request.getStatus().isAfter(Request.Status.PAYED)) {
+        if(!request.getStatus().isAfter(Request.Status.UNLOCKED)) {
             payDialog.show();
             return;
         }
@@ -232,7 +233,7 @@ public class RequestInfos extends ConventionFragment {
         }
 
         @Override
-        public void setView(final View itemView, final Result item) {
+        public void setView(@NonNull final View itemView, final Result item) {
         final Resources res = getResources();
 
             String[] match = res.getStringArray(R.array.result_item_match);
@@ -240,7 +241,7 @@ public class RequestInfos extends ConventionFragment {
 
             String host = "#######";
             try {
-                if(request.getStatus().isAfter(Request.Status.PAYED))
+                if(request.getStatus().isAfter(Request.Status.UNLOCKED))
                     host = new URL(item.getPicRefURL()).getHost();
             } catch (MalformedURLException ignored) { } //already checked in Searcher
             ((TextView) itemView.findViewById(R.id.pic_ref_url)).setText(res.getString(R.string.result_item_pic_ref_url, host));
@@ -252,7 +253,7 @@ public class RequestInfos extends ConventionFragment {
                 item_select.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        if (request.getStatus() != Request.Status.PAYED && isChecked) {
+                        if (request.getStatus() != Request.Status.UNLOCKED && isChecked) {
                             payDialog.show();
                             buttonView.setChecked(false);
                             return;
@@ -277,7 +278,7 @@ public class RequestInfos extends ConventionFragment {
         @Override
         public void onItemClick(Result item) {
             Log.i(TAG, "onItemClick");
-            if(!request.getStatus().isAfter(Request.Status.PAYED)) {
+            if(!request.getStatus().isAfter(Request.Status.UNLOCKED)) {
                 payDialog.show();
                 return;
             }

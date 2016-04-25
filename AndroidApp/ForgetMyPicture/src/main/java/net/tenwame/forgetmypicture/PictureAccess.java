@@ -18,28 +18,15 @@ import java.io.OutputStream;
  */
 public class PictureAccess {
     private static final String TAG = PictureAccess.class.getSimpleName();
-    private final String path;
+    protected final String path;
 
-    /**
-     * Control whether the file is stored in the package internal dir (Context methods)
-     * or should be treated as a public file (absolute path)
-     */
-    private final boolean internal;
 
     public PictureAccess(String path) {
-        this(path, true);
-    }
-
-    public PictureAccess(String path, boolean internal) {
         this.path = path;
-        this.internal = internal;
     }
 
-    private File getFile() {
-        if(internal)
-            return ForgetMyPictureApp.getContext().getFileStreamPath(path);
-        else
-            return new File(path);
+    public File getFile() {
+        return new File(path);
     }
 
 
@@ -47,7 +34,7 @@ public class PictureAccess {
      * gives a raw stream of the disk file
      * @return the picture stream
      */
-    public InputStream openStream() throws FileNotFoundException {
+    public final InputStream openStream() throws FileNotFoundException {
         return new FileInputStream(getFile());
     }
 
@@ -55,7 +42,7 @@ public class PictureAccess {
      * get the bitmap saved on disk
      * @return the bitmap, or null if there is an error
      */
-    public Bitmap get() {
+    public final Bitmap get() {
         return BitmapFactory.decodeFile(getFile().getAbsolutePath());
     }
 
@@ -66,7 +53,7 @@ public class PictureAccess {
      * @param width the desired width
      * @param height the desired height
      */
-    public Bitmap get(int width, int height) {
+    public final Bitmap get(int width, int height) {
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(getFile().getAbsolutePath(), opts);
@@ -81,10 +68,10 @@ public class PictureAccess {
      * if pic is null, then it is deleted
      * @param pic the bitmap to set
      */
-    public void set(Bitmap pic) {
+    public final void set(Bitmap pic) {
         if(pic == null) {
             if(!getFile().delete())
-                Log.e(TAG, "Could not delete picture " + path + (internal? " (internal)" : "") );
+                Log.e(TAG, "Could not delete picture " + path);
             return;
         }
 
@@ -102,4 +89,15 @@ public class PictureAccess {
     }
 
 
+    public static class Internal extends PictureAccess{
+
+        public Internal(String path) {
+            super(path);
+        }
+
+        @Override
+        public File getFile() {
+            return ForgetMyPictureApp.getContext().getFileStreamPath(path);
+        }
+    }
 }

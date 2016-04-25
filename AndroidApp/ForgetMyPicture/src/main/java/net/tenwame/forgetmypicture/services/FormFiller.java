@@ -15,6 +15,11 @@ import java.io.InputStream;
 import java.text.DateFormat;
 import java.util.Date;
 
+/**
+ * (see {@Link NetworkService})
+ * Service that fill and sends Google's dereferencing forms
+ * there is only one action: send form
+ */
 public class FormFiller extends NetworkService{
     private static final String TAG = FormFiller.class.getSimpleName();
 
@@ -39,6 +44,11 @@ public class FormFiller extends NetworkService{
     }
 
 
+    /**
+     * Action to send form
+     * expected parameters are:
+     *  - the relevant request
+     */
     private ActionHandler fillForm = new ActionHandler() {
         @Override
         public void handle(Bundle params) throws Exception {
@@ -47,7 +57,7 @@ public class FormFiller extends NetworkService{
             if(!request.getStatus().isAfter(Request.Status.PENDING))
                 throw new RuntimeException("Invalid request status: " + request.getStatus());
 
-
+            //replace with FORM_URL for release
             Connection connection = Jsoup.connect("127.0.0.1");
 
             User user = UserData.getUser();

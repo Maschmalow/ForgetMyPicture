@@ -13,7 +13,7 @@ import java.sql.SQLException;
 /**
  * Created by Antoine on 20/02/2016.
  * class used as a gateway to the user personal data
- * implements singleton pattern for the user table
+ * implements singleton pattern for the user table (See {@Link User})
  */
 public class UserData {
     private static final String TAG = UserData.class.getSimpleName();
@@ -33,6 +33,9 @@ public class UserData {
         return user;
     }
 
+    /*
+     * initialise user
+     */
     private static User setUser() {
         final Dao<User, String> dao = ForgetMyPictureApp.getHelper().getUserDao();
         try {
@@ -45,6 +48,8 @@ public class UserData {
         } catch (SQLException e) {
             throw new RuntimeException("Could not fetch or create user", e);
         }
+
+        //auto-refresh user
         dao.registerObserver(new Dao.DaoObserver() {
             @Override
             public void onChange() {
