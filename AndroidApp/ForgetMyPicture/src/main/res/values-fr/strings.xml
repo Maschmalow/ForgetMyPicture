@@ -134,7 +134,7 @@
     <string name="edit_btn">Editer</string>
     <string name="info_dialog_title">Informations complémentaires</string>
     <string name="search_info_btn">Plus d\'info</string>
-    <string name="search_info_msg">AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</string>
+    <string name="search_info_msg">Pour commencer une recherche, entrez des mots-clefs et facultativement cochez la case recherche rapide pour ajouter une image que vous souhaitez déréférencer ou supprimer. La recherche rapide recherche des images ressemblant fortement à celle que vous avez chargée/ajoutée, tandis que la recherche exhaustive (si la case recherche rapide n\'est pas cochée) recherche des images ressemblant par reconnaissance faciale au selfie pris.</string>
     <string name="email_preview_btn">Voir mail</string>
 
 

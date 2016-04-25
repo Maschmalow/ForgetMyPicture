@@ -132,7 +132,7 @@
     <string name="edit_btn">Edit</string>
     <string name="info_dialog_title">Additional information</string>
     <string name="search_info_btn">More info</string>
-    <string name="search_info_msg">AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</string>
+    <string name="search_info_msg">To begin a search, enter some keywords and optionally tick the quick search box to add a picture that you wish to dereference or delete. The quick search looks for comparable pictures to the one you have uploaded, whereas the exhaustive search - if the quick search box is not ticked - looks for comparable pictures to the selfie thanks to facial recognition.</string>
     <string name="email_preview_btn">See e-mail</string>
 
 
