@@ -85,8 +85,11 @@ public class Main {
                 if(entry.getValue().isDone()){
                     processingResults.remove(entry.getKey());
                     resultDao.refresh(entry.getKey());
-                    if(entry.getKey().getNb_fail() >= NB_FAIL_MAX)
+                    if(entry.getKey().getNb_fail() >= NB_FAIL_MAX) {
                         logger.log(Level.WARNING, "FAILED : Result definitely abandoned " + entry.getKey().getPicURL());
+                        entry.getKey().setMatch(0);
+                        resultDao.update(entry.getKey());
+                    }
                 }
             }
 
