@@ -4,11 +4,14 @@ import net.tenwame.manager.database.Request;
 import net.tenwame.manager.database.Result;
 import net.tenwame.manager.database.Selfie;
 import net.tenwame.manager.database.User;
+
 import org.im4java.core.ConvertCmd;
 import org.im4java.core.IM4JavaException;
 import org.im4java.core.IMOperation;
+import org.im4java.core.Operation;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -61,9 +64,10 @@ class ProcessingUnit implements Runnable {
         String dst = BASE_FILES_PATH + user.getDeviceId() + "_" +
                 request.getId() + "_" + UUID.randomUUID();
         savePic(result.getPicURL(), dst);
-        String picTmpPath = convertPic(dst);
+        String picTmpPath = convertPic(dst, true);
 
         List<String> args = new ArrayList<>();
+        String originalPicConverted = null;
         if(request.getKind() == Request.Kind.EXHAUSTIVE) {
             args.add(FR_PATH);
             args.add(picTmpPath);
@@ -74,17 +78,19 @@ class ProcessingUnit implements Runnable {
         if(request.getKind() == Request.Kind.QUICK) {
             args.add(IC_PATH);
             args.add(picTmpPath);
-            args.add(request.getOriginalPicPath());
+            originalPicConverted = convertPic(request.getOriginalPicPath(), false);
+            args.add(originalPicConverted);
         }
         args.add(BASE_FILES_PATH + "error_log_" + new SimpleDateFormat("dd.MM.yyyy_HH.mm.ss.SS").format(Calendar.getInstance().getTime()));
+        //File err = new File(BASE_FILES_PATH + "error_log_" + new SimpleDateFormat("dd.MM.yyyy_HH.mm.ss.SS").format(Calendar.getInstance().getTime()));
 
         try {
-            logger.log(Level.INFO, "Starting process" + args.toString());
-            Process proc = new ProcessBuilder(args).redirectErrorStream(true).start();
+            logger.log(Level.INFO, "Starting process" + args.toString() );
+            Process proc = new ProcessBuilder(args).directory(new File(new File(FR_PATH).getParent())).redirectErrorStream(true).start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
             proc.waitFor();
             String ret = reader.readLine();
-            logger.log(Level.INFO, ret);
+            logger.log(Level.INFO, result.getPicURL() + " result: " + ret);
             result.setMatch(Integer.parseInt(ret));
             Main.getResultDao().update(result);
 
@@ -93,9 +99,11 @@ class ProcessingUnit implements Runnable {
             throw new RuntimeException(e);
         } finally {
             try {
+                if(originalPicConverted != null)
+                    Files.delete(Paths.get(originalPicConverted));
                 Files.delete(Paths.get(picTmpPath));
             } catch (IOException e) {
-                logger.log(Level.WARNING, "Could not delete converted file " + picTmpPath, e);
+                logger.log(Level.WARNING, "Could not delete converted file", e);
             }
         }
     }
@@ -108,17 +116,21 @@ class ProcessingUnit implements Runnable {
         }
     }
 
-    private static String convertPic(String path) {
-        String convertedPath = path + ".ppm";
+    private static final Operation convertOp = new IMOperation().addImage().addImage();
+    private static String convertPic(String path, boolean delete) {
+        //I know, that's a lot of UUID's, but it's a cheap and efficient solution to filename collisions
+        String convertedPath = path + UUID.randomUUID() + ".ppm";
         try {
-            new ConvertCmd().run(new IMOperation().addImage().addImage(), path, convertedPath);
+            new ConvertCmd().run(convertOp, path, convertedPath);
         } catch (IOException | IM4JavaException | InterruptedException e) {
             throw new RuntimeException("Could not convert image", e);
         } finally {
-            try {
-                Files.delete(Paths.get(path));
-            } catch (IOException e) {
-                logger.log(Level.WARNING, "Could not delete downloaded file " + path, e);
+            if(delete) {
+                try {
+                    Files.delete(Paths.get(path));
+                } catch (IOException e) {
+                    logger.log(Level.WARNING, "Could not delete source file " + path, e);
+                }
             }
         }
 

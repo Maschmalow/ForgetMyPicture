@@ -2,6 +2,7 @@ package net.tenwame.manager.database;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+
 import net.tenwame.manager.Main;
 
 import java.sql.SQLException;
@@ -45,5 +46,24 @@ public class Result {
 
     public Request getRequest() throws SQLException {
         return Main.getRequestDao().queryForEq("request_id", request_id).get(0);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if( this == o ) return true;
+        if( o == null || getClass() != o.getClass() ) return false;
+
+        Result result = (Result) o;
+
+        if( !pic_url.equals(result.pic_url) ) return false;
+        return request_id.equals(result.request_id);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = pic_url.hashCode();
+        result = 31 * result + request_id.hashCode();
+        return result;
     }
 }

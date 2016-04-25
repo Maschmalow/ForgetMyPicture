@@ -6,6 +6,7 @@ import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
 import com.j256.ormlite.logger.LocalLog;
 import com.j256.ormlite.logger.LoggerFactory;
 import com.j256.ormlite.support.ConnectionSource;
+
 import net.tenwame.manager.database.Request;
 import net.tenwame.manager.database.Result;
 import net.tenwame.manager.database.Selfie;
@@ -13,10 +14,12 @@ import net.tenwame.manager.database.User;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -71,27 +74,22 @@ public class Main {
 
         ExecutorService pool = Executors.newFixedThreadPool(NB_WORKERS);
         Runtime.getRuntime().addShutdownHook(new Thread(pool::shutdownNow));
-        Set<Result> processingResults = new HashSet<>();
+        Map<Result, Future<Result>> processingResults = new HashMap<>();
 
         while( true ) {
-            for(Result r : processingResults) {
-                try {
-                    resultDao.refresh(r);
-                } catch (SQLException e) {
-                    logger.log(Level.WARNING, "SQL error while refreshing", e);
-                    continue;
+            List<Result> unprocessed = resultDao.queryForEq("pic_match", -1);
+            for(Result result : unprocessed) {
+                if( !processingResults.containsKey(result) ) {
+                    processingResults.put(result, pool.submit(new ProcessingUnit(result), result));
+                } else if(processingResults.get(result).isDone()) {
+                    processingResults.remove(result);
+                    resultDao.refresh(result);
+                    if(!result.isProcessed())
+                        logger.log(Level.WARNING, "Result could not be processed: " + result.getPicURL());
                 }
-                if( r.isProcessed() )
-                    processingResults.remove(r);
             }
 
-            for(Result result : resultDao.queryForEq("pic_match", -1)) {
-                if(!processingResults.contains(result)) {
-                    logger.log(Level.INFO, "New result is being processed.");
-                    pool.execute(new ProcessingUnit(result));
-                    processingResults.add(result);
-                }
-            }
+            logger.log(Level.INFO, unprocessed.size() + " unprocessed results, " + processingResults.size() + " processing");
 
             try {
                 Thread.sleep(REFRESH_RATE);
