@@ -29,7 +29,7 @@ public class Main {
     private static final String DB_PATH = "jdbc:mysql:///forgetmypicture";
     private static final String USERNAME = "manager";
     private static final String PASSWORD = "AtosManager2016";
-    private static final int NB_WORKERS = 16;
+    private static final int NB_WORKERS = 32;
     private static final int REFRESH_RATE = 1000; //ms
 
     public static final int NB_FAIL_MAX = 5;
