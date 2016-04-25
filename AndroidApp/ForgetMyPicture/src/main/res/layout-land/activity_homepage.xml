@@ -17,13 +17,10 @@
 
     <LinearLayout
         android:orientation="vertical"
+        android:gravity="center_vertical"
         android:layout_margin="8dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <TextView
-            android:background="@color/white"
-            style="@style/basic_view_with_margin"/>
 
         <Button
             style="@style/button_turquoise_background_and_white_text"

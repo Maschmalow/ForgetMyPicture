@@ -125,7 +125,7 @@
     <string name="refuse">Refuser</string>
 
     <!-- links -->
-    <string name="info_link">Si vous souhaitez des informations complémentaires (surtout si après un délai de 2 mois, les requêtes générées par l\'application n'ont pas abouti) concernant les procédures de déréférencement et de suppression, vous pouvez consulter la CNIL avec les liens https://www.cnil.fr/fr/le-droit-au-dereferencement et https://www.cnil.fr/fr/demander-le-retrait-de-votre-image-en-ligne .</string>
+    <string name="info_link">Si vous souhaitez des informations complémentaires (surtout si après un délai de 2 mois, les requêtes générées par l\'application n\'ont pas abouti) concernant les procédures de déréférencement et de suppression, vous pouvez consulter la CNIL avec les liens https://www.cnil.fr/fr/le-droit-au-dereferencement et https://www.cnil.fr/fr/demander-le-retrait-de-votre-image-en-ligne .</string>
     <string name="id_card_invalid_toast">Pièce d\'identité invalide</string>
     <string name="edit_btn">Editer</string>
 
