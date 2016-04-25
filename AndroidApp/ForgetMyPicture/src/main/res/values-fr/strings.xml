@@ -47,7 +47,7 @@
 
     <!-- homepage activity -->
     <string name="homepage_activity_name">ForgetMyPicture</string>
-    <string name="homepage_new_request">Commencer une nouvelle requête</string>
+    <string name="homepage_new_request">Nouvelle requête</string>
     <string name="homepage_requests_panel">Mes requêtes</string>
     <string name="homepage_menu_account">Mon compte</string>
     <string name="homepage_menu_settings">Paramètres</string>
@@ -68,8 +68,8 @@
     <string name="request_infos_motive">Motif : %s</string>
     <string name="request_infos_keywords">Mots-clefs: %s</string>
     <string name="request_infos_no_results">Aucun résultat pour l\'instant</string>
-    <string name="request_infos_send_email_btn">Envoyer mail</string>
-    <string name="request_infos_fill_form_btn">Remplir formulaire</string>
+    <string name="request_infos_send_email_btn">Supprimer</string>
+    <string name="request_infos_fill_form_btn">Déréférencer</string>
     <string name="request_infos_id_card_toast">Veuillez ajouter votre photo d\'identité avant de continuer</string>
     <string name="request_infos_pay_before_check">Vous devez déverrouiller cette requête pour pouvoir voir l\'origine des photos et les supprimer</string>
     <string name="request_infos_pay_btn">Payer</string>
