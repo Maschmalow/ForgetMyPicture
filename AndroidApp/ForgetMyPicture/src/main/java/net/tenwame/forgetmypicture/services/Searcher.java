@@ -18,10 +18,13 @@ import org.jsoup.nodes.Element;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 /**
@@ -107,7 +110,7 @@ public class Searcher extends NetworkService{
         Set<Result> results = new HashSet<>(); //convert this to a list to support server prioritisation
         final Document doc;
 
-        doc = Jsoup.connect(URL).data(queryData)/*.userAgent(userAgent)*/.get();
+        doc = Jsoup.connect(URL).data(queryData).userAgent(userAgent).get();
         Log.d(TAG, "Request: " + doc.baseUri());
 
         //get picture link
@@ -133,14 +136,6 @@ public class Searcher extends NetworkService{
         return results;
     }
 
-
-    // this is hard to set, but it seems that it should be changed from times to times
-    // (rather than used the phone default)
-    private void setCurUserAgent() {
-        userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.75.14 (KHTML, like Gecko) Version/7.0.3 Safari/7046A194A";
-    }
-
-
     private void setCurKeywords(Collection<String> keywords) {
         String joined = UserData.getUser().getForename() + " " + UserData.getUser().getName() + " ";
         for( String keyword : keywords ) {
@@ -148,6 +143,31 @@ public class Searcher extends NetworkService{
         }
         queryData.put("q", joined);
     }
+
+    // this is hard to set, but it seems that it should be changed from times to times
+    // (rather than used the phone default)
+    private void setCurUserAgent() {
+        userAgent = userAgents.get(new Random().nextInt(userAgents.size()));
+    }
+
+    private static final List<String> userAgents = new ArrayList<>();
+    static {
+        userAgents.add("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.75.14 (KHTML, like Gecko) Version/7.0.3 Safari/7046A194A");
+        userAgents.add("Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
+        userAgents.add("Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2226.0 Safari/537.36");
+        userAgents.add("Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.93 Safari/537.36");
+        userAgents.add("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1");
+        userAgents.add("Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0");
+        userAgents.add("Mozilla/5.0 (X11; Linux x86_64; rv:17.0) Gecko/20121202 Firefox/17.0 Iceweasel/17.0.1");
+        userAgents.add("Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; AS; rv:11.0) like Gecko");
+        userAgents.add("Mozilla/5.0 (compatible, MSIE 11, Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko");
+        userAgents.add("Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trident/5.0");
+        userAgents.add("Opera/9.80 (X11; Linux i686; Ubuntu/14.10) Presto/2.12.388 Version/12.16");
+        userAgents.add("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.75.14 (KHTML, like Gecko) Version/7.0.3 Safari/7046A194A");
+    }
+
+
+
 
 
 }
