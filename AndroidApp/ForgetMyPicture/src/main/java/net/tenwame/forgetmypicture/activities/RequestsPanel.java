@@ -74,6 +74,9 @@ public class RequestsPanel extends FragmentActivity {
     public void getMoreInfoFromUI(View v) {
         requests.getMoreInfoFromUI(v);
     }
+    public void helpFromUI(View v) {
+        requests.helpFromUI(v);
+    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

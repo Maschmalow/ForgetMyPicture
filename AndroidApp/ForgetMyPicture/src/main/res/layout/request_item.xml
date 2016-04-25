@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="horizontal"
+              android:padding="5dp"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
@@ -8,6 +9,8 @@
         android:id="@+id/status"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:background="@color/gray_light"
         android:textAppearance="?android:textAppearanceMedium"/>
 
 
@@ -17,6 +20,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:textColor="@android:color/black"
+        android:textSize="19sp"
         android:textAppearance="?android:textAppearanceMedium"/>
 
     <TextView

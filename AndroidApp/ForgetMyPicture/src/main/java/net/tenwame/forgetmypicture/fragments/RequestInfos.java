@@ -271,7 +271,7 @@ public class RequestInfos extends ConventionFragment {
 
             // TODO: 18/04/2016 Download server-side
             ImageView thumb = (ImageView) itemView.findViewById(R.id.thumb);
-            thumb.setImageResource(android.R.drawable.ic_menu_rotate);
+            thumb.setImageResource(R.drawable.ic_loading);
             ImageLoader.getInstance().displayImage(item.getPicURL(), thumb);
 
         }

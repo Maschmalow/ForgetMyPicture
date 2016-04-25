@@ -57,6 +57,9 @@
     <!-- requests_list fragment -->
     <string name="requests_list_title">Vos requêtes :</string>
     <string name="requests_list_no_requests">Aucune requête</string>
+    <string name="request_list_help">About your requests:\nThe fetching searches are still looking for picture on the Internet.\nOur servers are taking a look at your Processing searches.\nThe pending searches are waiting for your action.\nUnlocking your searches allow you to take act on them.\nFinished searches are kept for history.</string>
+    <string name="requests_list_help">Aide</string>
+    <string name="requests_list_links">Procédures</string>
     <string name="request_item_processed">%d%% traitées</string>
     <string name="request_item_fetched">%d%% récupérées</string>
     <string name="request_item_results">- %d resultats</string>
@@ -114,6 +117,7 @@
     <string name="ask_continue">Continuer ?</string>
     <string name="take_pic">Prendre</string>
     <string name="save_btn">Sauvegarder</string>
+    <string name="ok">Ok</string>
     <string name="saved_toast">Sauvegarde effectuée</string>
 
     <!-- agreement -->
@@ -125,12 +129,11 @@
     <string name="refuse">Refuser</string>
 
     <!-- links -->
-    <string name="links_info">Si vous souhaitez des informations complémentaires concernant les procédures de déréférencement et de suppression (surtout si après un délai de 2 mois, les requêtes générées par l\'application n\'ont pas abouti), vous pouvez consulter la CNIL avec les liens https://www.cnil.fr/fr/le-droit-au-dereferencement et https://www.cnil.fr/fr/demander-le-retrait-de-votre-image-en-ligne .</string>
+    <string name="info_links_msg">Si vous souhaitez des informations complémentaires concernant les procédures de déréférencement et de suppression (surtout si après un délai de 2 mois, les requêtes générées par l\'application n\'ont pas abouti), vous pouvez consulter la CNIL avec les liens https://www.cnil.fr/fr/le-droit-au-dereferencement et https://www.cnil.fr/fr/demander-le-retrait-de-votre-image-en-ligne .</string>
     <string name="id_card_invalid_toast">Pièce d\'identité invalide</string>
     <string name="edit_btn">Editer</string>
-    <string name="requests_list_links">Plus d\'info</string>
-    <string name="ok">Ok</string>
-    <string name="links_title">Informations complémentaires</string>
+    <string name="info_dialog_title">Informations complémentaires</string>
+
 
 
 </resources>

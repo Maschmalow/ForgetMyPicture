@@ -55,6 +55,9 @@
     <!-- requests_list fragment -->
     <string name="requests_list_title">Your requests:</string>
     <string name="requests_list_no_requests">No request</string>
+    <string name="request_list_help">About your requests:\\nThe fetching searches are still looking for picture on the Internet. Our servers are taking a look at your Processing searches.\\nThe pending searches are waiting for your action.\\nUnlocking your searches allow you to take act on them.\\nFinished searches are kept for history</string>
+    <string name="requests_list_help">Help</string>
+    <string name="requests_list_links">Procedure info</string>
     <string name="request_item_processed">%d%% processed</string>
     <string name="request_item_fetched">%d%% fetched</string>
     <string name="request_item_results">- %d results</string>
@@ -112,6 +115,7 @@
     <string name="ask_continue">Continue ?</string>
     <string name="take_pic">Take</string>
     <string name="save_btn">Save</string>
+    <string name="ok">Ok</string>
     <string name="saved_toast">Saved</string>
 
     <!-- agreement -->
@@ -123,12 +127,11 @@
     <string name="refuse">Refuse</string>
 
     <!-- links -->
-    <string name="links_info">If you want more information about the dereferencing and deletion procedures (especially if within two months, the application requests do not succeed), you can search on ICO\'s site https://ico.org.uk .</string>
+    <string name="info_links_msg">If you want more information about the dereferencing and deletion procedures (especially if within two months, the application requests do not succeed), you can search on ICO\'s site https://ico.org.uk .</string>
     <string name="id_card_invalid_toast">Invalid ID card</string>
     <string name="edit_btn">Edit</string>
-    <string name="requests_list_links">More info</string>
-    <string name="ok">Ok</string>
-    <string name="links_title">Additonal information</string>
+    <string name="info_dialog_title">Additional information</string>
+
 
 
 </resources>

@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.crittercism.app.Crittercism;
 
 import net.tenwame.forgetmypicture.DatabaseAdapter;
+import net.tenwame.forgetmypicture.ForgetMyPictureApp;
 import net.tenwame.forgetmypicture.R;
 import net.tenwame.forgetmypicture.Util;
 import net.tenwame.forgetmypicture.activities.RequestsPanel;
@@ -27,7 +28,8 @@ public class RequestsList extends ConventionFragment {
 
     private RequestsAdapter adapter = new RequestsAdapter();
     private DataSetObserver loader;
-    private AlertDialog moreInfo;
+    private AlertDialog procedures;
+    private AlertDialog help;
 
     //auto-retrieved views
     private ListView requestsList;
@@ -47,11 +49,8 @@ public class RequestsList extends ConventionFragment {
         adapter.loadData();
         adapter.trackDatabase(Result.class, true);
 
-        moreInfo = new AlertDialog.Builder(getContext())
-                .setTitle(R.string.links_title)
-                .setMessage(R.string.links_info)
-                .setNeutralButton(R.string.ok, null)
-                .create();
+        procedures = ForgetMyPictureApp.getInfoDialog(getContext(), R.string.info_links_msg);
+        help = ForgetMyPictureApp.getInfoDialog(getContext(), R.string.request_list_help);
     }
 
     @Override
@@ -72,12 +71,13 @@ public class RequestsList extends ConventionFragment {
         adapter.trackDatabase(Result.class, false);
     }
 
-    public void setFilterFromUI(/* filter */) {//will be from UI
-        //adapter.setMatchingArgs(new HashMap<String, Object>());
-    }
 
+
+    public void helpFromUI(View v) {
+        help.show();
+    }
     public void getMoreInfoFromUI(View v) {
-        moreInfo.show();
+        procedures.show();
     }
 
 

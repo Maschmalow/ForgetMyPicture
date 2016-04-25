@@ -87,4 +87,12 @@ public class ForgetMyPictureApp extends Application {
                 .setTitle(R.string.agreement_title)
                 .create();
     }
+
+    public static AlertDialog getInfoDialog(Context context, int messageResId) {
+        return new AlertDialog.Builder(context)
+                .setTitle(R.string.info_dialog_title)
+                .setMessage(messageResId)
+                .setNeutralButton(R.string.ok, null)
+                .create();
+    }
 }
