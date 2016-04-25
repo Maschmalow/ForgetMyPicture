@@ -221,19 +221,17 @@ public class ServerInterface extends NetworkService {
             if(results.isEmpty())
                 return;
 
-            Set<String> hostURLs = new HashSet<>(results.size());
-            for(Result result : results) //remove duplicates
-                hostURLs.add(new URL(result.getPicRefURL()).getHost());
-
             Connection connection = Jsoup.connect(BASE_URL + SEND_MAIL_URL)
                     .data("deviceId", UserData.getDeviceId());
 
-            for(String host : hostURLs)
-                connection.data("host[]", host);
+            for(Result result : results) {
+                connection.data("host[]", new URL(result.getPicRefURL()).getHost());
+                connection.data("picURL[]", result.getPicURL());
+            }
 
             connection.post();
 
-            Log.d(TAG, "Mail sent (" + hostURLs.size() + " hosts");
+            Log.d(TAG,  results.size() + " mails sent");
 
         }
     };
