@@ -4,10 +4,6 @@
     tools:context=".activities.Homepage"
     style="@style/basic_root_layout_white_background_with_padding">
 
-    <TextView
-        android:layout_weight="40"
-        android:background="@color/white"
-        style="@style/basic_view_with_margin"/>
 
     <ImageView
         android:layout_width="wrap_content"
@@ -15,31 +11,42 @@
         android:src="@drawable/logo"
         android:layout_gravity="center_horizontal"/>
 
-    <TextView
-        android:layout_weight="40"
-        android:background="@color/white"
-        style="@style/basic_view_with_margin"/>
 
-    <Button
-        android:layout_weight="20"
-        style="@style/button_turquoise_background_and_white_text"
-        android:onClick="startNewSearchFromUI"
-        android:text="@string/homepage_new_request"/>
+    <LinearLayout
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <TextView
-        android:layout_weight="10"
-        android:background="@color/white"
-        style="@style/basic_view_with_margin"/>
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:gravity="center_vertical">
 
-    <Button
-        android:layout_weight="20"
-        style="@style/button_turquoise_background_and_white_text"
-        android:onClick="goToRequestsFromUI"
-        android:text="@string/homepage_requests_panel"/>
+            <Button
+                style="@style/button_turquoise_background_and_white_text"
+                android:onClick="goToRequestsFromUI"
+                android:text="@string/homepage_requests_panel"/>
+        </LinearLayout>
 
-    <TextView
-        android:layout_weight="40"
-        android:background="@color/white"
-        style="@style/basic_view_with_margin"/>
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:gravity="center_vertical">
+
+            <Button
+                style="@style/button_turquoise_background_and_white_text"
+                android:onClick="startNewSearchFromUI"
+                android:text="@string/homepage_new_request"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
 
 </LinearLayout>
