@@ -1,5 +1,5 @@
 /**
- * \file send_mail.c
+ * \file have_adr.c
  * \brief Send mail to website host administrators
  * \author Pierre PLUMIER
  */

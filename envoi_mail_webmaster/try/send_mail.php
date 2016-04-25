@@ -1,5 +1,5 @@
 /**
- * \file launcher.php
+ * \file send_mail.php
  * \brief Launch the process to send mail to website host administrators
  * \author Pierre PLUMIER
  *

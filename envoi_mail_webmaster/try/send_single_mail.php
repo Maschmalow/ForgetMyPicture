@@ -1,5 +1,5 @@
 /**
- * \file send_mail.php
+ * \file send_single_mail.php
  * \brief Send mail to a website host administrator
  * \author Pierre PLUMIER
  *
