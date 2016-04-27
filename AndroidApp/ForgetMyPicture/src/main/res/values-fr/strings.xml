@@ -24,8 +24,8 @@
     <string name="account_forename">Prénom : %s</string>
     <string name="account_email">E-mail: %s</string>
     <string name="account_set_id_card">Changer la carte d\'identité</string>
-    <string name="account_not_registered">Your are not registerd yet !</string>
-    <string name="account_selfies">Your selfies</string>
+    <string name="account_not_registered">Vous n\'êtes pas encore enregistrés !</string>
+    <string name="account_selfies">Vos selfies</string>
 
     <!-- user_set_up activity -->
     <string name="user_setup_activity_name">Mettez à jour vos données</string>
@@ -34,7 +34,7 @@
     <string name="user_setup_forename">Prénom :</string>
     <string name="user_setup_email">Adresse mail :</string>
     <string name="user_setup_selfie">Prenez un selfie svp :</string>
-    <string name="user_setup_save_failed_toast">Echec de la sauvegarde de vos données. Récommencez plus tard svp.</string>
+    <string name="user_setup_save_failed_toast">Echec de la sauvegarde de vos données. Recommencez plus tard svp.</string>
     <string name="user_setup_invalid_toast">Données écrites invalides.</string>
     <string name="user_setup_selfie_desc">Miniature du selfie</string>
     <string name="user_setup_idcard_desc">Miniature de votre pièce d\'identité</string>
@@ -44,7 +44,7 @@
     <string name="id_card_setup_thumb_desc">Miniature de la carte d\'identité</string>
     <string name="id_card_setup_title">Prenez une photo de votre pièce d\'identité svp :</string>
     <string name="id_card_setup_help">Cette photo sera utilisée uniquement pour la procédure de déréférencement via le remplissage du formulaire de déréférencement.\nVous pouvez cacher n\'importe quelle information non nécessaire à l\'identification.</string>
-    <string name="id_card_motive_title">Veuillez ajouter un motif pour votre requête :</string>
+    <string name="id_card_motive_title">Pour chaque URL fournie, veuillez expliquer svp :\n(1) en quoi l\'URL mise en cause vous concerne (ou, si vous envoyez ce formulaire au nom d\'un tiers, en quoi la page le concerne) ;\n(2) en quoi l\'URL apparaissant dans les résultats de recherche est hors sujet, obsolète ou autrement répréhensible.</string>
 
     <!-- homepage activity -->
     <string name="homepage_activity_name">ForgetMyPicture</string>
