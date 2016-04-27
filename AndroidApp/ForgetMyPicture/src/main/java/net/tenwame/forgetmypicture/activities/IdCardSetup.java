@@ -52,7 +52,6 @@ public class IdCardSetup extends Activity {
     private LinearLayout motiveContent;
     private EditText motiveText;
 
-    private Button saveButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +67,6 @@ public class IdCardSetup extends Activity {
         setIdCard = getIntent().getBooleanExtra(EXTRA_SETIDCARD_KEY, false);
 
         idCardThumb = (ImageView) findViewById(R.id.idcard_thumb);
-        saveButton = (Button) findViewById(R.id.save_btn);
         takeIdcard = (Button) findViewById(R.id.take_idcard);
         idCardContent = (LinearLayout) findViewById(R.id.idcard_content);
 

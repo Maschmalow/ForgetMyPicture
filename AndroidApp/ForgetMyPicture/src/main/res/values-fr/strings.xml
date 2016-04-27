@@ -44,7 +44,8 @@
     <string name="id_card_setup_thumb_desc">Miniature de la carte d\'identité</string>
     <string name="id_card_setup_title">Prenez une photo de votre pièce d\'identité svp :</string>
     <string name="id_card_setup_help">Cette photo sera utilisée uniquement pour la procédure de déréférencement via le remplissage du formulaire de déréférencement.\nVous pouvez cacher n\'importe quelle information non nécessaire à l\'identification.</string>
-    <string name="id_card_motive_title">Pour chaque URL fournie, veuillez expliquer svp :\n(1) en quoi l\'URL mise en cause vous concerne (ou, si vous envoyez ce formulaire au nom d\'un tiers, en quoi la page le concerne) ;\n(2) en quoi l\'URL apparaissant dans les résultats de recherche est hors sujet, obsolète ou autrement répréhensible.</string>
+    <string name="id_card_motive_title">Veuillez ajouter un motif pour votre requète</string>
+    <string name="id_card_motive_help">Pour toutes les URL selectionnées, veuillez expliquer svp :\n(1) en quoi l\'URL mise en cause vous concerne (ou, si vous envoyez ce formulaire au nom d\'un tiers, en quoi la page le concerne) ;\n(2) en quoi l\'URL apparaissant dans les résultats de recherche est hors sujet, obsolète ou autrement répréhensible.</string>
 
     <!-- homepage activity -->
     <string name="homepage_activity_name">ForgetMyPicture</string>

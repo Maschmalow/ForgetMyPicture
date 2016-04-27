@@ -1,5 +1,6 @@
 package net.tenwame.forgetmypicture.fragments;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -53,6 +54,7 @@ public class RequestInfos extends ConventionFragment {
     private static final String SELECTED_KEY = "SELECTED";
     private static final String PAY_DIALOG_KEY = "PAY_DIALOG";
     private static final String AGREEMENT_DIALOG_KEY = "AGREEMENT_DIALOG";
+    private static final int REQUEST_ADD_INFO = 1;
 
     private Request request;
     private ResultsAdapter adapter = new ResultsAdapter();
@@ -66,7 +68,6 @@ public class RequestInfos extends ConventionFragment {
     private TextView status;
     private TextView stats;
     private TextView keywords;
-    private TextView motive;
     private ListView resultsList;
     private TextView empty;
 
@@ -135,12 +136,6 @@ public class RequestInfos extends ConventionFragment {
         stats.setText(res.getString(R.string.request_infos_stats, nbResults, estimated, processed));
         keywords.setText(res.getString(R.string.request_infos_keywords, request.getKeywords().toString())); //TODO
 
-        if(request.getStatus().isAfter(Request.Status.UNLOCKED) && request.getMotive() != null) {
-            motive.setVisibility(View.VISIBLE);
-            motive.setText(res.getString(R.string.request_infos_motive, request.getMotive()));
-        } else {
-            motive.setVisibility(View.GONE);
-        }
 
     }
 
@@ -167,24 +162,32 @@ public class RequestInfos extends ConventionFragment {
             return;
         }
 
-        if(!UserData.getUser().getIdCard().getFile().exists() || request.getMotive() == null) {
-            Toast.makeText(getContext(), R.string.request_infos_id_card_toast, Toast.LENGTH_LONG).show();
 
-            Intent intent = new Intent(getContext(), IdCardSetup.class);
-            if(request.getMotive() == null) {
-                intent.putExtra(IdCardSetup.EXTRA_REQUEST_KEY, request.getId());
-            }
-            if(!UserData.getUser().getIdCard().getFile().exists())
-                intent.putExtra(IdCardSetup.EXTRA_SETIDCARD_KEY, true);
-            startActivity(intent);
-            return;
-        }
+        Toast.makeText(getContext(), R.string.request_infos_id_card_toast, Toast.LENGTH_LONG).show();
 
+        Intent intent = new Intent(getContext(), IdCardSetup.class);
+        intent.putExtra(IdCardSetup.EXTRA_REQUEST_KEY, request.getId());
+
+        if(!UserData.getUser().getIdCard().getFile().exists())
+            intent.putExtra(IdCardSetup.EXTRA_SETIDCARD_KEY, true);
+        startActivityForResult(intent, REQUEST_ADD_INFO);
+
+    }
+
+    private void doFillForm() {
         Bundle params = new Bundle(); //we do it manually because Id's are already saved, no need to fetch DB
         params.putInt(FormFiller.EXTRA_REQUEST_ID_KEY, request.getId());
         params.putStringArrayList(FormFiller.EXTRA_RESULTS_KEY, new ArrayList<>(selected));
         NetworkService.execute(FormFiller.class, FormFiller.ACTION_FILL_FORM, params);
         Toast.makeText(getContext(), R.string.request_infos_form_sent, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode != REQUEST_ADD_INFO || resultCode != Activity.RESULT_OK)
+            return;
+        if(request.getMotive() != null && UserData.getUser().getIdCard().getFile().exists())
+            doFillForm();
     }
 
     public void sendEmailFromUI(View v) {

@@ -85,6 +85,12 @@
                     android:text="@string/id_card_motive_title"
                     android:textAppearance="?android:textAppearanceLarge"/>
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/id_card_motive_help"
+                    android:textAppearance="?android:textAppearanceMedium"/>
+
                 <EditText
                     android:id="@+id/motive_text"
                     android:layout_width="match_parent"
