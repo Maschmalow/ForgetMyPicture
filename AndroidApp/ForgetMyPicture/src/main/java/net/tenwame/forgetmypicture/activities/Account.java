@@ -92,6 +92,8 @@ public class Account extends Activity {
     }
 
     public void setIdCardFromUI(View v) {
-        startActivity(new Intent(this, IdCardSetup.class));
+        Intent intent = new Intent(this, IdCardSetup.class);
+        intent.putExtra(IdCardSetup.EXTRA_SETIDCARD_KEY, true);
+        startActivity(intent);
     }
 }

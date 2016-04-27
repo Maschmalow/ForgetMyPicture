@@ -135,7 +135,7 @@ public class RequestInfos extends ConventionFragment {
         stats.setText(res.getString(R.string.request_infos_stats, nbResults, estimated, processed));
         keywords.setText(res.getString(R.string.request_infos_keywords, request.getKeywords().toString())); //TODO
 
-        if(request.getStatus() == Request.Status.FINISHED && request.getMotive() != null) {
+        if(request.getStatus().isAfter(Request.Status.UNLOCKED) && request.getMotive() != null) {
             motive.setVisibility(View.VISIBLE);
             motive.setText(res.getString(R.string.request_infos_motive, request.getMotive()));
         } else {
@@ -167,9 +167,16 @@ public class RequestInfos extends ConventionFragment {
             return;
         }
 
-        if(UserData.getUser().getIdCard().get() == null) {
+        if(!UserData.getUser().getIdCard().getFile().exists() || request.getMotive() == null) {
             Toast.makeText(getContext(), R.string.request_infos_id_card_toast, Toast.LENGTH_LONG).show();
-            startActivity(new Intent(getContext(), IdCardSetup.class));
+
+            Intent intent = new Intent(getContext(), IdCardSetup.class);
+            if(request.getMotive() == null) {
+                intent.putExtra(IdCardSetup.EXTRA_REQUEST_KEY, request.getId());
+            }
+            if(!UserData.getUser().getIdCard().getFile().exists())
+                intent.putExtra(IdCardSetup.EXTRA_SETIDCARD_KEY, true);
+            startActivity(intent);
             return;
         }
 

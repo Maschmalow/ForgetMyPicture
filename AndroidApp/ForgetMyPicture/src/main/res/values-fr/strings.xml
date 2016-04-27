@@ -40,10 +40,11 @@
     <string name="user_setup_idcard_desc">Miniature de votre pièce d\'identité</string>
 
     <!-- id_card_setup_activity -->
-    <string name="id_card_setup_activity_name">Ajout d\'une carte d\'identité</string>
+    <string name="id_card_setup_activity_name">Informations supplémentaires</string>
     <string name="id_card_setup_thumb_desc">Miniature de la carte d\'identité</string>
     <string name="id_card_setup_title">Prenez une photo de votre pièce d\'identité svp :</string>
     <string name="id_card_setup_help">Cette photo sera utilisée uniquement pour la procédure de déréférencement via le remplissage du formulaire de déréférencement.\nVous pouvez cacher n\'importe quelle information non nécessaire à l\'identification.</string>
+    <string name="id_card_motive_title">Veuillez ajouter un motif pour votre requête :</string>
 
     <!-- homepage activity -->
     <string name="homepage_activity_name">ForgetMyPicture</string>
@@ -73,7 +74,7 @@
     <string name="request_infos_no_results">Aucun résultat pour l\'instant</string>
     <string name="request_infos_send_email_btn">Supprimer</string>
     <string name="request_infos_fill_form_btn">Déréférencer</string>
-    <string name="request_infos_id_card_toast">Veuillez ajouter votre photo d\'identité avant de continuer</string>
+    <string name="request_infos_id_card_toast">Des informations supplémentaires son nécessaires</string>
     <string name="request_infos_pay_before_check">Vous devez déverrouiller cette requête pour pouvoir voir l\'origine des photos et les supprimer</string>
     <string name="request_infos_pay_btn">Payer</string>
     <string name="request_infos_payed_toast">Merci de votre achat</string>

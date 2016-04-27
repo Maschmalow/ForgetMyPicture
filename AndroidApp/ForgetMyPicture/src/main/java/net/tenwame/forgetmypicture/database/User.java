@@ -78,7 +78,7 @@ public class User {
     public boolean isValid() {
         if(selfies.isEmpty()) return false;
         for(Selfie selfie : selfies)
-            if(selfie.getPic().get() == null)
+            if(!selfie.getPic().getFile().exists())
                 return false;
         return email != null && name != null && forename != null;
     }
