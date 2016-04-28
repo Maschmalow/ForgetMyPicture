@@ -43,7 +43,7 @@
     <string name="id_card_setup_title">Please take a picture of your ID card</string>
     <string name="id_card_setup_help">This picture will only be used to fill the dereferencing form.\nYou can hide any data irrelevant for identification.</string>
     <string name="id_card_motive_title">Please add a motive for your request:</string>
-    <string name="id_card_motive_help">For all selected URLs, please explain:\n(1) how the linked URL relates to you (or, if you are submitting this form on behalf of someone else, why the page is about that person); and\n(2) why the content on this URL in search results is distributed unlawfully, inaccurate, or outdated.</string>
+    <string name="id_card_motive_help">For each selected URL, please explain:\n(1) how the linked URL relates to you (or, if you are submitting this form on behalf of someone else, why the page is about that person); and\n(2) why the content on this URL in search results is distributed unlawfully, inaccurate, or outdated.</string>
 
     <!-- homepage activity -->
     <string name="homepage_activity_name">ForgetMyPicture</string>
